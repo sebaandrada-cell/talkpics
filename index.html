@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f1ea">
+<title>TalkPics — Comunicación con fotos reales</title>
+<meta name="description" content="TalkPics es una app de comunicación aumentativa para personas autistas no verbales y sus familias. Fotos reales, grandes y calmadas, que hablan.">
+<style>
+  :root{
+    --bg:#f4f1ea; --card:#ffffff; --ink:#2b2b2b; --muted:#7a756c;
+    --line:#e3ddd0; --accent:#3a7d5d; --accent-dark:#2f6b4f; --accent-soft:#dff0e7;
+    --star:#e0a92e; --danger:#c0563f;
+    --shadow:0 4px 20px rgba(43,43,43,.08); --shadow-lg:0 12px 40px rgba(43,43,43,.12);
+    --radius:22px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
+  section{padding:88px 0;}
+  h1,h2,h3{line-height:1.15; letter-spacing:-.02em;}
+  a{color:inherit;}
+
+  /* Header */
+  header{
+    position:sticky; top:0; z-index:50; background:rgba(244,241,234,.85);
+    backdrop-filter:saturate(160%) blur(12px); border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex; align-items:center; gap:16px; height:64px;}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; margin-right:auto;}
+  .logo{width:36px; height:36px; border-radius:11px; background:var(--accent); color:#fff;
+    display:grid; place-items:center; font-size:20px; box-shadow:var(--shadow);}
+  .lang{display:inline-flex; border:2px solid var(--line); border-radius:30px; overflow:hidden; background:#fff;}
+  .lang button{border:none; background:none; padding:6px 14px; font-weight:800; font-size:13px; color:var(--muted); cursor:pointer;}
+  .lang button.on{background:var(--accent); color:#fff;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; border:none; cursor:pointer;
+    background:var(--accent); color:#fff; font-weight:800; font-size:16px;
+    padding:14px 26px; border-radius:30px; box-shadow:var(--shadow); text-decoration:none;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px); background:var(--accent-dark);}
+  .btn.ghost{background:#fff; color:var(--accent); border:2px solid var(--accent-soft); box-shadow:none;}
+  .btn.sm{padding:10px 18px; font-size:15px;}
+
+  /* Hero */
+  .hero{padding:72px 0 60px; display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center;}
+  .eyebrow{display:inline-block; background:var(--accent-soft); color:var(--accent-dark);
+    font-weight:800; font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+    padding:7px 14px; border-radius:20px; margin-bottom:20px;}
+  .hero h1{font-size:52px; font-weight:800; margin-bottom:20px;}
+  .hero p.lead{font-size:20px; color:var(--muted); margin-bottom:28px; max-width:30em;}
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+  .cta-note{font-size:14px; color:var(--muted); margin-top:16px;}
+
+  /* Phone mock */
+  .mock{
+    background:#fff; border-radius:34px; padding:14px; box-shadow:var(--shadow-lg);
+    border:1px solid var(--line); max-width:360px; margin:0 auto; width:100%;
+  }
+  .mock .screen{background:var(--bg); border-radius:24px; padding:16px; overflow:hidden;}
+  .mock .topbar{display:flex; align-items:center; gap:8px; margin-bottom:14px;}
+  .mock .topbar .t{font-weight:800; font-size:15px;}
+  .mock .topbar .gear{margin-left:auto; width:30px; height:30px; border-radius:9px; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-size:15px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .pcard{background:#fff; border-radius:16px; border:1px solid var(--line); padding:10px 6px; text-align:center; box-shadow:var(--shadow);}
+  .pcard .emoji{font-size:34px; line-height:1; display:block; margin-bottom:6px;}
+  .pcard .cap{font-size:12px; font-weight:700; color:var(--ink);}
+  .pcard.sel{grid-column:1/-1; border:3px solid var(--accent); box-shadow:0 0 0 6px var(--accent-soft);}
+  .pcard.sel .emoji{font-size:64px;}
+  .pcard.sel .cap{font-size:20px;}
+  .speak{display:inline-flex; align-items:center; gap:6px; margin-top:6px; background:var(--accent); color:#fff; font-size:12px; font-weight:800; padding:5px 12px; border-radius:16px;}
+
+  /* Stat / trust bar */
+  .bar{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .bar .wrap{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding:34px 24px;}
+  .stat{text-align:center;}
+  .stat b{display:block; font-size:30px; font-weight:800; color:var(--accent); letter-spacing:-.02em;}
+  .stat span{font-size:14px; color:var(--muted);}
+
+  .sec-head{text-align:center; max-width:36em; margin:0 auto 52px;}
+  .sec-head .eyebrow{margin-bottom:16px;}
+  .sec-head h2{font-size:38px; font-weight:800; margin-bottom:14px;}
+  .sec-head p{font-size:18px; color:var(--muted);}
+
+  /* Problem */
+  .problem{background:#fff;}
+  .p-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:center;}
+  .quote{font-size:26px; font-weight:700; line-height:1.35; letter-spacing:-.01em;}
+  .quote span{color:var(--accent);}
+  .p-list{list-style:none;}
+  .p-list li{display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); font-size:17px;}
+  .p-list li:last-child{border-bottom:none;}
+  .p-list .ic{flex:none; width:40px; height:40px; border-radius:12px; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-size:20px;}
+
+  /* Features */
+  .feat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .feat{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow); transition:transform .15s ease, box-shadow .15s ease;}
+  .feat:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg);}
+  .feat .fic{width:54px; height:54px; border-radius:16px; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-size:28px; margin-bottom:16px;}
+  .feat h3{font-size:19px; font-weight:800; margin-bottom:8px;}
+  .feat p{font-size:15px; color:var(--muted);}
+
+  /* How it works */
+  .how{background:#fff;}
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; counter-reset:step;}
+  .step{position:relative; padding-top:8px;}
+  .step .num{width:44px; height:44px; border-radius:50%; background:var(--accent); color:#fff; font-weight:800; font-size:19px; display:grid; place-items:center; margin-bottom:16px;}
+  .step h3{font-size:19px; font-weight:800; margin-bottom:8px;}
+  .step p{font-size:15px; color:var(--muted);}
+
+  /* Advantages */
+  .adv-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px 40px;}
+  .adv{display:flex; gap:14px; align-items:flex-start; padding:12px 0;}
+  .adv .check{flex:none; width:30px; height:30px; border-radius:50%; background:var(--accent); color:#fff; display:grid; place-items:center; font-weight:800; font-size:15px; margin-top:2px;}
+  .adv b{display:block; font-size:17px; margin-bottom:2px;}
+  .adv p{font-size:14px; color:var(--muted);}
+
+  /* Audiences */
+  .aud-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .aud{border:1px solid var(--line); border-radius:var(--radius); padding:28px; background:#fff; box-shadow:var(--shadow);}
+  .aud .ail{font-size:34px; margin-bottom:12px;}
+  .aud h3{font-size:19px; font-weight:800; margin-bottom:8px;}
+  .aud p{font-size:15px; color:var(--muted);}
+
+  /* CTA */
+  .final{background:var(--accent); color:#fff; border-radius:0;}
+  .final .wrap{text-align:center;}
+  .final h2{font-size:40px; font-weight:800; margin-bottom:16px;}
+  .final p{font-size:19px; opacity:.92; max-width:32em; margin:0 auto 30px;}
+  .final .btn{background:#fff; color:var(--accent-dark);}
+  .final .btn.ghost{background:transparent; color:#fff; border:2px solid rgba(255,255,255,.5);}
+
+  footer{padding:40px 0; text-align:center; color:var(--muted); font-size:14px;}
+  footer .brand{justify-content:center; margin-bottom:10px; color:var(--ink);}
+
+  /* Pricing */
+  .price{background:#fff;}
+  .price-card{max-width:560px; margin:0 auto; background:var(--bg); border:1px solid var(--line);
+    border-radius:26px; padding:40px 36px; box-shadow:var(--shadow-lg); text-align:center;}
+  .price-tag{display:flex; align-items:baseline; justify-content:center; gap:6px; margin:6px 0 4px;}
+  .price-tag .amount{font-size:64px; font-weight:800; letter-spacing:-.03em; color:var(--accent);}
+  .price-tag .cur{font-size:34px; font-weight:800; color:var(--accent);}
+  .price-sub{color:var(--muted); font-size:15px; margin-bottom:24px;}
+  .incl{list-style:none; text-align:left; max-width:340px; margin:0 auto 28px;}
+  .incl li{display:flex; gap:10px; padding:7px 0; font-size:15px;}
+  .incl li .c{color:var(--accent); font-weight:800;}
+  .pay-methods{display:flex; flex-direction:column; gap:12px; text-align:left; margin-bottom:24px;}
+  .pm{background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 18px; display:flex; align-items:center; gap:14px;}
+  .pm .pmic{flex:none; width:44px; height:44px; border-radius:12px; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-size:22px; font-weight:800;}
+  .pm .pmbody{flex:1; min-width:0;}
+  .pm .pmbody b{display:block; font-size:15px;}
+  .pm .pmbody code{font-size:14px; color:var(--ink); background:#f4f1ea; padding:2px 8px; border-radius:7px; word-break:break-all; display:inline-block; margin-top:2px;}
+  .pm .pmbody span{font-size:13px; color:var(--muted);}
+  .steps-pay{text-align:left; background:var(--accent-soft); border-radius:16px; padding:18px 20px; margin-bottom:22px;}
+  .steps-pay ol{margin:0; padding-left:20px;}
+  .steps-pay li{font-size:14px; color:var(--accent-dark); padding:3px 0;}
+  .price-note{font-size:13px; color:var(--muted); margin-top:14px;}
+
+  [data-en]{display:none;}
+  body.en [data-es]{display:none;}
+  body.en [data-en]{display:revert;}
+
+  @media(max-width:860px){
+    section{padding:60px 0;}
+    .hero{grid-template-columns:1fr; padding:48px 0;}
+    .hero h1{font-size:40px;}
+    .p-grid,.feat-grid,.steps,.adv-grid,.aud-grid{grid-template-columns:1fr;}
+    .bar .wrap{grid-template-columns:1fr 1fr;}
+    .sec-head h2{font-size:30px;}
+    .brand span.full{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="logo">◉</span> <span class="full">TalkPics</span></div>
+    <a href="#features" class="hidedesk"></a>
+    <div class="lang" role="group" aria-label="Idioma">
+      <button id="es" class="on" onclick="setLang('es')">ES</button>
+      <button id="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#precio" class="btn sm"><span data-es>Comprar · 10€</span><span data-en>Buy · €10</span></a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <span class="eyebrow"><span data-es>Comunicación aumentativa · CAA</span><span data-en>Augmentative communication · AAC</span></span>
+      <h1>
+        <span data-es>Las fotos que dan voz a quien no puede hablar</span>
+        <span data-en>The pictures that give a voice to those who can't speak</span>
+      </h1>
+      <p class="lead">
+        <span data-es>TalkPics convierte fotos reales de la vida de tu hijo en un tablero simple que <b>habla por él</b>. Toca una foto, se agranda y el dispositivo dice la palabra en voz alta. Grande, calmado y hecho para personas autistas no verbales.</span>
+        <span data-en>TalkPics turns real photos from your child's life into a simple board that <b>speaks for them</b>. Tap a photo, it grows large and the device says the word out loud. Big, calm, and built for non-speaking autistic people.</span>
+      </p>
+      <div class="cta-row">
+        <a href="#precio" class="btn"><span data-es>Conseguirla por 10€</span><span data-en>Get it for €10</span></a>
+        <a href="#how" class="btn ghost"><span data-es>Ver cómo funciona</span><span data-en>See how it works</span></a>
+      </div>
+      <p class="cta-note">
+        <span data-es>◉ Funciona sin internet · ◉ Sin anuncios · ◉ Las fotos nunca salen del dispositivo</span>
+        <span data-en>◉ Works offline · ◉ No ads · ◉ Photos never leave the device</span>
+      </p>
+    </div>
+
+    <div class="mock" aria-hidden="true">
+      <div class="screen">
+        <div class="topbar"><span class="logo" style="width:26px;height:26px;font-size:14px;border-radius:8px">◉</span><span class="t">TalkPics</span><span class="gear">⚙</span></div>
+        <div class="grid3">
+          <div class="pcard sel">
+            <span class="emoji">💧</span>
+            <span class="cap"><span data-es>Agua</span><span data-en>Water</span></span>
+            <div><span class="speak">🔊 <span data-es>"Agua"</span><span data-en>"Water"</span></span></div>
+          </div>
+          <div class="pcard"><span class="emoji">🍎</span><span class="cap"><span data-es>Manzana</span><span data-en>Apple</span></span></div>
+          <div class="pcard"><span class="emoji">🧸</span><span class="cap"><span data-es>Oso</span><span data-en>Teddy</span></span></div>
+          <div class="pcard"><span class="emoji">🏞️</span><span class="cap"><span data-es>Parque</span><span data-en>Park</span></span></div>
+          <div class="pcard"><span class="emoji">👩</span><span class="cap"><span data-es>Mamá</span><span data-en>Mum</span></span></div>
+          <div class="pcard"><span class="emoji">😴</span><span class="cap"><span data-es>Dormir</span><span data-en>Sleep</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="bar">
+  <div class="wrap">
+    <div class="stat"><b>1-2</b><span data-es>toques para "decir" una palabra</span><span data-en>taps to "say" a word</span></div>
+    <div class="stat"><b>100%</b><span data-es>funciona sin conexión</span><span data-en>works offline</span></div>
+    <div class="stat"><b>4</b><span data-es>plataformas: iPad, iPhone, Android</span><span data-en>platforms: iPad, iPhone, Android</span></div>
+    <div class="stat"><b>0</b><span data-es>anuncios y rastreo</span><span data-en>ads and tracking</span></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="wrap p-grid">
+    <div>
+      <span class="eyebrow"><span data-es>El problema</span><span data-en>The problem</span></span>
+      <p class="quote" style="margin-top:16px">
+        <span data-es>Cuando un niño no puede pedir <span>agua</span>, <span>un abrazo</span> o decir que algo <span>le duele</span>, la frustración crece para toda la familia.</span>
+        <span data-en>When a child can't ask for <span>water</span>, <span>a hug</span>, or say that something <span>hurts</span>, frustration grows for the whole family.</span>
+      </p>
+    </div>
+    <ul class="p-list">
+      <li><span class="ic">🔤</span><span data-es>Los pictogramas genéricos no se parecen a <b>su</b> taza, <b>su</b> cocina, <b>su</b> familia.</span><span data-en>Generic symbols don't look like <b>their</b> cup, <b>their</b> kitchen, <b>their</b> family.</span></li>
+      <li><span class="ic">😵</span><span data-es>Las apps existentes son caras, cargadas de botones y fáciles de romper con un toque.</span><span data-en>Existing apps are expensive, cluttered with buttons, and easy to break with one tap.</span></li>
+      <li><span class="ic">🔒</span><span data-es>Suben las fotos del niño a la nube. Datos sensibles fuera de tu control.</span><span data-en>They upload the child's photos to the cloud. Sensitive data out of your control.</span></li>
+      <li><span class="ic">📶</span><span data-es>Sin internet, muchas dejan de funcionar justo cuando más se necesitan.</span><span data-en>Without internet, many stop working right when they're needed most.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-es>Qué hace la app</span><span data-en>What the app does</span></span>
+      <h2><span data-es>Todo lo que necesita una familia, nada que sobre</span><span data-en>Everything a family needs, nothing they don't</span></h2>
+      <p><span data-es>Diseñada con terapeutas del lenguaje alrededor de un principio: la foto real de tu hijo comunica más rápido que cualquier símbolo.</span><span data-en>Designed with speech therapists around one principle: your child's real photo communicates faster than any symbol.</span></p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><div class="fic">📸</div><h3><span data-es>Fotos reales</span><span data-en>Real photos</span></h3><p><span data-es>Haz una foto o súbela desde la galería. La taza azul de casa, no un dibujo cualquiera.</span><span data-en>Snap a photo or upload from the gallery. The blue cup from home, not a generic drawing.</span></p></div>
+      <div class="feat"><div class="fic">🔊</div><h3><span data-es>Habla en voz alta</span><span data-en>Speaks aloud</span></h3><p><span data-es>Al tocar, dice la palabra. Puedes grabar tu propia voz: la que el niño reconoce.</span><span data-en>On tap, it says the word. You can record your own voice — the one the child knows.</span></p></div>
+      <div class="feat"><div class="fic">🔍</div><h3><span data-es>Enfoque y zoom</span><span data-en>Focus &amp; zoom</span></h3><p><span data-es>La foto elegida crece hasta llenar la pantalla para que todos la vean con claridad.</span><span data-en>The chosen photo grows to fill the screen so everyone sees it clearly.</span></p></div>
+      <div class="feat"><div class="fic">🗂️</div><h3><span data-es>Categorías y filtros</span><span data-en>Categories &amp; filters</span></h3><p><span data-es>Comida, personas, lugares, emociones. Ordena, etiqueta y marca favoritos a tu manera.</span><span data-en>Food, people, places, feelings. Sort, tag and star favorites your way.</span></p></div>
+      <div class="feat"><div class="fic">🧩</div><h3><span data-es>Modo simple y bloqueo</span><span data-en>Simple mode &amp; lock</span></h3><p><span data-es>Menos tarjetas, más grandes, sin botones de edición. El niño no puede borrar ni salir por error.</span><span data-en>Fewer, larger cards, no edit buttons. The child can't delete or exit by accident.</span></p></div>
+      <div class="feat"><div class="fic">💬</div><h3><span data-es>Tira de frases</span><span data-en>Sentence strip</span></h3><p><span data-es>Encadena tarjetas para construir frases: "Quiero" + "agua". Actívala solo cuando esté listo.</span><span data-en>Chain cards to build phrases: "I want" + "water". Turn it on only when ready.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" class="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-es>Cómo funciona</span><span data-en>How it works</span></span>
+      <h2><span data-es>Listo en tres pasos</span><span data-en>Ready in three steps</span></h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3><span data-es>Añade fotos</span><span data-en>Add photos</span></h3><p><span data-es>El cuidador toma o sube fotos de las cosas, personas y lugares del día a día del niño y les pone nombre.</span><span data-en>The caregiver takes or uploads photos of the child's everyday things, people and places, and names them.</span></p></div>
+      <div class="step"><div class="num">2</div><h3><span data-es>Bloquea en modo niño</span><span data-en>Lock into child mode</span></h3><p><span data-es>Un gesto seguro deja la app en una vista simple donde nada se puede romper ni borrar.</span><span data-en>A safe gesture leaves the app in a simple view where nothing can break or be deleted.</span></p></div>
+      <div class="step"><div class="num">3</div><h3><span data-es>El niño se comunica</span><span data-en>The child communicates</span></h3><p><span data-es>Toca la foto que quiere, se agranda y suena la palabra. Uno o dos toques, sin esperas.</span><span data-en>They tap the photo they want, it grows and the word plays. One or two taps, no waiting.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ADVANTAGES -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-es>Ventajas</span><span data-en>Advantages</span></span>
+      <h2><span data-es>Por qué TalkPics es diferente</span><span data-en>Why TalkPics is different</span></h2>
+    </div>
+    <div class="adv-grid">
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Privado por defecto</span><span data-en>Private by default</span></b><p><span data-es>Las fotos y datos del niño se quedan en el dispositivo. Nada se sube sin tu permiso explícito.</span><span data-en>The child's photos and data stay on the device. Nothing is uploaded without your explicit consent.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Funciona sin conexión</span><span data-en>Works offline</span></b><p><span data-es>En casa, en el coche o en el súper. Sin depender del wifi ni de un spinner de carga.</span><span data-en>At home, in the car, at the store. No wifi dependence, no loading spinner.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Calmado y sensorial</span><span data-en>Calm &amp; sensory-friendly</span></b><p><span data-es>Colores suaves, animaciones reducibles, control de volumen y modo silencio para niños sensibles.</span><span data-en>Muted colors, reducible animation, volume control and silent mode for sensitive children.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>A prueba de errores</span><span data-en>Mistake-proof</span></b><p><span data-es>Objetivos grandes, mucho espacio y acciones destructivas tras un candado. Nada se rompe con un toque.</span><span data-en>Big targets, generous spacing, destructive actions behind a lock. Nothing breaks with a tap.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Bilingüe y con tu voz</span><span data-en>Bilingual &amp; your voice</span></b><p><span data-es>Muestra una palabra y pronuncia otra, o graba tu propia voz para cada foto.</span><span data-en>Show one word and speak another, or record your own voice for each photo.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Crece con la familia</span><span data-en>Grows with the family</span></b><p><span data-es>Varios perfiles, copias de seguridad y sincronización opcional entre casa y colegio.</span><span data-en>Multiple profiles, backups and optional sync between home and school.</span></p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCES -->
+<section class="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-es>Para quién</span><span data-en>Who it's for</span></span>
+      <h2><span data-es>Hecho para todo el círculo de apoyo</span><span data-en>Made for the whole support circle</span></h2>
+    </div>
+    <div class="aud-grid">
+      <div class="aud"><div class="ail">👧</div><h3><span data-es>Niños y adultos no verbales</span><span data-en>Non-speaking children &amp; adults</span></h3><p><span data-es>Autistas mínimamente verbales que necesitan una forma clara, grande y predecible de expresarse.</span><span data-en>Minimally verbal autistic people who need a clear, big, predictable way to express themselves.</span></p></div>
+      <div class="aud"><div class="ail">👨‍👩‍👧</div><h3><span data-es>Familias</span><span data-en>Families</span></h3><p><span data-es>Padres y hermanos que quieren entender qué necesita su ser querido y reducir la frustración diaria.</span><span data-en>Parents and siblings who want to understand what their loved one needs and reduce daily frustration.</span></p></div>
+      <div class="aud"><div class="ail">🧑‍🏫</div><h3><span data-es>Terapeutas y colegios</span><span data-en>Therapists &amp; schools</span></h3><p><span data-es>Logopedas y docentes que buscan una herramienta CAA seria, con datos de uso privados para objetivos de terapia.</span><span data-en>Speech therapists and teachers wanting a serious AAC tool with private usage data for therapy goals.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING / PAYMENT -->
+<section id="precio" class="price">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-es>Precio</span><span data-en>Pricing</span></span>
+      <h2><span data-es>Un pago único. Tuya para siempre.</span><span data-en>One single payment. Yours forever.</span></h2>
+      <p><span data-es>Sin suscripciones ni sorpresas. Pagas 10€ y descargas la app al instante.</span><span data-en>No subscriptions, no surprises. Pay €10 and download the app instantly.</span></p>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tag"><span class="amount">10</span><span class="cur">€</span></div>
+      <p class="price-sub"><span data-es>Pago único · Todas las funciones · Todas las plataformas</span><span data-en>One-time payment · All features · All platforms</span></p>
+
+      <ul class="incl">
+        <li><span class="c">✓</span> <span data-es>App completa para iPad, iPhone y Android</span><span data-en>Full app for iPad, iPhone and Android</span></li>
+        <li><span class="c">✓</span> <span data-es>Fotos, voz, categorías, modo simple y tira de frases</span><span data-en>Photos, voice, categories, simple mode and sentence strip</span></li>
+        <li><span class="c">✓</span> <span data-es>Funciona sin internet y sin anuncios</span><span data-en>Works offline and ad-free</span></li>
+        <li><span class="c">✓</span> <span data-es>Actualizaciones incluidas</span><span data-en>Updates included</span></li>
+      </ul>
+
+      <div class="pay-methods">
+        <div class="pm">
+          <span class="pmic">🏦</span>
+          <div class="pmbody">
+            <b><span data-es>Transferencia bancaria</span><span data-en>Bank transfer</span></b>
+            <code>IBAN: ESXX XXXX XXXX XXXX XXXX XXXX</code><br>
+            <span data-es>Titular: [Tu nombre] · Concepto: TalkPics + tu email</span><span data-en>Holder: [Your name] · Reference: TalkPics + your email</span>
+          </div>
+        </div>
+        <div class="pm">
+          <span class="pmic">📲</span>
+          <div class="pmbody">
+            <b>Bizum</b>
+            <code>+34 XXX XXX XXX</code><br>
+            <span data-es>Concepto: TalkPics + tu email</span><span data-en>Reference: TalkPics + your email</span>
+          </div>
+        </div>
+        <div class="pm">
+          <span class="pmic">💳</span>
+          <div class="pmbody">
+            <b>PayPal</b>
+            <span data-es>Paga de forma segura con tarjeta o saldo PayPal.</span><span data-en>Pay securely with card or PayPal balance.</span><br>
+            <a href="https://paypal.me/TU_USUARIO" style="color:var(--accent);font-weight:700;font-size:14px">paypal.me/TU_USUARIO</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps-pay">
+        <ol>
+          <li><span data-es>Paga 10€ por cualquiera de los métodos e incluye tu email en el concepto.</span><span data-en>Pay €10 by any method and include your email in the reference.</span></li>
+          <li><span data-es>Pulsa "Descargar" para obtener la app al momento.</span><span data-en>Tap "Download" to get the app right away.</span></li>
+          <li><span data-es>¿Algún problema? Escríbeme y lo resolvemos.</span><span data-en>Any issue? Write to me and we'll sort it out.</span></li>
+        </ol>
+      </div>
+
+      <div class="cta-row" style="justify-content:center">
+        <a href="TalkPics.html" class="btn"><span data-es>⬇ Abrir la app</span><span data-en>⬇ Open the app</span></a>
+        <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Pago%20y%20descarga" class="btn ghost"><span data-es>Ayuda con el pago</span><span data-en>Payment help</span></a>
+      </div>
+      <p class="price-note"><span data-es>Pago seguro. Si el pago por transferencia o Bizum necesita verificación, recibirás el enlace por email en pocas horas.</span><span data-en>Secure payment. If a transfer or Bizum needs verification, you'll get the link by email within a few hours.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta" class="final">
+  <div class="wrap">
+    <h2><span data-es>Dale una voz. Por solo 10€.</span><span data-en>Give them a voice. For just €10.</span></h2>
+    <p><span data-es>Un pago único y la app es tuya para siempre. Empieza hoy a comunicaros con fotos reales.</span><span data-en>One single payment and the app is yours forever. Start communicating with real photos today.</span></p>
+    <div class="cta-row" style="justify-content:center">
+      <a href="#precio" class="btn"><span data-es>Comprar por 10€</span><span data-en>Buy for €10</span></a>
+      <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Colaboraci%C3%B3n" class="btn ghost"><span data-es>Contactar / Colaborar</span><span data-en>Contact / Partner</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="logo">◉</span> TalkPics</div>
+    <p><span data-es>Comunicación con fotos reales para personas autistas no verbales y sus familias.</span><span data-en>Real-photo communication for non-speaking autistic people and their families.</span></p>
+    <p style="margin-top:8px">© 2026 TalkPics · sebaandrada@gmail.com</p>
+  </div>
+</footer>
+
+<script>
+  function setLang(l){
+    document.body.classList.toggle('en', l==='en');
+    document.documentElement.lang = l;
+    document.getElementById('es').classList.toggle('on', l==='es');
+    document.getElementById('en').classList.toggle('on', l==='en');
+  }
+</script>
+</body>
+</html>
