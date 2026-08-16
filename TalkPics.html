@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f4f1ea">
+<title>TalkPics — Comunicación con fotos</title>
+<style>
+  :root{
+    --bg:#f4f1ea; --card:#ffffff; --ink:#2b2b2b; --muted:#7a756c;
+    --line:#e3ddd0; --accent:#3a7d5d; --accent-soft:#dff0e7;
+    --star:#e0a92e; --danger:#c0563f; --shadow:0 2px 10px rgba(0,0,0,.08);
+    --radius:22px; --tap:64px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); overflow:hidden;
+    -webkit-user-select:none; user-select:none; touch-action:manipulation;
+  }
+  #app{display:flex; flex-direction:column; height:100dvh;}
+
+  /* ---------- Top bar ---------- */
+  header{
+    display:flex; align-items:center; gap:10px; padding:10px 12px;
+    background:var(--card); border-bottom:1px solid var(--line); flex:none;
+  }
+  .title{font-size:20px; font-weight:800; letter-spacing:.3px; margin-right:auto; display:flex; align-items:center; gap:8px;}
+  .title small{font-weight:600; color:var(--muted); font-size:12px;}
+  .iconbtn{
+    min-width:var(--tap); height:var(--tap); border:none; border-radius:18px;
+    background:var(--accent-soft); color:var(--accent); font-size:26px; font-weight:700;
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer; padding:0 14px; gap:8px;
+  }
+  .iconbtn.plain{background:#efe9dd; color:var(--ink);}
+  .iconbtn.solid{background:var(--accent); color:#fff;}
+  .iconbtn.danger{background:#f6ddd5; color:var(--danger);}
+  .iconbtn span.lbl{font-size:16px; font-weight:700;}
+  .hint{position:fixed; left:50%; transform:translateX(-50%); bottom:18px; background:#2b2b2b; color:#fff; padding:10px 16px; border-radius:30px; font-size:15px; opacity:0; transition:opacity .2s; pointer-events:none; z-index:60;}
+  .hint.show{opacity:.95;}
+
+  /* ---------- Categories ---------- */
+  nav{display:flex; flex-wrap:wrap; gap:8px; padding:10px 12px; background:var(--card); border-bottom:1px solid var(--line); flex:none;}
+  .cat{
+    flex:none; padding:0 14px; height:48px; border-radius:26px; border:2px solid var(--line);
+    background:#fff; font-size:16px; font-weight:700; color:var(--muted); display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  }
+  .cat.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .cat .dot{font-size:20px;}
+
+  /* ---------- Caregiver toolbar ---------- */
+  #carebar{display:none; gap:8px; padding:8px 12px; background:#fbf8f1; border-bottom:1px solid var(--line); align-items:center; flex:none; flex-wrap:wrap;}
+  body.care #carebar{display:flex;}
+  #search{flex:1; min-width:140px; height:46px; border-radius:14px; border:2px solid var(--line); padding:0 14px; font-size:16px; background:#fff; color:var(--ink);}
+  select.sortsel{height:46px; border-radius:14px; border:2px solid var(--line); padding:0 10px; font-size:15px; background:#fff;}
+
+  /* ---------- Board ---------- */
+  main{flex:1; overflow-y:auto; padding:14px; -webkit-overflow-scrolling:touch;}
+  .grid{display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+  body.simple .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px;}
+  .pcard{
+    position:relative; background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden; cursor:pointer; aspect-ratio:1/1.18; display:flex; flex-direction:column;
+  }
+  .pcard .img{flex:1; background:#eee center/cover no-repeat; min-height:0;}
+  .pcard .name{padding:10px 8px; text-align:center; font-size:20px; font-weight:800; line-height:1.1;}
+  body.simple .pcard .name{font-size:26px; padding:14px 8px;}
+  .pcard .fav{position:absolute; top:8px; left:8px; font-size:24px; filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));}
+  .pcard .edit{position:absolute; top:8px; right:8px; width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,.92); border:none; font-size:20px; display:none; align-items:center; justify-content:center; cursor:pointer;}
+  body.care .pcard .edit{display:flex;}
+  .empty{text-align:center; color:var(--muted); margin-top:60px; font-size:18px; line-height:1.6;}
+  /* ----- Móvil: tarjetas más chicas (más por fila) ----- */
+  @media (max-width:600px){
+    main{padding:10px;}
+    .grid{gap:10px; grid-template-columns:repeat(auto-fill,minmax(96px,1fr));}
+    body.simple .grid{gap:12px; grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+    .pcard{border-radius:16px;}
+    .pcard .name{font-size:15px; padding:7px 4px;}
+    body.simple .pcard .name{font-size:19px; padding:9px 6px;}
+    .pcard .fav{font-size:18px; top:5px; left:5px;}
+    .pcard .edit{width:34px; height:34px; font-size:16px; top:5px; right:5px;}
+  }
+  @media (max-width:380px){
+    .grid{grid-template-columns:repeat(auto-fill,minmax(86px,1fr));}
+    body.simple .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
+  }
+
+  /* ---------- Zoom overlay ---------- */
+  #zoom{position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; flex-direction:column;
+    background:rgba(20,20,20,.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);}
+  #zoom.show{display:flex;}
+  #zoomCard{width:75vw; height:75vh; max-width:75vh; background:#fff; border-radius:30px; overflow:hidden;
+    box-shadow:0 0 0 8px var(--accent), 0 18px 50px rgba(0,0,0,.45); display:flex; flex-direction:column;
+    transform:scale(.8); opacity:0; transition:transform .25s ease, opacity .25s ease;}
+  #zoom.show #zoomCard{transform:scale(1); opacity:1;}
+  #zoomCard .zimg{flex:1; background:#fff center/contain no-repeat; min-height:0;}
+  #zoomCard .zname{padding:14px; text-align:center; font-size:min(8vw,46px); font-weight:900;}
+  #closeZoom{position:fixed; top:18px; right:18px; height:62px; border-radius:20px; background:#fff; color:var(--danger);
+    border:none; font-size:24px; font-weight:900; display:inline-flex; align-items:center; gap:10px; padding:0 22px; cursor:pointer; box-shadow:var(--shadow); z-index:81;}
+  #closeZoom .x{font-size:30px;}
+
+  /* ---------- Sentence strip (hasta 10) ---------- */
+  #strip{display:none; gap:10px; align-items:center; padding:10px 12px; background:var(--card); border-top:1px solid var(--line); flex:none;}
+  body.strip #strip{display:flex;}
+  #stripItems{flex:1; display:flex; gap:8px; overflow-x:auto; min-height:78px; align-items:center; padding:2px;}
+  #stripItems::-webkit-scrollbar{display:none;}
+  .schip{flex:none; width:66px; position:relative; display:flex; flex-direction:column; align-items:center; gap:3px;}
+  .schip .thumb{width:66px; height:56px; border-radius:14px; background:center/cover no-repeat #eee; border:2px solid var(--line);}
+  .schip .lab{font-size:11px; font-weight:700; color:var(--ink); line-height:1.05; max-width:66px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;}
+  .schip.slot .thumb{background:#f5f1e8; border:2px dashed #d8d2c4; display:flex; align-items:center; justify-content:center; color:#c3bba7; font-size:22px; font-weight:800;}
+  #stripItems .ph{color:var(--muted); font-size:15px; font-weight:600; padding:0 4px;}
+
+  /* ---------- Modals ---------- */
+  .scrim{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:90; display:none; align-items:center; justify-content:center; padding:18px;}
+  .scrim.show{display:flex;}
+  .sheet{background:#fff; border-radius:24px; width:100%; max-width:460px; max-height:90dvh; overflow-y:auto; padding:20px;}
+  .sheet h2{margin:0 0 14px; font-size:22px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:14px; font-weight:700; color:var(--muted); margin-bottom:6px;}
+  .field input[type=text], .field select{width:100%; height:52px; border-radius:14px; border:2px solid var(--line); padding:0 14px; font-size:18px; background:#fff; color:var(--ink);}
+  .row{display:flex; gap:10px;}
+  .row .iconbtn{flex:1;}
+  .bigbtn{width:100%; height:60px; border:none; border-radius:16px; font-size:19px; font-weight:800; cursor:pointer; margin-top:6px;}
+  .bigbtn.primary{background:var(--accent); color:#fff;}
+  .bigbtn.ghost{background:#efe9dd; color:var(--ink);}
+  .bigbtn.danger{background:#f6ddd5; color:var(--danger);}
+  .toggle{display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-size:18px; font-weight:600;}
+  .sw{width:60px; height:34px; border-radius:20px; background:#d8d2c4; position:relative; transition:.2s; flex:none; cursor:pointer;}
+  .sw.on{background:var(--accent);}
+  .sw::after{content:""; position:absolute; top:3px; left:3px; width:28px; height:28px; border-radius:50%; background:#fff; transition:.2s;}
+  .sw.on::after{left:29px;}
+  .preview{width:100%; height:180px; border-radius:16px; background:#f0ece2 center/contain no-repeat; margin-bottom:12px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:15px;}
+  .tagwrap{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .tagpill{padding:8px 14px; border-radius:20px; background:#efe9dd; font-size:15px; font-weight:600; cursor:pointer; border:2px solid transparent;}
+  .tagpill.on{background:var(--accent-soft); border-color:var(--accent); color:var(--accent);}
+  .hidden{display:none!important;}
+  /* ---- Selector de idioma (segmentado) ---- */
+  .seg{display:flex; gap:8px;}
+  .segbtn{flex:1; height:54px; border-radius:14px; border:2px solid var(--line); background:#fff; color:var(--muted); font-size:17px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;}
+  .segbtn.on{background:var(--accent); border-color:var(--accent); color:#fff;}
+  /* ---- Créditos / licencia ---- */
+  .credits{margin:16px 0 6px; padding:14px; border:1px solid var(--line); border-radius:14px; background:#fbf8f1;}
+  .credits-h{font-size:14px; font-weight:800; color:var(--ink); margin-bottom:6px;}
+  .credits p{font-size:12px; color:var(--muted); line-height:1.5; margin:0;}
+  .credits a{color:var(--accent); font-weight:700;}
+  /* ---- Nota de atribución bajo el botón de ARASAAC ---- */
+  .araNote{font-size:10.5px; line-height:1.4; color:var(--muted); margin:6px 4px 0; text-align:center;}
+  .araNote a{color:var(--accent); font-weight:600;}
+  /* ---- Resultados del buscador ARASAAC ---- */
+  #araResults .aracard{background:#fff; border:2px solid var(--line); border-radius:14px; padding:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; aspect-ratio:1/1;}
+  #araResults .aracard:active{transform:scale(.95);}
+  #araResults .aracard img{max-width:100%; max-height:100%; pointer-events:none;}
+
+  /* ---------- Respuesta táctil inmediata (causa → efecto) ---------- */
+  .pcard{transition:transform .09s ease, box-shadow .15s ease;}
+  .pcard:active{transform:scale(.95);}
+  .pcard.picked{box-shadow:0 0 0 5px var(--accent), var(--shadow);}
+  .cat{transition:transform .09s ease;}
+  .cat:active{transform:scale(.94);}
+  /* Indicador de voz de familiar dentro del nombre */
+  .pcard .name .micdot{font-size:.8em; opacity:.85;}
+
+  /* ---------- Accesibilidad: foco visible (teclado / acceso por barrido) ---------- */
+  button:focus-visible, .pcard:focus-visible, .cat:focus-visible, input:focus-visible, select:focus-visible, .sw:focus-visible{
+    outline:4px solid #2f6ef0; outline-offset:3px;
+  }
+
+  /* ---------- Pulso mientras "habla" (une audio + imagen) ---------- */
+  @keyframes speakpulse{
+    0%,100%{box-shadow:0 0 0 8px var(--accent), 0 18px 50px rgba(0,0,0,.45);}
+    50%{box-shadow:0 0 0 15px var(--accent), 0 18px 50px rgba(0,0,0,.45);}
+  }
+  #zoomCard.speaking{animation:speakpulse 1s ease-in-out infinite;}
+
+  /* ---------- Modo calmo / menos movimiento (sensorial) ---------- */
+  body.calm #zoomCard{transition:none; transform:none; opacity:1;}
+  body.calm #zoom{backdrop-filter:none; -webkit-backdrop-filter:none; background:rgba(20,20,20,.72);}
+  body.calm #zoomCard.speaking{animation:none;}
+  body.calm .pcard, body.calm .cat{transition:none;}
+  body.calm .pcard:active, body.calm .cat:active{transform:none;}
+  @media (prefers-reduced-motion: reduce){
+    #zoomCard{transition:none;}
+    #zoomCard.speaking{animation:none;}
+  }
+
+  /* ---------- Grabar voz (editor) ---------- */
+  #recBtn.recording{background:var(--danger); color:#fff; animation:recblink 1s steps(1) infinite;}
+  @keyframes recblink{50%{opacity:.55;}}
+
+  /* ---------- Quitar una imagen de la tira de frases ---------- */
+  .schip .rm{position:absolute; top:0; right:0; width:24px; height:24px; border-radius:50%;
+    background:var(--danger); color:#fff; font-size:14px; font-weight:900; line-height:1;
+    display:flex; align-items:center; justify-content:center; border:2px solid #fff; cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="title">🗣️ TalkPics <small id="modeLabel">modo niño</small></div>
+    <button class="iconbtn plain hidden" id="addBtn" title="Agregar" aria-label="Agregar foto">＋ <span class="lbl" data-i18n="lblPhoto">Foto</span></button>
+    <button class="iconbtn plain hidden" id="setBtn" title="Ajustes" aria-label="Ajustes">⚙️</button>
+    <button class="iconbtn" id="lockBtn" title="Editar (mantén presionado)" aria-label="Modo editor: mantén presionado">🔒</button>
+    <button class="iconbtn solid hidden" id="doneBtn" title="Listo" aria-label="Listo, volver a modo niño">✓ <span class="lbl" data-i18n="lblDone">Listo</span></button>
+  </header>
+
+  <nav id="cats"></nav>
+
+  <div id="carebar">
+    <input id="search" type="text" placeholder="Buscar por nombre o etiqueta…" data-i18n-ph="searchPh">
+    <select class="sortsel" id="sortSel">
+      <option value="manual" data-i18n="sortManual">Orden manual</option>
+      <option value="alpha" data-i18n="sortAlpha">A → Z</option>
+      <option value="recent" data-i18n="sortRecent">Recientes</option>
+      <option value="used" data-i18n="sortUsed">Más usadas</option>
+    </select>
+    <button class="iconbtn solid" id="shareBar" title="Guardar / Compartir">📤 <span class="lbl" data-i18n="lblSave">Guardar</span></button>
+  </div>
+
+  <main><div class="grid" id="grid"></div><div class="empty hidden" id="empty"></div></main>
+
+  <div id="strip">
+    <div id="stripItems"></div>
+    <button class="iconbtn solid" id="playStrip">▶</button>
+    <button class="iconbtn danger" id="clearStrip">⌫</button>
+  </div>
+</div>
+
+<!-- Zoom -->
+<div id="zoom" role="dialog" aria-modal="true" aria-label="Imagen seleccionada">
+  <button id="closeZoom" aria-label="Cerrar"><span class="x">✕</span> Cerrar</button>
+  <div id="zoomCard"><div class="zimg" id="zImg"></div><div class="zname" id="zName"></div></div>
+</div>
+
+<!-- Add source choice -->
+<div class="scrim" id="addScrim">
+  <div class="sheet">
+    <h2 data-i18n="addTitle">Agregar una imagen</h2>
+    <button class="bigbtn primary" id="takePhoto" data-i18n="takePhoto">📷 Tomar una foto</button>
+    <button class="bigbtn ghost" id="pickPhoto" style="margin-top:12px" data-i18n="pickPhoto">🖼️ Elegir de la galería</button>
+    <button class="bigbtn ghost" id="arasaacOpen" style="margin-top:12px" data-i18n="arasaacBtn">🔎 Buscar pictograma (ARASAAC)</button>
+    <div class="araNote">Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.</div>
+    <button class="bigbtn ghost" id="addCancel" style="margin-top:18px" data-i18n="cancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- Cámara en vivo -->
+<div class="scrim" id="camScrim">
+  <div class="sheet" style="text-align:center">
+    <h2 data-i18n="takePhoto">📷 Tomar una foto</h2>
+    <div style="position:relative; width:100%; max-width:340px; margin:0 auto 14px; aspect-ratio:1/1; background:#000; border-radius:16px; overflow:hidden">
+      <video id="camVideo" playsinline autoplay muted style="width:100%; height:100%; object-fit:cover"></video>
+    </div>
+    <button class="bigbtn primary" id="camShoot">📸 Capturar</button>
+    <button class="bigbtn ghost" id="camFlip" style="margin-top:12px">🔄 Cambiar cámara</button>
+    <button class="bigbtn ghost" id="camCancel" style="margin-top:12px" data-i18n="cancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- Buscador de pictogramas ARASAAC -->
+<div class="scrim" id="arasaacScrim">
+  <div class="sheet">
+    <h2 data-i18n="arasaacTitle">Buscar pictograma</h2>
+    <div style="display:flex; gap:10px; margin-bottom:12px">
+      <input type="text" id="araQuery" placeholder="Escribe una palabra… (ej: comer)" data-i18n-ph="arasaacPh" style="flex:1; height:52px; border-radius:14px; border:2px solid var(--line); padding:0 14px; font-size:18px; background:#fff; color:var(--ink)">
+      <button class="iconbtn solid" id="araGo" aria-label="Buscar">🔎</button>
+    </div>
+    <div id="araStatus" style="font-size:14px; color:var(--muted); min-height:20px; margin-bottom:8px"></div>
+    <div class="grid" id="araResults" style="grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:10px; max-height:44vh; overflow-y:auto"></div>
+    <div style="font-size:12px; color:var(--muted); margin-top:12px; line-height:1.4" data-i18n="arasaacHint">Pictogramas de ARASAAC. Necesita internet solo para buscar; una vez elegido queda guardado y funciona sin conexión.</div>
+    <button class="bigbtn ghost" id="araCancel" style="margin-top:12px" data-i18n="cancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- Edit / create picture -->
+<div class="scrim" id="editScrim">
+  <div class="sheet">
+    <h2 id="editTitle">Nueva imagen</h2>
+    <div class="preview" id="editPreview" data-i18n="noImg">sin imagen</div>
+    <button class="bigbtn ghost" id="arasaacOpen2" style="margin:0 0 12px" data-i18n="arasaacBtn">🔎 Buscar pictograma (ARASAAC)</button>
+    <div class="field"><label data-i18n="fldName">Nombre (lo que dice en voz alta)</label><input type="text" id="fName" placeholder="Ej: Agua"></div>
+    <div class="field"><label data-i18n="fldNameCa">Nombre en catalán (opcional)</label><input type="text" id="fNameCa" placeholder="Ex: Aigua"></div>
+    <div class="field"><label data-i18n="fldCat">Categoría</label><select id="fCat"></select></div>
+    <div class="field"><label data-i18n="fldTags">Etiquetas (para filtrar)</label>
+      <input type="text" id="fTags" placeholder="Ej: desayuno, favorito">
+      <div class="tagwrap" id="tagSuggest"></div>
+    </div>
+    <div class="field"><label data-i18n="fldVoice">🎙️ Voz de un familiar (opcional)</label>
+      <div class="row">
+        <button class="bigbtn ghost" id="recBtn" style="margin-top:0">🎙️ Grabar</button>
+        <button class="bigbtn ghost hidden" id="recPlay" style="margin-top:0" data-i18n="recHear">▶️ Oír</button>
+        <button class="bigbtn danger hidden" id="recDel" style="margin-top:0" aria-label="Borrar grabación">🗑️</button>
+      </div>
+      <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.4" data-i18n="voiceHelp">Graba a mamá, papá o a quien acompaña diciendo la palabra. El peque suele responder mejor a una voz conocida. Si hay grabación, se reproduce en lugar de la voz del dispositivo.</div>
+    </div>
+    <div class="toggle" style="border-top:1px solid var(--line)"><span data-i18n="fav">⭐ Favorito</span> <div class="sw" id="fFav"></div></div>
+    <button class="bigbtn primary" id="savePic" style="margin-top:16px" data-i18n="save">Guardar</button>
+    <button class="bigbtn danger hidden" id="delPic" style="margin-top:10px" data-i18n="delPic">🗑️ Borrar esta imagen</button>
+    <button class="bigbtn ghost" id="editCancel" style="margin-top:10px" data-i18n="cancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="scrim" id="setScrim">
+  <div class="sheet">
+    <h2 data-i18n="setTitle">Ajustes</h2>
+    <div class="field" style="margin-bottom:16px"><label data-i18n="stLang">Idioma</label>
+      <div class="seg">
+        <button class="segbtn" id="langEs" type="button">🇪🇸 Español</button>
+        <button class="segbtn" id="langCa" type="button">🟨🟥 Català</button>
+      </div>
+    </div>
+    <div class="toggle"><span data-i18n="stSimple">🔠 Modo simple grande</span> <div class="sw" id="swSimple"></div></div>
+    <div class="toggle"><span data-i18n="stSpeak">🗣️ Hablar en voz alta</span> <div class="sw" id="swSpeak"></div></div>
+    <div class="toggle"><span data-i18n="stStrip">📝 Tira de frases siempre visible (hasta 10)</span> <div class="sw" id="swStrip"></div></div>
+    <div class="toggle"><span data-i18n="stCalm">🌙 Modo calmo (menos movimiento)</span> <div class="sw" id="swCalm"></div></div>
+    <div class="toggle"><span data-i18n="stHaptic">📳 Vibración suave al tocar</span> <div class="sw" id="swHaptic"></div></div>
+    <div class="field" style="margin-top:16px"><label data-i18n="stVoice">Voz</label>
+      <select id="voiceSel"></select>
+      <div style="font-size:12px; color:var(--muted); margin-top:4px" data-i18n="stVoiceHelp">Elige una voz en español o catalán. Toca para escuchar una prueba.</div>
+    </div>
+    <div class="field"><label data-i18n="stRate">Velocidad de la voz</label>
+      <input type="range" id="rate" min="0.5" max="1.2" step="0.1" value="0.8" style="width:100%">
+    </div>
+    <div class="field"><label data-i18n="stVol">Volumen</label>
+      <input type="range" id="vol" min="0" max="1" step="0.1" value="1" style="width:100%">
+    </div>
+    <button class="bigbtn ghost" id="helpBtn" style="margin-bottom:14px" data-i18n="help">❓ Cómo se usa</button>
+    <div class="field"><label data-i18n="newCat">Nueva categoría</label>
+      <div class="row"><input type="text" id="newCatName" placeholder="Nombre" data-i18n-ph="catNamePh"><button class="iconbtn solid" id="addCat">＋</button></div>
+    </div>
+    <button class="bigbtn primary" id="shareBtn" data-i18n="shareApp">📤 Compartir / Exportar app</button>
+    <div style="font-size:13px; color:var(--muted); margin:6px 2px 14px; line-height:1.4">Crea un archivo único con la app dentro. Podrás elegir <b>con fotos</b> (copia completa, para respaldo o tu otro dispositivo) o <b>sin fotos</b> (solo la plantilla, para compartir con otra familia cuidando la privacidad). En el móvil abre WhatsApp/correo para enviarlo; en el ordenador lo descarga. Sin internet ni instalar nada.</div>
+    <button class="bigbtn ghost" id="exportBtn" data-i18n="backup">💾 Copia de seguridad (.json)</button>
+    <button class="bigbtn ghost" id="importBtn" style="margin-top:10px" data-i18n="restore">📂 Restaurar copia (.json)</button>
+    <div class="credits">
+      <div class="credits-h" data-i18n="creditsTitle">Créditos y licencia</div>
+      <p>Algunas imágenes usan pictogramas de ARASAAC. Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.</p>
+    </div>
+    <button class="bigbtn ghost" id="setClose" style="margin-top:18px" data-i18n="close">Cerrar</button>
+  </div>
+</div>
+
+<!-- Elegir cómo exportar: con o sin fotos -->
+<div class="scrim" id="exportScrim">
+  <div class="sheet">
+    <h2>📤 Compartir / Exportar</h2>
+    <p style="font-size:14px; color:var(--muted); margin:0 0 14px; line-height:1.45">Crea un archivo único con la app dentro. Elige si incluir las fotos.</p>
+    <button class="bigbtn primary" id="expWith">📷 Con fotos — copia completa</button>
+    <div style="font-size:12.5px; color:var(--muted); margin:6px 2px 14px; line-height:1.4">Incluye tus fotos y grabaciones. Ideal como respaldo o para pasar la app a tu otro dispositivo.</div>
+    <button class="bigbtn ghost" id="expWithout">🔒 Sin fotos — solo la plantilla</button>
+    <div style="font-size:12.5px; color:var(--muted); margin:6px 2px 16px; line-height:1.4">Comparte nombres, categorías, ajustes y pictogramas, <b>sin las fotos ni las grabaciones</b> de tu peque. Ideal para enviar a otra familia o al terapeuta cuidando la privacidad.</div>
+    <button class="bigbtn ghost" id="expCancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- Bienvenida (primera vez) -->
+<!-- Aviso para guardar/exportar al salir del editor -->
+<div class="scrim" id="saveScrim">
+  <div class="sheet">
+    <h2>💾 Guarda tus cambios</h2>
+    <p style="font-size:16px; line-height:1.5; margin:0 0 8px">Agregaste o cambiaste fotos. Para que <b>no se pierdan</b> al mover la app o al pasarla a otro dispositivo, y para <b>compartirlas con otra familia</b>, guarda un archivo con todo incluido.</p>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 16px">Es el archivo que envías al móvil o a la madre: lo abren y ven exactamente tus fotos.</p>
+    <button class="bigbtn primary" id="saveExport">📤 Guardar / Compartir ahora</button>
+    <button class="bigbtn ghost" id="saveLater" style="margin-top:10px">Ahora no</button>
+  </div>
+</div>
+
+<div class="scrim" id="welcomeScrim">
+  <div class="sheet">
+    <h2 data-i18n="welcomeTitle">🗣️ Bienvenido/a a TalkPics</h2>
+    <p style="font-size:16px; line-height:1.5; margin:0 0 14px" data-i18n-html="welcomeIntro">Una forma sencilla de comunicarse con <b>fotos y dibujos</b>. Pensada para acompañar a peques que hablan poco o no hablan.</p>
+    <div style="font-size:16px; line-height:1.6" data-i18n-html="welcomeBody">
+      <div style="margin-bottom:10px">👉 <b>Tocá una imagen</b>: <b>dice la palabra en voz alta</b> al instante y se suma a la <b>frase</b> de abajo. Toca la miniatura de la frase para verla grande.</div>
+      <div style="margin-bottom:10px">📝 La <b>tira de frases</b> está siempre lista: usa <b>un solo pictograma</b> o arma frases de <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y óyelas con ▶. ⌫ la borra.</div>
+      <div style="margin-bottom:10px">⭐ Arriba cambias de categoría: Comida, Acciones, Salidas…</div>
+      <div style="margin-bottom:10px">🔒 <b>Mantené presionado el candado</b> (arriba) para entrar al <b>modo editor</b>.</div>
+      <div style="margin-bottom:10px">✏️ / ＋ En modo editor podés <b>agregar o cambiar fotos</b> (cámara, galería o <b>buscar un pictograma de ARASAAC</b>) y ponerles nombre.</div>
+      <div style="margin-bottom:10px">🎙️ Podés <b>grabar la voz de un familiar</b> en cada tarjeta. El peque responde mejor a una voz conocida.</div>
+      <div style="margin-bottom:10px">🇪🇸/🟨🟥 En Ajustes ⚙️ cambias entre <b>Español y Català</b> (textos y voz).</div>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin:12px 0 16px" data-i18n-html="welcomeFoot">Todo funciona sin internet y sin crear cuentas. Tus fotos se guardan solo en este dispositivo.</p>
+    <button class="bigbtn primary" id="welcomeClose" data-i18n="welcomeStart">Comenzar</button>
+  </div>
+</div>
+
+<input type="file" id="fileCam" accept="image/*" capture="environment" class="hidden">
+<input type="file" id="fileLib" accept="image/*" multiple class="hidden">
+<input type="file" id="fileRestore" accept="application/json" class="hidden">
+<div class="hint" id="hint"></div>
+
+<!-- Datos incrustados: al exportar la app, aquí quedan guardadas todas las tarjetas y fotos -->
+<script id="embedded-data" type="application/json">null</script>
+
+<script>
+"use strict";
+// Captura una copia limpia del archivo ANTES de modificar la pantalla (para exportar la app completa)
+const PRISTINE_HTML="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+/* ============ Almacenamiento local (IndexedDB, sin internet) ============ */
+const DB_NAME="talkpics", STORE="kv";
+let db=null;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);
+  r.onupgradeneeded=()=>r.result.createObjectStore(STORE);
+  r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);});}
+function dbGet(k){return new Promise((res)=>{const t=db.transaction(STORE).objectStore(STORE).get(k);
+  t.onsuccess=()=>res(t.result); t.onerror=()=>res(null);});}
+function dbSet(k,v){return new Promise((res)=>{const t=db.transaction(STORE,"readwrite").objectStore(STORE).put(v,k);
+  t.onsuccess=()=>res(true); t.onerror=()=>res(false);});}
+
+/* ============ Estado ============ */
+let state={pics:[], cats:[], settings:{}, curCat:null, mode:"child", strip:[]};
+let dirty=false; // hay fotos/cambios sin exportar a un archivo
+function markDirty(){ dirty=true; updateShareBadge(); }
+function updateShareBadge(){
+  const b=document.getElementById("shareBar"); if(!b) return;
+  const l=b.querySelector(".lbl");
+  if(l) l.textContent = dirty ? (t("lblSave")+" •") : t("lblSave");
+  b.style.background = dirty ? "#e0a92e" : "";
+}
+const DEFAULT_SETTINGS={simple:false, speak:true, strip:true, rate:0.8, volume:1, calm:false, haptic:false, lang:"es"};
+const DEFAULT_CATS=[
+  {id:"comida", name:"Comida", nameCa:"Menjar", dot:"🍽️"},
+  {id:"acciones", name:"Acciones", nameCa:"Accions", dot:"🏃"},
+  {id:"emociones", name:"Emociones", nameCa:"Emocions", dot:"😊"},
+  {id:"necesidades", name:"Necesito", nameCa:"Necessito", dot:"🙋"},
+  {id:"lugares", name:"Salidas", nameCa:"Sortides", dot:"🚗"},
+  {id:"respuestas", name:"Respuestas", nameCa:"Respostes", dot:"💬"},
+  {id:"personas", name:"Personas", nameCa:"Persones", dot:"👪"},
+];
+/* ---- Traducción ES → CA de las tarjetas base (pictogramas independientes del idioma) ---- */
+const CA_NAMES={
+  "Agua":"Aigua","Comida":"Menjar","Más":"Més","Menos":"Menys","Fideo":"Fideu","Patata":"Patata","Rabas":"Anelles de calamar","Tortilla":"Truita","Pastas rellenas":"Pasta farcida",
+  "Arroz con salsa de tomate":"Arròs amb salsa de tomàquet","Tortilla de espinaca":"Truita d'espinacs","Chocolate":"Xocolata",
+  "Calamares a la romana":"Calamars a la romana","Patatas bravas":"Patates braves","Patatas fritas":"Patates fregides","Patatas hervidas":"Patates bullides","Agua mineral":"Aigua mineral",
+  "Pan baguette":"Pa baguette","Capeletti de verdura":"Caputxeti de verdura","Chorizo":"Xoriço","Ravioles de verduras":"Raviolis de verdura",
+  "Baño":"Bany","Jugar":"Jugar","Dormir":"Dormir","Ayuda":"Ajuda","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Banyera","Lavarse los dientes":"Rentar-se les dents","Limpiarse la cola":"Netejar-se el cul",
+  "Salir":"Sortir","Ir a la playa":"Anar a la platja","Ir al parque":"Anar al parc","Ir a la escuela":"Anar a l'escola",
+  "Sí":"Sí","No":"No","Mamá":"Mama","Papá":"Papa",
+  "Playa":"Platja","Piscina":"Piscina","Parque de juegos":"Parc infantil",
+  "Feliz":"Content","Triste":"Trist","Enojado":"Enfadat","Cansado":"Cansat","Con miedo":"Amb por","Tranquilo":"Tranquil","Nervioso":"Nerviós","Aburrido":"Avorrit","Sorprendido":"Sorprès","Quiero llorar":"Vull plorar","Me gusta":"M'agrada","No me gusta":"No m'agrada",
+  "Tengo hambre":"Tinc gana","Tengo sed":"Tinc set","Tengo sueño":"Tinc son","Me duele":"Em fa mal","Pis":"Pipí","Caca":"Caca","Frío":"Fred","Calor":"Calor","Abrazo":"Abraçada","Descansar":"Descansar","Medicina":"Medecina",
+  "Quiero":"Vull","No quiero":"No vull","Ya terminé":"Ja he acabat","Otra vez":"Una altra vegada","Espera":"Espera","No sé":"No ho sé","Por favor":"Si us plau","Gracias":"Gràcies","Hola":"Hola","Adiós":"Adéu"
+};
+const SEED=[
+  ["Agua","💧","#dff0e7","comida"],["Comida","🍽️","#fde6d6","comida"],["Más","➕","#e7e3f7","comida"],["Menos","➖","#f1e3d8","comida"],
+  ["Fideo","🍝","#fdeacb","comida"],["Patata","🥔","#efe2c4","comida"],["Rabas","🍤","#f6e3c4","comida"],["Tortilla","🍳","#fdf0c9","comida"],["Pastas rellenas","🥟","#fae2cf","comida"],
+  ["Arroz con salsa de tomate","🍅🍚","#fbe0d6","comida"],["Tortilla de espinaca","🥬🥧","#e4f0d8","comida"],["Chocolate","🍫","#e8d8c8","comida"],
+  ["Calamares a la romana","🍤","#f6e3c4","comida"],["Patatas bravas","🍟🌶️","#fbe0d6","comida"],["Patatas fritas","🍟","#fdf0c9","comida"],["Patatas hervidas","🍲🥔","#eef2e0","comida"],["Agua mineral","💧","#dceefb","comida"],
+  ["Pan baguette","🥖","#f3e6c8","comida"],["Capeletti de verdura","🥬🥟","#e7f0d8","comida"],["Chorizo","🌭","#f5ddc8","comida"],["Ravioles de verduras","🥟🥬","#e7f0d8","comida"],
+  ["Baño","🚽","#d9eefb","acciones"],["Jugar","🧸","#fde6ef","acciones"],
+  ["Dormir","🛏️","#e6e9f5","acciones"],["Ayuda","🙋","#fdeede","acciones"],
+  ["iPad","📱","#e6e9ee","acciones"],["YouTube Kids","▶️","#f8dcd6","acciones"],
+  ["Bañera","🛁","#dceff5","acciones"],["Lavarse los dientes","🪥","#e6f0fa","acciones"],["Limpiarse la cola","💩🧻","#efe6da","acciones"],
+  ["Salir","🚪","#e9f3d8","lugares"],["Ir a la playa","🏖️","#fdf3d2","lugares"],["Ir al parque","🛝","#e3f2d8","lugares"],["Ir a la escuela","🏫","#fde9d6","lugares"],
+  ["Sí","✅","#dff0e7","respuestas"],["No","❌","#f8dcd6","respuestas"],
+  ["Mamá","👩","#fde9f0","personas"],["Papá","👨","#dcecf8","personas"],
+];
+// Tarjetas que se agregan a usuarios que ya tenían la app (una sola vez)
+const ADD_V2=[
+  ["Menos","➖","#f1e3d8","comida"],
+  ["Fideo","🍝","#fdeacb","comida"],["Patata","🥔","#efe2c4","comida"],["Rabas","🍤","#f6e3c4","comida"],["Tortilla","🍳","#fdf0c9","comida"],["Pastas rellenas","🥟","#fae2cf","comida"],
+];
+const ADD_V3=[
+  ["Arroz con salsa de tomate","🍅🍚","#fbe0d6","comida"],["Tortilla de espinaca","🥬🥧","#e4f0d8","comida"],["Chocolate","🍫","#e8d8c8","comida"],
+  ["iPad","📱","#e6e9ee","acciones"],["YouTube Kids","▶️","#f8dcd6","acciones"],
+];
+const ADD_V4=[
+  ["Calamares a la romana","🍤","#f6e3c4","comida"],["Patatas bravas","🍟🌶️","#fbe0d6","comida"],["Patatas fritas","🍟","#fdf0c9","comida"],["Patatas hervidas","🍲🥔","#eef2e0","comida"],["Agua mineral","💧","#dceefb","comida"],
+  ["Bañera","🛁","#dceff5","acciones"],["Lavarse los dientes","🪥","#e6f0fa","acciones"],["Limpiarse la cola","💩🧻","#efe6da","acciones"],
+];
+const ADD_V5=[
+  ["Ir a la playa","🏖️","#fdf3d2","acciones"],["Ir al parque","🛝","#e3f2d8","acciones"],["Ir a la escuela","🏫","#fde9d6","acciones"],
+];
+const ADD_V8=[
+  ["Pan baguette","🥖","#f3e6c8","comida"],["Capeletti de verdura","🥬🥟","#e7f0d8","comida"],["Chorizo","🌭","#f5ddc8","comida"],
+];
+const ADD_V9=[
+  ["Ravioles de verduras","🥟🥬","#e7f0d8","comida"],
+];
+/* ---- Novedades v13: importantes para peques con autismo ---- */
+// Emociones / estados de ánimo — nombrar cómo se siente ayuda mucho a la comunicación
+const EMO=[
+  ["Feliz","😊","#fdf0c9","emociones"],
+  ["Triste","😢","#dceefb","emociones"],
+  ["Enojado","😠","#f8dcd6","emociones"],
+  ["Cansado","😴","#e6e9f5","emociones"],
+  ["Con miedo","😨","#e7e3f7","emociones"],
+  ["Tranquilo","😌","#dff0e7","emociones"],
+  ["Nervioso","😟","#efe6da","emociones"],
+  ["Aburrido","😐","#eef2e0","emociones"],
+  ["Sorprendido","😮","#fde6ef","emociones"],
+  ["Quiero llorar","😭","#dceff5","emociones"],
+  ["Me gusta","👍","#dff0e7","emociones"],
+  ["No me gusta","👎","#f6ddd5","emociones"],
+];
+// Necesidades del cuerpo — pedir lo básico sin hablar
+const NEEDS=[
+  ["Tengo hambre","🍽️","#fde6d6","necesidades"],
+  ["Tengo sed","🥤","#dceefb","necesidades"],
+  ["Tengo sueño","🥱","#e6e9f5","necesidades"],
+  ["Me duele","🤕","#f8dcd6","necesidades"],
+  ["Pis","🚽","#d9eefb","necesidades"],
+  ["Caca","💩","#efe6da","necesidades"],
+  ["Frío","🥶","#dceff5","necesidades"],
+  ["Calor","🥵","#fde9d6","necesidades"],
+  ["Abrazo","🤗","#fde9f0","necesidades"],
+  ["Descansar","🛌","#eef2e0","necesidades"],
+  ["Medicina","💊","#e7f0d8","necesidades"],
+];
+// Palabras clave para armar frases (van en Respuestas)
+const CORE=[
+  ["Quiero","🙋","#dff0e7","respuestas"],
+  ["No quiero","🙅","#f8dcd6","respuestas"],
+  ["Ya terminé","🏁","#eef2e0","respuestas"],
+  ["Otra vez","🔁","#e7e3f7","respuestas"],
+  ["Espera","⏳","#fdeacb","respuestas"],
+  ["No sé","🤷","#efe6da","respuestas"],
+  ["Por favor","🥺","#fde9f0","respuestas"],
+  ["Gracias","🙏","#dceefb","respuestas"],
+  ["Hola","🙌","#fdf0c9","respuestas"],
+  ["Adiós","👋","#fde9d6","respuestas"],
+];
+
+/* ---- Dibuja un pictograma con emoji como imagen ---- */
+function emojiImg(emoji,bg){
+  const c=document.createElement("canvas"); c.width=c.height=400; const x=c.getContext("2d");
+  x.fillStyle=bg; x.fillRect(0,0,400,400);
+  x.textAlign="center"; x.textBaseline="middle";
+  const g=[...emoji];
+  if(g.length<=1){ x.font="220px serif"; x.fillText(emoji,200,210); }
+  else { x.font="150px serif"; x.fillText(g[0],135,205); x.fillText(g[1],270,205); }
+  return c.toDataURL("image/png");
+}
+/* ---- Escenas ilustradas (más realistas que un emoji) ---- */
+function svgImg(svg){ return "data:image/svg+xml,"+encodeURIComponent(svg); }
+const SCENES={
+  playa:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aee3f7"/><stop offset="1" stop-color="#e2f6fc"/></linearGradient></defs><rect width="400" height="400" fill="url(#s)"/><circle cx="320" cy="78" r="44" fill="#ffd34d"/><rect y="225" width="400" height="60" fill="#3aa6d6"/><path d="M0 225 q50 14 100 0 t100 0 t100 0 t100 0 v60 H0 Z" fill="#56b8e0"/><rect y="282" width="400" height="118" fill="#f0d9a7"/><ellipse cx="200" cy="300" rx="190" ry="20" fill="#e7cb92"/><rect x="150" y="248" width="7" height="74" fill="#7a5230"/><path d="M118 250 a38 38 0 0 1 76 0 Z" fill="#e2574c"/><path d="M118 250 a38 38 0 0 1 19 0 l-19 0 Z" fill="#fff"/><path d="M156 250 a38 38 0 0 1 19 0 l-19 0 Z" fill="#fff"/><circle cx="252" cy="322" r="22" fill="#fff" stroke="#e2574c" stroke-width="4"/><path d="M252 300 a22 22 0 0 0 0 44" fill="none" stroke="#3aa6d6" stroke-width="4"/></svg>`,
+  piscina:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#bfe3a6"/><circle cx="350" cy="52" r="30" fill="#ffd34d"/><rect x="22" y="92" width="356" height="284" rx="22" fill="#eef2f4" stroke="#dde4e8" stroke-width="3"/><polygon points="118,128 282,128 350,332 50,332" fill="#ffffff"/><polygon points="132,142 268,142 330,320 70,320" fill="#2f9fd6"/><polygon points="142,154 258,154 312,308 88,308" fill="#39b2e6"/><g stroke="#bfe6f5" stroke-width="5" fill="none" opacity="0.9"><line x1="186" y1="156" x2="152" y2="306"/><line x1="200" y1="156" x2="200" y2="306"/><line x1="214" y1="156" x2="248" y2="306"/></g><path d="M150 300 q50 -12 100 0" stroke="#cfeefb" stroke-width="5" fill="none" opacity="0.8"/><g fill="#cfd6da"><rect x="298" y="250" width="7" height="78" rx="3"/><rect x="326" y="250" width="7" height="78" rx="3"/><rect x="298" y="268" width="35" height="6" rx="3"/><rect x="298" y="290" width="35" height="6" rx="3"/></g></svg>`,
+  parque:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="262" fill="#bfe6f7"/><rect y="262" width="400" height="138" fill="#8fcf6e"/><circle cx="66" cy="66" r="36" fill="#ffd34d"/><rect x="248" y="150" width="11" height="152" fill="#7a5230"/><path d="M256 150 L332 302 L300 302 L240 172 Z" fill="#f2a93b"/><rect x="232" y="138" width="38" height="22" rx="4" fill="#e2574c"/><rect x="66" y="150" width="128" height="11" rx="4" fill="#c98b3a"/><rect x="64" y="150" width="11" height="152" fill="#c98b3a"/><rect x="186" y="150" width="11" height="152" fill="#c98b3a"/><line x1="96" y1="161" x2="104" y2="250" stroke="#888" stroke-width="5"/><line x1="156" y1="161" x2="148" y2="250" stroke="#888" stroke-width="5"/><rect x="98" y="250" width="56" height="13" rx="4" fill="#5b8def"/></svg>`,
+  plato:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#fbe7d0"/><g fill="#b9b2a3"><rect x="70" y="150" width="13" height="150" rx="6"/><rect x="60" y="108" width="8" height="56" rx="4"/><rect x="72" y="104" width="8" height="60" rx="4"/><rect x="84" y="108" width="8" height="56" rx="4"/><rect x="60" y="150" width="32" height="12" rx="6"/></g><g fill="#b9b2a3"><rect x="318" y="150" width="13" height="150" rx="6"/><path d="M331 104 q22 6 0 70 l-13 0 0 -64 q6 -8 13 -6 Z"/></g><circle cx="200" cy="210" r="118" fill="#ffffff" stroke="#dfd8c9" stroke-width="7"/><circle cx="200" cy="210" r="88" fill="none" stroke="#ece5d6" stroke-width="5"/></svg>`
+};
+function sceneImg(k){ return svgImg(SCENES[k]); }
+// Tarjetas con escena ilustrada: [nombre, claveEscena, categoria, favorito]
+const ILLUS=[
+  ["Playa","playa","lugares",true],
+  ["Piscina","piscina","lugares",false],
+  ["Parque de juegos","parque","lugares",false],
+];
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+
+/* ---- Reduce y recorta a cuadrado una foto subida ---- */
+function processImage(dataUrl){return new Promise((res)=>{
+  const img=new Image(); img.onload=()=>{
+    const size=Math.min(img.width,img.height), max=900;
+    const out=Math.min(size,max), c=document.createElement("canvas"); c.width=c.height=out;
+    const x=c.getContext("2d");
+    x.drawImage(img,(img.width-size)/2,(img.height-size)/2,size,size,0,0,out,out);
+    res(c.toDataURL("image/jpeg",0.82));
+  }; img.src=dataUrl;});}
+
+/* ============ Persistencia ============ */
+async function save(){await dbSet("pics",state.pics); await dbSet("cats",state.cats); await dbSet("settings",state.settings);}
+function readEmbedded(){
+  const el=document.getElementById("embedded-data");
+  if(!el) return null;
+  try{ const d=JSON.parse(el.textContent.trim()); return (d&&Array.isArray(d.pics)&&d.pics.length)?d:null; }catch(e){ return null; }
+}
+async function load(){
+  state.pics=await dbGet("pics"); state.cats=await dbGet("cats"); state.settings=await dbGet("settings");
+  if(!state.settings) state.settings={...DEFAULT_SETTINGS};
+  if(!state.cats) state.cats=[...DEFAULT_CATS];
+  // Si no hay datos en este dispositivo pero el archivo trae datos incrustados (app compartida), usarlos
+  if(!state.pics){
+    const emb=readEmbedded();
+    if(emb){
+      state.pics=emb.pics;
+      if(Array.isArray(emb.cats)&&emb.cats.length) state.cats=emb.cats;
+      state.settings={...DEFAULT_SETTINGS, ...(emb.settings||{})};
+      await save();
+      return;
+    }
+  }
+  if(!state.pics){
+    state.pics=SEED.map((s,i)=>({id:uid(), name:s[0], img:emojiImg(s[1],s[2]), cat:s[3], tags:[], fav:i<3, uses:0, created:Date.now()+i, pos:i}));
+    ILLUS.forEach((s,i)=>state.pics.push({id:uid(), name:s[0], img:sceneImg(s[1]), cat:s[2], tags:[], fav:!!s[3], uses:0, created:Date.now()+SEED.length+i, pos:SEED.length+i}));
+    const cm0=state.pics.find(p=>p.name==="Comida"); if(cm0) cm0.img=sceneImg("plato");
+    state.settings.seedV2=true; state.settings.seedV3=true; state.settings.seedV4=true; state.settings.seedV5=true; state.settings.seedV6=true; state.settings.seedV7=true; state.settings.seedV8=true; state.settings.seedV9=true; state.settings.seedV10=true; state.settings.seedV11=true; state.settings.seedV12=true;
+    await save();
+  }
+  const existe=n=>state.pics.some(p=>p.name.toLowerCase()===n.toLowerCase());
+  const addCards=list=>list.forEach((s,i)=>{ if(!existe(s[0]))
+    state.pics.push({id:uid(), name:s[0], img:emojiImg(s[1],s[2]), cat:s[3], tags:[], fav:false, uses:0, created:Date.now()+i, pos:state.pics.length+i}); });
+  // Migración: usuarios que ya tenían la app reciben las novedades (una sola vez)
+  if(!state.settings.seedV2){ addCards(ADD_V2); state.settings.rate=0.8; state.settings.seedV2=true; await save(); }
+  if(!state.settings.seedV3){
+    addCards(ADD_V3);
+    const rabas=state.pics.find(p=>p.name.toLowerCase()==="rabas"); if(rabas) rabas.img=emojiImg("🍤","#f6e3c4");
+    state.settings.seedV3=true; await save();
+  }
+  if(!state.settings.seedV4){
+    addCards(ADD_V4);
+    const te=state.pics.find(p=>p.name.toLowerCase()==="tortilla de espinaca"); if(te) te.img=emojiImg("🥬🥧","#e4f0d8");
+    state.settings.seedV4=true; await save();
+  }
+  if(!state.settings.seedV5){ addCards(ADD_V5); state.settings.seedV5=true; await save(); }
+  if(!state.settings.seedV6){
+    if(!state.cats.some(c=>c.id==="lugares")){
+      const cat={id:"lugares",name:"Salidas",dot:"🚗"}, idx=state.cats.findIndex(c=>c.id==="acciones");
+      if(idx>=0) state.cats.splice(idx+1,0,cat); else state.cats.push(cat);
+    }
+    ["salir","ir a la playa","ir al parque","ir a la escuela"].forEach(n=>{
+      const p=state.pics.find(x=>x.name.toLowerCase()===n); if(p) p.cat="lugares"; });
+    state.settings.seedV6=true; await save();
+  }
+  if(!state.settings.seedV7){
+    ILLUS.forEach((s,i)=>{ if(!existe(s[0]))
+      state.pics.push({id:uid(), name:s[0], img:sceneImg(s[1]), cat:s[2], tags:[], fav:!!s[3], uses:0, created:Date.now()+i, pos:state.pics.length+i}); });
+    state.settings.seedV7=true; await save();
+  }
+  if(!state.settings.seedV8){ addCards(ADD_V8); state.settings.seedV8=true; await save(); }
+  if(!state.settings.seedV9){
+    const a=state.pics.find(p=>p.name.toLowerCase()==="arroz con tomate"); if(a) a.name="Arroz con salsa de tomate";
+    addCards(ADD_V9); state.settings.seedV9=true; await save();
+  }
+  if(!state.settings.seedV10){
+    // Repara las escenas que se veían en negro (colores mal codificados)
+    const fix={"playa":"playa","piscina":"piscina","parque de juegos":"parque"};
+    state.pics.forEach(p=>{ const k=fix[p.name.toLowerCase()]; if(k) p.img=sceneImg(k); });
+    state.settings.seedV10=true; await save();
+  }
+  if(!state.settings.seedV11){
+    const cm=state.pics.find(p=>p.name.toLowerCase()==="comida"); if(cm) cm.img=sceneImg("plato");
+    state.settings.seedV11=true; await save();
+  }
+  if(!state.settings.seedV12){
+    // Vuelve a dibujar las escenas con la última versión (piscina en perspectiva, etc.)
+    const fix={"playa":"playa","piscina":"piscina","parque de juegos":"parque","comida":"plato"};
+    state.pics.forEach(p=>{ const k=fix[p.name.toLowerCase()]; if(k) p.img=sceneImg(k); });
+    state.settings.seedV12=true; await save();
+  }
+  if(!state.settings.seedV13){
+    // Nuevas categorías y tarjetas: emociones, necesidades del cuerpo y palabras para armar frases
+    const ensureCat=(cat,afterId)=>{
+      if(!state.cats.some(c=>c.id===cat.id)){
+        const idx=state.cats.findIndex(c=>c.id===afterId);
+        if(idx>=0) state.cats.splice(idx+1,0,cat); else state.cats.push(cat);
+      }
+    };
+    ensureCat({id:"emociones",name:"Emociones",dot:"😊"},"acciones");
+    ensureCat({id:"necesidades",name:"Necesito",dot:"🙋"},"emociones");
+    addCards(EMO); addCards(NEEDS); addCards(CORE);
+    state.settings.seedV13=true; await save();
+  }
+  if(!state.settings.seedV14){
+    // Idioma: por defecto español. Traduce al catalán los nombres de las tarjetas y categorías base.
+    if(!state.settings.lang) state.settings.lang="es";
+    state.pics.forEach(p=>{ if(!p.nameCa && CA_NAMES[p.name]) p.nameCa=CA_NAMES[p.name]; });
+    const CA_CATS={comida:"Menjar",acciones:"Accions",emociones:"Emocions",necesidades:"Necessito",lugares:"Sortides",respuestas:"Respostes",personas:"Persones"};
+    state.cats.forEach(c=>{ if(!c.nameCa && CA_CATS[c.id]) c.nameCa=CA_CATS[c.id]; });
+    // La tira de frases pasa a estar siempre disponible por defecto (una sola vez; se puede desactivar en Ajustes)
+    if(state.settings.strip!==true) state.settings.strip=true;
+    state.settings.seedV14=true; await save();
+  }
+}
+
+/* ============ Voz (offline) ============ */
+function voiceList(){ // solo español y catalán, nunca inglés
+  return ("speechSynthesis" in window ? speechSynthesis.getVoices() : [])
+    .filter(v=>v.lang && /^(es|ca)/i.test(v.lang));
+}
+function pickVoice(){
+  const all=("speechSynthesis" in window)?speechSynthesis.getVoices():[];
+  if(state.settings.voiceURI){ const v=all.find(v=>v.voiceURI===state.settings.voiceURI); if(v) return v; }
+  // Preferencia según el idioma elegido; con reserva al otro idioma
+  if(lang()==="ca"){
+    return all.find(v=>/^ca/i.test(v.lang)) || all.find(v=>/^es-ES/i.test(v.lang)) || all.find(v=>/^es/i.test(v.lang)) || null;
+  }
+  return all.find(v=>/^es-ES/i.test(v.lang)) || all.find(v=>/^es/i.test(v.lang)) || all.find(v=>/^ca/i.test(v.lang)) || null;
+}
+function makeUtter(text){
+  const u=new SpeechSynthesisUtterance(text);
+  const v=pickVoice();
+  if(v){ u.voice=v; u.lang=v.lang; } else { u.lang=lang()==="ca"?"ca-ES":"es-ES"; }
+  u.rate=state.settings.rate||0.9; u.pitch=1;
+  u.volume=(state.settings.volume==null?1:state.settings.volume);
+  return u;
+}
+function speak(text){
+  if(!state.settings.speak || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(makeUtter(text));
+}
+/* "Calienta" la voz en el primer toque (iPad/Android a veces la silencian la 1ª vez) */
+function warmTTS(){ try{ if("speechSynthesis" in window){ const u=new SpeechSynthesisUtterance(" "); u.volume=0; speechSynthesis.speak(u); } }catch(e){} }
+/* Reproduce la grabación de un familiar */
+let curAudio=null;
+function playClip(dataUrl){
+  try{ if(curAudio){curAudio.pause();} const a=new Audio(dataUrl);
+    a.volume=(state.settings.volume==null?1:state.settings.volume); curAudio=a; a.play().catch(()=>{}); return a;
+  }catch(e){ return null; }
+}
+function stopAudio(){ try{ if(curAudio){curAudio.pause(); curAudio=null;} if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){} }
+/* Vibración muy suave y opcional: confirma al peque que su toque funcionó */
+function buzz(){ if(state.settings.haptic && navigator.vibrate){ try{navigator.vibrate(12);}catch(e){} } }
+/* Sonido de una tarjeta: grabación del familiar si existe, si no la voz del dispositivo */
+function sayCard(p, onStart, onEnd){
+  if(!state.settings.speak){ if(onEnd)onEnd(); return; }
+  if(p.audio){ const a=playClip(p.audio); if(a){ if(onStart)onStart(); a.onended=()=>{ if(onEnd)onEnd(); }; return; } }
+  if("speechSynthesis" in window){ speechSynthesis.cancel(); const u=makeUtter(dispName(p));
+    if(onStart)u.onstart=onStart; if(onEnd)u.onend=onEnd; speechSynthesis.speak(u);
+  } else if(onEnd) onEnd();
+}
+
+/* ============ Idioma (Español / Català) ============ */
+const STRIP_MAX=10; // frases de hasta 10 pictogramas
+function lang(){ return (state.settings && state.settings.lang==="ca") ? "ca" : "es"; }
+function dispName(p){ return (lang()==="ca" && p.nameCa) ? p.nameCa : p.name; }
+function dispCat(c){ return (lang()==="ca" && c.nameCa) ? c.nameCa : c.name; }
+const I18N={
+  es:{
+    modeChild:"modo niño", modeCare:"modo editor", lblPhoto:"Foto", lblDone:"Listo", lblSave:"Guardar",
+    searchPh:"Buscar por nombre o etiqueta…", sortManual:"Orden manual", sortAlpha:"A → Z", sortRecent:"Recientes", sortUsed:"Más usadas",
+    favs:"Favoritos",
+    stripHint:"Toca hasta "+STRIP_MAX+" imágenes para armar una frase…",
+    emptyCare:"No hay imágenes aquí.<br>Toca <b>＋ Foto</b> para agregar.", emptyChild:"Esta categoría está vacía.",
+    addTitle:"Agregar una imagen", takePhoto:"📷 Tomar una foto", pickPhoto:"🖼️ Elegir de la galería", arasaacBtn:"🔎 Buscar pictograma (ARASAAC)", cancel:"Cancelar",
+    editNew:"Nueva imagen", editEdit:"Editar imagen", noImg:"sin imagen",
+    fldName:"Nombre (lo que dice en voz alta)", fldNameCa:"Nombre en catalán (opcional)", fldCat:"Categoría", fldTags:"Etiquetas (para filtrar)",
+    fldVoice:"🎙️ Voz de un familiar (opcional)", recDo:"🎙️ Grabar", recHear:"▶️ Oír", recAgain:"🎙️ Volver a grabar", recStop:"⏹️ Detener",
+    voiceHelp:"Graba a mamá, papá o a quien acompaña diciendo la palabra. El peque suele responder mejor a una voz conocida. Si hay grabación, se reproduce en lugar de la voz del dispositivo.",
+    fav:"⭐ Favorito", save:"Guardar", delPic:"🗑️ Borrar esta imagen",
+    setTitle:"Ajustes", stLang:"Idioma", stSimple:"🔠 Modo simple grande", stSpeak:"🗣️ Hablar en voz alta",
+    stStrip:"📝 Tira de frases siempre visible (hasta "+STRIP_MAX+")", stCalm:"🌙 Modo calmo (menos movimiento)", stHaptic:"📳 Vibración suave al tocar",
+    stVoice:"Voz", stVoiceHelp:"Elige una voz en español o catalán. Toca para escuchar una prueba.", stRate:"Velocidad de la voz", stVol:"Volumen",
+    help:"❓ Cómo se usa", newCat:"Nueva categoría", catNamePh:"Nombre",
+    shareApp:"📤 Compartir / Exportar app", backup:"💾 Copia de seguridad (.json)", restore:"📂 Restaurar copia (.json)", close:"Cerrar",
+    creditsTitle:"Créditos y licencia",
+    arasaacTitle:"Buscar pictograma", arasaacPh:"Escribe una palabra… (ej: comer)", arasaacSearch:"Buscar", arasaacHint:"Pictogramas de ARASAAC. Necesita internet solo para buscar; una vez elegido queda guardado y funciona sin conexión.", arasaacSearching:"Buscando…", arasaacNone:"No se encontraron pictogramas. Prueba con otra palabra.", arasaacErr:"No hay conexión con ARASAAC. Revisa tu internet.", arasaacLoading:"Guardando pictograma…",
+    welcomeTitle:"🗣️ Bienvenido/a a TalkPics", welcomeStart:"Comenzar",
+    welcomeIntro:"Una forma sencilla de comunicarse con <b>fotos y dibujos</b>. Pensada para acompañar a peques que hablan poco o no hablan.",
+    welcomeFoot:"Todo funciona sin internet y sin crear cuentas. Tus fotos se guardan solo en este dispositivo.",
+    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imagen</b>: <b>dice la palabra en voz alta</b> al instante y se suma a la <b>frase</b> de abajo. Toca la miniatura de la frase para verla grande.</div><div style="margin-bottom:10px">📝 La <b>tira de frases</b> está siempre lista: usa <b>un solo pictograma</b> o arma frases de <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y óyelas con ▶. ⌫ la borra.</div><div style="margin-bottom:10px">⭐ Arriba cambias de categoría: Comida, Acciones, Salidas…</div><div style="margin-bottom:10px">🔒 <b>Mantén presionado el candado</b> (arriba) para entrar al <b>modo editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En modo editor puedes <b>agregar o cambiar fotos</b> (cámara, galería o <b>buscar un pictograma de ARASAAC</b>) y ponerles nombre.</div><div style="margin-bottom:10px">🎙️ Puedes <b>grabar la voz de un familiar</b> en cada tarjeta. El peque responde mejor a una voz conocida.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 En Ajustes ⚙️ cambias entre <b>Español y Català</b> (textos y voz).</div>'
+  },
+  ca:{
+    modeChild:"mode nen", modeCare:"mode editor", lblPhoto:"Foto", lblDone:"Fet", lblSave:"Desa",
+    searchPh:"Cerca per nom o etiqueta…", sortManual:"Ordre manual", sortAlpha:"A → Z", sortRecent:"Recents", sortUsed:"Més usades",
+    favs:"Preferits",
+    stripHint:"Toca fins a "+STRIP_MAX+" imatges per fer una frase…",
+    emptyCare:"No hi ha imatges aquí.<br>Toca <b>＋ Foto</b> per afegir.", emptyChild:"Aquesta categoria està buida.",
+    addTitle:"Afegir una imatge", takePhoto:"📷 Fer una foto", pickPhoto:"🖼️ Triar de la galeria", arasaacBtn:"🔎 Cercar pictograma (ARASAAC)", cancel:"Cancel·la",
+    editNew:"Nova imatge", editEdit:"Editar imatge", noImg:"sense imatge",
+    fldName:"Nom (el que diu en veu alta)", fldNameCa:"Nom en català (opcional)", fldCat:"Categoria", fldTags:"Etiquetes (per filtrar)",
+    fldVoice:"🎙️ Veu d'un familiar (opcional)", recDo:"🎙️ Gravar", recHear:"▶️ Escoltar", recAgain:"🎙️ Tornar a gravar", recStop:"⏹️ Aturar",
+    voiceHelp:"Grava la mare, el pare o qui acompanya dient la paraula. El nen sol respondre millor a una veu coneguda. Si hi ha gravació, es reprodueix en lloc de la veu del dispositiu.",
+    fav:"⭐ Preferit", save:"Desa", delPic:"🗑️ Esborrar aquesta imatge",
+    setTitle:"Configuració", stLang:"Idioma", stSimple:"🔠 Mode simple gran", stSpeak:"🗣️ Parlar en veu alta",
+    stStrip:"📝 Tira de frases sempre visible (fins a "+STRIP_MAX+")", stCalm:"🌙 Mode calmat (menys moviment)", stHaptic:"📳 Vibració suau en tocar",
+    stVoice:"Veu", stVoiceHelp:"Tria una veu en espanyol o català. Toca per escoltar una prova.", stRate:"Velocitat de la veu", stVol:"Volum",
+    help:"❓ Com s'utilitza", newCat:"Nova categoria", catNamePh:"Nom",
+    shareApp:"📤 Compartir / Exportar app", backup:"💾 Còpia de seguretat (.json)", restore:"📂 Restaurar còpia (.json)", close:"Tancar",
+    creditsTitle:"Crèdits i llicència",
+    arasaacTitle:"Cercar pictograma", arasaacPh:"Escriu una paraula… (ex: menjar)", arasaacSearch:"Cerca", arasaacHint:"Pictogrames d'ARASAAC. Només cal internet per cercar; un cop triat queda desat i funciona sense connexió.", arasaacSearching:"Cercant…", arasaacNone:"No s'han trobat pictogrames. Prova una altra paraula.", arasaacErr:"No hi ha connexió amb ARASAAC. Revisa el teu internet.", arasaacLoading:"Desant pictograma…",
+    welcomeTitle:"🗣️ Benvingut/da a TalkPics", welcomeStart:"Comença",
+    welcomeIntro:"Una manera senzilla de comunicar-se amb <b>fotos i dibuixos</b>. Pensada per acompanyar nens que parlen poc o no parlen.",
+    welcomeFoot:"Tot funciona sense internet i sense crear comptes. Les teves fotos es desen només en aquest dispositiu.",
+    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imatge</b>: <b>diu la paraula en veu alta</b> a l\'instant i se suma a la <b>frase</b> de sota. Toca la miniatura de la frase per veure-la gran.</div><div style="margin-bottom:10px">📝 La <b>tira de frases</b> sempre està a punt: fes servir <b>un sol pictograma</b> o fes frases de <b>fins a 10</b> (per exemple “Vull” + “Aigua”) i escolta-les amb ▶. ⌫ l\'esborra.</div><div style="margin-bottom:10px">⭐ A dalt canvies de categoria: Menjar, Accions, Sortides…</div><div style="margin-bottom:10px">🔒 <b>Mantén premut el cadenat</b> (a dalt) per entrar al <b>mode editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En mode editor pots <b>afegir o canviar fotos</b> (càmera, galeria o <b>cercar un pictograma d\'ARASAAC</b>) i posar-los nom.</div><div style="margin-bottom:10px">🎙️ Pots <b>gravar la veu d\'un familiar</b> a cada targeta. El nen respon millor a una veu coneguda.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 A Configuració ⚙️ canvies entre <b>Español i Català</b> (textos i veu).</div>'
+  }
+};
+function t(k){ const L=I18N[lang()]||I18N.es; return (k in L)?L[k]:(I18N.es[k]||k); }
+function applyLang(){
+  const L=lang();
+  document.documentElement.lang=L;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(k) el.textContent=t(k); });
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{ const k=el.getAttribute("data-i18n-html"); if(k) el.innerHTML=t(k); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ const k=el.getAttribute("data-i18n-ph"); if(k) el.setAttribute("placeholder",t(k)); });
+  const ml=$("#modeLabel"); if(ml) ml.textContent = state.mode==="care"?t("modeCare"):t("modeChild");
+  // Botón de idioma segmentado
+  const bes=$("#langEs"), bca=$("#langCa"); if(bes&&bca){ bes.classList.toggle("on",L==="es"); bca.classList.toggle("on",L==="ca"); }
+}
+
+/* ============ Render ============ */
+const $=s=>document.querySelector(s);
+function applyBodyClasses(){
+  document.body.classList.toggle("care",state.mode==="care");
+  document.body.classList.toggle("simple",!!state.settings.simple);
+  document.body.classList.toggle("strip",!!state.settings.strip);
+  document.body.classList.toggle("calm",!!state.settings.calm);
+  $("#modeLabel").textContent=state.mode==="care"?t("modeCare"):t("modeChild");
+  $("#lockBtn").classList.toggle("hidden",state.mode==="care");
+  $("#addBtn").classList.toggle("hidden",state.mode!=="care");
+  $("#setBtn").classList.toggle("hidden",state.mode!=="care");
+  $("#doneBtn").classList.toggle("hidden",state.mode!=="care");
+}
+function renderCats(){
+  const wrap=$("#cats"); wrap.innerHTML="";
+  const all={id:"__fav",name:t("favs"),dot:"⭐"};
+  [all,...state.cats].forEach(c=>{
+    const b=document.createElement("button"); b.className="cat"+((state.curCat===c.id)?" active":"");
+    b.innerHTML=`<span class="dot">${c.dot||"📁"}</span>${escapeHtml(c.id==="__fav"?c.name:dispCat(c))}`;
+    b.onclick=()=>{state.curCat=c.id; renderCats(); renderBoard();};
+    wrap.appendChild(b);
+  });
+}
+function currentList(){
+  let list=state.pics.slice();
+  if(state.curCat==="__fav") list=list.filter(p=>p.fav);
+  else if(state.curCat) list=list.filter(p=>p.cat===state.curCat);
+  if(state.mode==="care"){
+    const q=$("#search").value.trim().toLowerCase();
+    if(q) list=list.filter(p=>p.name.toLowerCase().includes(q)||(p.nameCa||"").toLowerCase().includes(q)||(p.tags||[]).some(t=>t.toLowerCase().includes(q)));
+    const s=$("#sortSel").value;
+    if(s==="alpha") list.sort((a,b)=>a.name.localeCompare(b.name));
+    else if(s==="recent") list.sort((a,b)=>b.created-a.created);
+    else if(s==="used") list.sort((a,b)=>(b.uses||0)-(a.uses||0));
+    else list.sort((a,b)=>(a.pos||0)-(b.pos||0));
+  } else list.sort((a,b)=>(a.pos||0)-(b.pos||0));
+  return list;
+}
+function renderBoard(){
+  const grid=$("#grid"), empty=$("#empty"); grid.innerHTML="";
+  const list=currentList();
+  if(!list.length){
+    empty.classList.remove("hidden");
+    empty.innerHTML = state.mode==="care" ? t("emptyCare") : t("emptyChild");
+    return;
+  }
+  empty.classList.add("hidden");
+  list.forEach(p=>{
+    const card=document.createElement("div"); card.className="pcard";
+    card.setAttribute("role","button"); card.setAttribute("tabindex","0"); card.setAttribute("aria-label",dispName(p));
+    card.innerHTML=`${p.fav?'<div class="fav">⭐</div>':''}<div class="img" style="background-image:url('${p.img}')"></div><div class="name">${p.audio?'<span class="micdot" aria-hidden="true">🔊</span> ':''}${escapeHtml(dispName(p))}</div><button class="edit" aria-label="Editar ${escapeHtml(dispName(p))}">✏️</button>`;
+    card.querySelector(".img").onclick=()=>onSelect(p,card);
+    card.querySelector(".name").onclick=()=>onSelect(p,card);
+    card.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onSelect(p,card); } });
+    card.querySelector(".edit").onclick=(e)=>{e.stopPropagation(); openEdit(p);};
+    grid.appendChild(card);
+  });
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ============ Selección ============ */
+let zoomPic=null;
+function onSelect(p, cardEl){
+  p.uses=(p.uses||0)+1; save();
+  buzz();
+  if(cardEl){ cardEl.classList.add("picked"); setTimeout(()=>cardEl.classList.remove("picked"),450); }
+  // Con tira de frases: suma a la frase Y muestra la imagen grande.
+  if(state.settings.strip){ addToStrip(p); }
+  // Siempre: imagen grande + voz (openZoom ya habla, no duplicar sayCard)
+  openZoom(p);
+}
+function openZoom(p){
+  zoomPic=p;
+  $("#zImg").style.backgroundImage=`url('${p.img}')`;
+  $("#zName").textContent=dispName(p);
+  $("#zoom").classList.add("show");
+  const zc=$("#zoomCard");
+  sayCard(p, ()=>zc.classList.add("speaking"), ()=>zc.classList.remove("speaking"));
+}
+function closeZoom(){ stopAudio(); $("#zoomCard").classList.remove("speaking"); $("#zoom").classList.remove("show"); }
+$("#closeZoom").onclick=closeZoom;
+$("#zoom").onclick=e=>{ if(e.target.id==="zoom") closeZoom(); };
+$("#zoomCard").onclick=()=>{ if(!zoomPic) return; const zc=$("#zoomCard");
+  sayCard(zoomPic, ()=>zc.classList.add("speaking"), ()=>zc.classList.remove("speaking")); };
+
+/* ============ Tira de frases (hasta 10) ============ */
+function addToStrip(p){
+  if(state.strip.length>=STRIP_MAX){ showHint("Ya hay "+STRIP_MAX+" imágenes — toca ▶ para oírla o ⌫ para borrar"); buzz(); return false; }
+  state.strip.push(p); renderStrip(); return true;
+}
+function renderStrip(){
+  const w=$("#stripItems"); w.innerHTML="";
+  if(!state.strip.length){
+    const ph=document.createElement("span"); ph.className="ph";
+    ph.textContent=t("stripHint");
+    w.appendChild(ph);
+  }
+  state.strip.forEach((p,idx)=>{
+    const d=document.createElement("div"); d.className="schip"; d.setAttribute("aria-label",dispName(p));
+    const th=document.createElement("div"); th.className="thumb"; th.style.backgroundImage=`url('${p.img}')`;
+    th.title=dispName(p); th.onclick=e=>{ e.stopPropagation(); openZoom(p); };
+    const rm=document.createElement("button"); rm.className="rm"; rm.textContent="✕"; rm.setAttribute("aria-label","Quitar "+dispName(p));
+    rm.onclick=e=>{ e.stopPropagation(); state.strip.splice(idx,1); renderStrip(); };
+    const lab=document.createElement("div"); lab.className="lab"; lab.textContent=dispName(p);
+    d.appendChild(th); d.appendChild(rm); d.appendChild(lab); w.appendChild(d);
+  });
+  // Ranuras vacías numeradas: dejan ver que caben hasta 10
+  if(state.strip.length){
+    for(let i=state.strip.length;i<STRIP_MAX;i++){
+      const d=document.createElement("div"); d.className="schip slot"; d.setAttribute("aria-hidden","true");
+      const th=document.createElement("div"); th.className="thumb"; th.textContent=String(i+1);
+      d.appendChild(th); w.appendChild(d);
+    }
+  }
+}
+$("#playStrip").onclick=()=>{
+  if(!state.strip.length) return;
+  stopAudio();
+  let i=0; const next=()=>{ if(i>=state.strip.length) return; sayCard(state.strip[i], null, ()=>{ i++; next(); }); };
+  next();
+};
+$("#clearStrip").onclick=()=>{state.strip=[]; renderStrip();};
+
+/* ============ Bloqueo / modo editor (mantener presionado) ============ */
+let holdT=null;
+const lock=$("#lockBtn");
+function startHold(){ showHint("Mantén presionado para editar…");
+  holdT=setTimeout(()=>{state.mode="care"; applyBodyClasses(); renderCats(); renderBoard(); hideHint();},1200);}
+function endHold(){clearTimeout(holdT); }
+lock.addEventListener("pointerdown",startHold);
+lock.addEventListener("pointerup",endHold);
+lock.addEventListener("pointerleave",endHold);
+function exitEdit(){state.mode="child"; $("#search").value=""; applyBodyClasses(); renderCats(); renderBoard();}
+$("#doneBtn").onclick=()=>{ if(dirty){ $("#saveScrim").classList.add("show"); } else exitEdit(); };
+$("#saveLater").onclick=()=>{ $("#saveScrim").classList.remove("show"); exitEdit(); };
+$("#saveExport").onclick=async()=>{ $("#saveScrim").classList.remove("show"); await doShare(true); exitEdit(); };
+
+/* ============ Agregar imagen ============ */
+let pending=null; // {img, editingId}
+$("#addBtn").onclick=()=>$("#addScrim").classList.add("show");
+$("#addCancel").onclick=()=>$("#addScrim").classList.remove("show");
+$("#takePhoto").onclick=()=>{$("#addScrim").classList.remove("show"); openCamera();};
+$("#pickPhoto").onclick=()=>{$("#addScrim").classList.remove("show"); $("#fileLib").click();};
+
+/* ---- Cámara en vivo (getUserMedia): fiable en móvil y escritorio ---- */
+let camStream=null, camFacing="environment";
+async function openCamera(){
+  // Si el dispositivo no permite cámara en la página, usamos el selector de archivo (respaldo)
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ $("#fileCam").click(); return; }
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFacing}, audio:false});
+    $("#camVideo").srcObject=camStream;
+    $("#camScrim").classList.add("show");
+  }catch(e){
+    // Permiso denegado o sin cámara → respaldo al selector de archivo
+    $("#fileCam").click();
+  }
+}
+function closeCamera(){
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  const v=$("#camVideo"); if(v) v.srcObject=null;
+  $("#camScrim").classList.remove("show");
+}
+async function shootPhoto(){
+  const v=$("#camVideo");
+  if(!v || !v.videoWidth){ showHint("La cámara aún no está lista"); return; }
+  const c=document.createElement("canvas");
+  c.width=v.videoWidth; c.height=v.videoHeight;
+  c.getContext("2d").drawImage(v,0,0);
+  const dataUrl=c.toDataURL("image/jpeg",0.92);
+  closeCamera();
+  const img=await processImage(dataUrl);
+  pending={img, editingId:null, audio:null};
+  openEditSheet({name:"",cat:state.curCat&&state.curCat!=="__fav"?state.curCat:state.cats[0].id,tags:[],fav:false});
+}
+async function flipCamera(){
+  camFacing = camFacing==="environment" ? "user" : "environment";
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); }
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFacing}, audio:false});
+    $("#camVideo").srcObject=camStream;
+  }catch(e){ showHint("No se pudo cambiar de cámara"); }
+}
+$("#camShoot").onclick=shootPhoto;
+$("#camFlip").onclick=flipCamera;
+$("#camCancel").onclick=closeCamera;
+$("#fileCam").onchange=e=>handleFiles(e.target.files);
+$("#fileLib").onchange=e=>handleFiles(e.target.files);
+async function handleFiles(files){
+  const arr=[...files]; if(!arr.length) return;
+  // primera abre el editor con su imagen; las demás se guardan con nombre vacío
+  for(let i=0;i<arr.length;i++){
+    const dataUrl=await readFile(arr[i]); const img=await processImage(dataUrl);
+    if(i===0){ pending={img, editingId:null, audio:null}; openEditSheet({name:"",cat:state.curCat&&state.curCat!=="__fav"?state.curCat:state.cats[0].id,tags:[],fav:false}); }
+    else { state.pics.push({id:uid(),name:"",img,cat:state.cats[0].id,tags:[],fav:false,uses:0,created:Date.now()+i,pos:state.pics.length+i}); }
+  }
+  if(arr.length>1){markDirty(); await save(); renderBoard(); showHint(arr.length+" imágenes agregadas — ponles nombre tocando ✏️");}
+  ["#fileCam","#fileLib"].forEach(s=>$(s).value="");
+}
+function readFile(f){return new Promise(res=>{const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(f);});}
+
+/* ============ Buscador de pictogramas ARASAAC ============ */
+/* API pública y gratuita de ARASAAC (sin registro). Solo se usa al buscar; el pictograma
+   elegido se guarda incrustado en la app, así sigue funcionando sin internet. */
+const ARA_API="https://api.arasaac.org/api/pictograms";
+const araImg=id=>"https://static.arasaac.org/pictograms/"+id+"/"+id+"_300.png";
+function openArasaac(){
+  $("#addScrim").classList.remove("show");
+  $("#araResults").innerHTML=""; $("#araStatus").textContent="";
+  $("#arasaacScrim").classList.add("show");
+  setTimeout(()=>{ try{$("#araQuery").focus();}catch(e){} },150);
+}
+$("#arasaacOpen").onclick=openArasaac;
+$("#arasaacOpen2").onclick=openArasaac;
+$("#araCancel").onclick=()=>$("#arasaacScrim").classList.remove("show");
+async function araFetch(l,q){
+  const r=await fetch(ARA_API+"/"+l+"/search/"+encodeURIComponent(q));
+  if(!r.ok) throw new Error("http "+r.status);
+  return await r.json();
+}
+async function araSearch(){
+  const q=$("#araQuery").value.trim(); if(!q) return;
+  const res=$("#araResults"); res.innerHTML=""; $("#araStatus").textContent=t("arasaacSearching");
+  let data=null;
+  try{
+    data=await araFetch(lang(),q);
+    if((!data||!data.length) && lang()!=="es") data=await araFetch("es",q);
+  }catch(e){ $("#araStatus").textContent=t("arasaacErr"); return; }
+  if(!data||!data.length){ $("#araStatus").textContent=t("arasaacNone"); return; }
+  $("#araStatus").textContent="";
+  data.slice(0,60).forEach(it=>{
+    const id=it._id||it.idPictogram; if(!id) return;
+    const b=document.createElement("button"); b.className="aracard"; b.type="button"; b.title=q;
+    const im=document.createElement("img"); im.loading="lazy"; im.src=araImg(id); im.alt=q;
+    b.appendChild(im); b.onclick=()=>araChoose(id,q); res.appendChild(b);
+  });
+}
+function araChoose(id,q){
+  $("#araStatus").textContent=t("arasaacLoading");
+  const cap=q.charAt(0).toUpperCase()+q.slice(1);
+  const img=new Image(); img.crossOrigin="anonymous";
+  img.onload=()=>{
+    let dataUrl;
+    try{
+      const c=document.createElement("canvas"); c.width=c.height=500; const x=c.getContext("2d");
+      x.fillStyle="#ffffff"; x.fillRect(0,0,500,500);
+      const s=Math.min(500/img.width,500/img.height), w=img.width*s, h=img.height*s;
+      x.drawImage(img,(500-w)/2,(500-h)/2,w,h);
+      dataUrl=c.toDataURL("image/jpeg",0.85);
+    }catch(e){ dataUrl=araImg(id); }
+    if(!pending) pending={img:null,editingId:null,audio:null};
+    pending.img=dataUrl; pending.arasaac=true;
+    $("#arasaacScrim").classList.remove("show");
+    if(pending.editingId){
+      $("#editPreview").style.backgroundImage=`url('${dataUrl}')`; $("#editPreview").textContent="";
+      $("#editScrim").classList.add("show");
+    } else {
+      openEditSheet({name:cap, nameCa:(lang()==="ca"?cap:""), cat:(state.curCat&&state.curCat!=="__fav")?state.curCat:state.cats[0].id, tags:[], fav:false});
+    }
+  };
+  img.onerror=()=>{ $("#araStatus").textContent=t("arasaacErr"); };
+  img.src=araImg(id);
+}
+$("#araGo").onclick=araSearch;
+$("#araQuery").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); araSearch(); } });
+
+/* ============ Idioma: cambiar Español / Català ============ */
+async function setLang(l){
+  state.settings.lang=(l==="ca")?"ca":"es"; await save();
+  applyLang(); renderCats(); renderBoard(); renderStrip();
+}
+$("#langEs").onclick=()=>setLang("es");
+$("#langCa").onclick=()=>setLang("ca");
+
+/* ============ Editar imagen ============ */
+let editFav=false;
+function buildCatSelect(sel){const s=$("#fCat"); s.innerHTML=""; state.cats.forEach(c=>{const o=document.createElement("option"); o.value=c.id; o.textContent=c.name; s.appendChild(o);}); if(sel)s.value=sel;}
+function buildTagSuggest(active){
+  const all=[...new Set(state.pics.flatMap(p=>p.tags||[]))].slice(0,12);
+  const w=$("#tagSuggest"); w.innerHTML="";
+  all.forEach(t=>{const b=document.createElement("span"); b.className="tagpill"; b.textContent=t;
+    b.onclick=()=>{const cur=$("#fTags").value.split(",").map(x=>x.trim()).filter(Boolean);
+      const i=cur.indexOf(t); if(i<0)cur.push(t); else cur.splice(i,1); $("#fTags").value=cur.join(", "); buildTagSuggest();};
+    w.appendChild(b);});
+}
+function openEditSheet(p){
+  $("#editTitle").textContent=pending&&!pending.editingId?t("editNew"):t("editEdit");
+  $("#editPreview").style.backgroundImage=pending?`url('${pending.img}')`:`url('${p.img}')`;
+  $("#editPreview").textContent="";
+  $("#fName").value=p.name||""; $("#fNameCa").value=p.nameCa||""; buildCatSelect(p.cat); $("#fTags").value=(p.tags||[]).join(", ");
+  editFav=!!p.fav; $("#fFav").classList.toggle("on",editFav);
+  $("#delPic").classList.toggle("hidden", !(pending&&pending.editingId));
+  buildTagSuggest();
+  updateRecUI();
+  $("#editScrim").classList.add("show");
+}
+function openEdit(p){pending={img:p.img,editingId:p.id,audio:p.audio||null,arasaac:!!p.arasaac}; openEditSheet(p);}
+
+/* ---- Grabar voz de un familiar (opcional) ---- */
+let mediaRec=null, recChunks=[], recTimer=null;
+function updateRecUI(){
+  const has=!!(pending&&pending.audio);
+  $("#recPlay").classList.toggle("hidden",!has);
+  $("#recDel").classList.toggle("hidden",!has);
+  const rb=$("#recBtn"); rb.classList.remove("recording");
+  rb.textContent = has ? t("recAgain") : t("recDo");
+}
+async function startRec(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !("MediaRecorder" in window)){
+    showHint("Este dispositivo no permite grabar aquí"); return; }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recChunks=[]; mediaRec=new MediaRecorder(stream);
+    mediaRec.ondataavailable=e=>{ if(e.data&&e.data.size) recChunks.push(e.data); };
+    mediaRec.onstop=async()=>{
+      stream.getTracks().forEach(t=>t.stop());
+      const type=recChunks[0]?recChunks[0].type:"audio/webm";
+      const blob=new Blob(recChunks,{type});
+      const dataUrl=await new Promise(r=>{const fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(blob);});
+      if(!pending) pending={img:null,editingId:null,audio:null};
+      pending.audio=dataUrl; updateRecUI(); showHint("Grabación lista ✓");
+    };
+    mediaRec.start();
+    const rb=$("#recBtn"); rb.classList.add("recording"); rb.textContent=t("recStop");
+    recTimer=setTimeout(()=>{ if(mediaRec&&mediaRec.state!=="inactive") stopRec(); },6000); // límite 6s
+  }catch(e){ showHint("No se pudo usar el micrófono"); }
+}
+function stopRec(){ clearTimeout(recTimer); if(mediaRec&&mediaRec.state!=="inactive"){ try{mediaRec.stop();}catch(e){} } mediaRec=null; }
+$("#recBtn").onclick=()=>{ if(mediaRec&&mediaRec.state==="recording") stopRec(); else startRec(); };
+$("#recPlay").onclick=()=>{ if(pending&&pending.audio) playClip(pending.audio); };
+$("#recDel").onclick=()=>{ if(pending) pending.audio=null; updateRecUI(); showHint("Grabación borrada"); };
+$("#fFav").onclick=()=>{editFav=!editFav; $("#fFav").classList.toggle("on",editFav);};
+$("#editCancel").onclick=()=>{$("#editScrim").classList.remove("show"); stopRec(); pending=null;};
+$("#savePic").onclick=async()=>{
+  if(mediaRec&&mediaRec.state==="recording"){ stopRec(); showHint("Termina la grabación y toca Guardar otra vez"); return; }
+  const name=$("#fName").value.trim()||"(sin nombre)";
+  const nameCa=$("#fNameCa").value.trim()||null;
+  const cat=$("#fCat").value; const tags=$("#fTags").value.split(",").map(x=>x.trim()).filter(Boolean);
+  const audio=(pending&&pending.audio)||null;
+  const arasaac=!!(pending&&pending.arasaac);
+  if(pending&&pending.editingId){
+    const p=state.pics.find(x=>x.id===pending.editingId);
+    Object.assign(p,{name,nameCa,cat,tags,fav:editFav,audio,arasaac}); if(pending.img)p.img=pending.img;
+  } else {
+    state.pics.push({id:uid(),name,nameCa,img:pending.img,cat,tags,fav:editFav,audio,arasaac,uses:0,created:Date.now(),pos:state.pics.length});
+  }
+  markDirty();
+  await save(); pending=null; $("#editScrim").classList.remove("show"); renderCats(); renderBoard();
+};
+$("#delPic").onclick=async()=>{
+  if(!pending||!pending.editingId)return;
+  state.pics=state.pics.filter(p=>p.id!==pending.editingId);
+  markDirty();
+  await save(); pending=null; $("#editScrim").classList.remove("show"); renderBoard();
+};
+
+/* ============ Ajustes ============ */
+$("#setBtn").onclick=()=>{syncSettingsUI(); $("#setScrim").classList.add("show");};
+$("#setClose").onclick=()=>$("#setScrim").classList.remove("show");
+function populateVoices(){
+  const sel=$("#voiceSel"); if(!sel) return;
+  const vs=voiceList();
+  sel.innerHTML="";
+  const auto=document.createElement("option"); auto.value=""; auto.textContent="Automática (español)"; sel.appendChild(auto);
+  vs.forEach(v=>{ const o=document.createElement("option"); o.value=v.voiceURI;
+    const fam=/^ca/i.test(v.lang)?"Català":"Español";
+    o.textContent=fam+" — "+v.name; sel.appendChild(o); });
+  sel.value=state.settings.voiceURI||"";
+  if(!vs.length){ auto.textContent="(Buscando voces del dispositivo…)"; }
+}
+function syncSettingsUI(){
+  $("#swSimple").classList.toggle("on",state.settings.simple);
+  $("#swSpeak").classList.toggle("on",state.settings.speak);
+  $("#swStrip").classList.toggle("on",state.settings.strip);
+  $("#swCalm").classList.toggle("on",!!state.settings.calm);
+  $("#swHaptic").classList.toggle("on",!!state.settings.haptic);
+  $("#rate").value=state.settings.rate;
+  $("#vol").value=(state.settings.volume==null?1:state.settings.volume);
+  populateVoices();
+  applyLang();
+}
+$("#voiceSel").onchange=async e=>{
+  state.settings.voiceURI=e.target.value||null; await save();
+  const prev=state.settings.speak; state.settings.speak=true; speak("Hola, soy tu voz"); state.settings.speak=prev;
+};
+function bindToggle(swId,key){$(swId).onclick=async()=>{state.settings[key]=!state.settings[key]; $(swId).classList.toggle("on",state.settings[key]); applyBodyClasses(); renderStrip(); await save();};}
+bindToggle("#swSimple","simple"); bindToggle("#swSpeak","speak"); bindToggle("#swStrip","strip");
+bindToggle("#swCalm","calm");
+$("#swHaptic").onclick=async()=>{ state.settings.haptic=!state.settings.haptic; $("#swHaptic").classList.toggle("on",state.settings.haptic); if(state.settings.haptic) buzz(); await save(); };
+$("#rate").oninput=async e=>{state.settings.rate=parseFloat(e.target.value); await save();};
+$("#vol").oninput=async e=>{state.settings.volume=parseFloat(e.target.value); await save();};
+$("#addCat").onclick=async()=>{const n=$("#newCatName").value.trim(); if(!n)return;
+  state.cats.push({id:uid(),name:n,dot:"📁"}); $("#newCatName").value=""; await save(); renderCats(); showHint("Categoría agregada");};
+
+/* ============ Exportar / compartir app completa (1 archivo) ============ */
+// Quita datos personales: reemplaza fotos reales por un pictograma y borra las grabaciones
+function stripPersonal(pics){
+  const ph=emojiImg("🖼️","#eae6da");
+  return pics.map(p=>{
+    const real = typeof p.img==="string" && /^data:image\/(jpeg|jpg)/i.test(p.img) && !p.arasaac;
+    const q={...p}; if(real) q.img=ph; delete q.audio; return q;
+  });
+}
+function buildExportHtml(includePhotos){
+  // Quien reciba la app debe ver la bienvenida la primera vez
+  const settingsOut={...state.settings}; delete settingsOut.seenWelcome;
+  const pics = (includePhotos===false) ? stripPersonal(state.pics) : state.pics;
+  // JSON con todo (tarjetas + fotos); escapamos "<" para no romper la etiqueta <script>
+  const data=JSON.stringify({pics:pics,cats:state.cats,settings:settingsOut}).replace(/</g,"\\u003c");
+  const a=PRISTINE_HTML.indexOf('id="embedded-data"');
+  if(a<0) return null;
+  const start=PRISTINE_HTML.indexOf(">",a)+1;
+  const end=PRISTINE_HTML.indexOf("</"+"script>",start);
+  return PRISTINE_HTML.slice(0,start)+data+PRISTINE_HTML.slice(end);
+}
+function downloadHtml(html, fileName){
+  const url=URL.createObjectURL(new Blob([html],{type:"text/html"})), el=document.createElement("a");
+  el.href=url; el.download=fileName||"TalkPics.html"; el.click();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+  showHint(fileName&&fileName.indexOf("plantilla")>=0 ? "Plantilla exportada (sin fotos)" : "App exportada — comparte ese archivo");
+}
+async function doShare(includePhotos=true){
+  const html=buildExportHtml(includePhotos);
+  if(!html){ showHint("No se pudo exportar la app"); return; }
+  const fileName = includePhotos ? "TalkPics.html" : "TalkPics-plantilla.html";
+  const text = includePhotos
+    ? "Abre este archivo en el navegador para usar TalkPics. Funciona sin internet."
+    : "Plantilla de TalkPics (sin fotos ni grabaciones). Ábrela en el navegador y agrega tus propias fotos.";
+  // En el móvil: abrir el menú de compartir (WhatsApp, correo, etc.) con el archivo
+  try{
+    const file=new File([html],fileName,{type:"text/html"});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:"TalkPics", text});
+      if(includePhotos){ dirty=false; updateShareBadge(); }
+      return;
+    }
+  }catch(e){ /* cancelado o no disponible → descargamos */ }
+  downloadHtml(html, fileName);
+  if(includePhotos){ dirty=false; updateShareBadge(); }
+}
+function openExportChoice(){ $("#exportScrim").classList.add("show"); }
+$("#shareBtn").onclick=openExportChoice;
+$("#shareBar").onclick=()=>doShare(true);
+$("#expWith").onclick=async()=>{ $("#exportScrim").classList.remove("show"); await doShare(true); };
+$("#expWithout").onclick=async()=>{ $("#exportScrim").classList.remove("show"); await doShare(false); };
+$("#expCancel").onclick=()=>$("#exportScrim").classList.remove("show");
+
+/* ============ Copia de seguridad ============ */
+$("#exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify({pics:state.pics,cats:state.cats,settings:state.settings})],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="talkpics-copia-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+};
+$("#importBtn").onclick=()=>$("#fileRestore").click();
+$("#fileRestore").onchange=async e=>{
+  const f=e.target.files[0]; if(!f)return; const txt=await f.text();
+  try{const d=JSON.parse(txt); if(d.pics)state.pics=d.pics; if(d.cats)state.cats=d.cats; if(d.settings)state.settings=d.settings;
+    await save(); applyBodyClasses(); renderCats(); renderBoard(); showHint("Copia restaurada");}
+  catch(err){showHint("No se pudo leer el archivo");}
+  e.target.value="";
+};
+
+/* ============ Utilidades UI ============ */
+let hintT=null;
+function showHint(t){const h=$("#hint"); h.textContent=t; h.classList.add("show"); clearTimeout(hintT); hintT=setTimeout(()=>h.classList.remove("show"),2200);}
+function hideHint(){$("#hint").classList.remove("show");}
+$("#search").oninput=renderBoard; $("#sortSel").onchange=renderBoard;
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{ populateVoices(); };}
+
+/* ============ Bienvenida / Ayuda ============ */
+function showWelcome(){ $("#welcomeScrim").classList.add("show"); }
+$("#welcomeClose").onclick=async()=>{ $("#welcomeScrim").classList.remove("show"); warmTTS(); state.settings.seenWelcome=true; await save(); };
+$("#helpBtn").onclick=()=>{ $("#setScrim").classList.remove("show"); showWelcome(); };
+
+/* ============ Inicio ============ */
+(async()=>{
+  try{ db=await openDB(); }catch(e){ alert("Tu navegador no permite guardar datos aquí. Ábrelo desde un servidor o agrégalo a la pantalla de inicio."); }
+  await load();
+  // Primera vez: si el dispositivo pide "menos movimiento", arrancamos en modo calmo
+  if(state.settings.calm===undefined){
+    state.settings.calm=!!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+  state.curCat=state.cats[0]?state.cats[0].id:"__fav";
+  applyBodyClasses(); renderCats(); renderBoard(); renderStrip(); applyLang();
+  if(!state.settings.seenWelcome) showWelcome();
+  // Calienta la voz en el primer toque (mejor compatibilidad en tablets)
+  window.addEventListener("pointerdown",warmTTS,{once:true});
+})();
+</script>
+</body>
+</html>
