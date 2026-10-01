@@ -574,7 +574,15 @@ function readEmbedded(){
 }
 async function load(){
   state.pics=await dbGet("pics"); state.cats=await dbGet("cats"); state.settings=await dbGet("settings");
-  if(!state.settings) state.settings={...DEFAULT_SETTINGS};
+  if(!state.settings){
+    state.settings={...DEFAULT_SETTINGS};
+    // Primera vez en este dispositivo: idioma según ?lang= del enlace o el idioma del navegador
+    try{
+      const q=new URLSearchParams(location.search).get("lang");
+      const nl=((navigator.language||"es")+"").slice(0,2).toLowerCase();
+      if(q==="ca"||(q!=="es"&&nl==="ca")) state.settings.lang="ca";
+    }catch(e){}
+  }
   if(!state.cats) state.cats=[...DEFAULT_CATS];
   // Si no hay datos en este dispositivo pero el archivo trae datos incrustados (app compartida), usarlos
   if(!state.pics){
