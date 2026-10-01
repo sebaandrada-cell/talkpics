@@ -195,6 +195,14 @@
   .copied{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#2b2b2b; color:#fff; padding:10px 18px; border-radius:30px; font-size:15px; opacity:0; transition:opacity .2s; pointer-events:none; z-index:90;}
   .copied.show{opacity:.95;}
   @media(max-width:860px){ .inst-top,.inst-grid{grid-template-columns:1fr;} .qrcard{max-width:320px; margin:0 auto;} .inst-top{text-align:center;} .share-btns{justify-content:center;} }
+  /* compact header on small phones */
+  .nav .btn.sm{white-space:nowrap;}
+  @media(max-width:480px){
+    .nav{gap:8px;}
+    .nav .btn.sm{padding:10px 14px; font-size:14px;}
+    .lang button{padding:6px 9px; font-size:12px;}
+    .cta-row .btn{white-space:normal;}
+  }
   [data-en],[data-ca]{display:none;}
   body.en [data-es],body.ca [data-es]{display:none;}
   body.en [data-en]{display:revert;}
@@ -222,7 +230,7 @@
       <button id="ca" onclick="setLang('ca')">CA</button>
       <button id="en" onclick="setLang('en')">EN</button>
     </div>
-    <a href="#precio" class="btn sm"><span data-es>Colaborar</span><span data-en>Contribute</span><span data-ca>Col·laborar</span></a>
+    <a href="TalkPics.html" class="btn sm"><span data-es>Abrir la app</span><span data-en>Open the app</span><span data-ca>Obrir l'app</span></a>
   </div>
 </header>
 
@@ -242,7 +250,7 @@
         <span data-ca>TalkPics converteix fotos reals de la vida del teu fill o filla en un tauler senzill que <b>parla per ell</b>. Toca una foto, s'amplia i el dispositiu diu la paraula en veu alta. Gran, calmat i fet per a persones autistes no verbals.</span>
       </p>
       <div class="cta-row">
-        <a href="#precio" class="btn"><span data-es>Conseguir la app gratis</span><span data-en>Get the app free</span><span data-ca>Aconsegueix l'app gratis</span></a>
+        <a href="TalkPics.html" class="btn"><span data-es>Abrir la app</span><span data-en>Open the app</span><span data-ca>Obrir l'app</span></a>
         <a href="#instalar" class="btn ghost"><span data-es>Instalar en mi dispositivo</span><span data-en>Install on my device</span><span data-ca>Instal·la-la al meu dispositiu</span></a>
       </div>
       <p class="cta-note">
