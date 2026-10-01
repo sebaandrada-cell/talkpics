@@ -195,9 +195,10 @@
   .copied{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#2b2b2b; color:#fff; padding:10px 18px; border-radius:30px; font-size:15px; opacity:0; transition:opacity .2s; pointer-events:none; z-index:90;}
   .copied.show{opacity:.95;}
   @media(max-width:860px){ .inst-top,.inst-grid{grid-template-columns:1fr;} .qrcard{max-width:320px; margin:0 auto;} .inst-top{text-align:center;} .share-btns{justify-content:center;} }
-  [data-en]{display:none;}
-  body.en [data-es]{display:none;}
+  [data-en],[data-ca]{display:none;}
+  body.en [data-es],body.ca [data-es]{display:none;}
   body.en [data-en]{display:revert;}
+  body.ca [data-ca]{display:revert;}
 
   @media(max-width:860px){
     section{padding:60px 0;}
@@ -218,9 +219,10 @@
     <a href="#features" class="hidedesk"></a>
     <div class="lang" role="group" aria-label="Idioma">
       <button id="es" class="on" onclick="setLang('es')">ES</button>
+      <button id="ca" onclick="setLang('ca')">CA</button>
       <button id="en" onclick="setLang('en')">EN</button>
     </div>
-    <a href="#precio" class="btn sm"><span data-es>Colaborar</span><span data-en>Contribute</span></a>
+    <a href="#precio" class="btn sm"><span data-es>Colaborar</span><span data-en>Contribute</span><span data-ca>Col·laborar</span></a>
   </div>
 </header>
 
@@ -228,22 +230,25 @@
 <div class="wrap">
   <div class="hero">
     <div>
-      <span class="eyebrow"><span data-es>Comunicación aumentativa · CAA</span><span data-en>Augmentative communication · AAC</span></span>
+      <span class="eyebrow"><span data-es>Comunicación aumentativa · CAA</span><span data-en>Augmentative communication · AAC</span><span data-ca>Comunicació augmentativa · CAA</span></span>
       <h1>
         <span data-es>Las fotos que dan voz a quien no puede hablar</span>
         <span data-en>The pictures that give a voice to those who can't speak</span>
+        <span data-ca>Les fotos que donen veu a qui no pot parlar</span>
       </h1>
       <p class="lead">
         <span data-es>TalkPics convierte fotos reales de la vida de tu hijo en un tablero simple que <b>habla por él</b>. Toca una foto, se agranda y el dispositivo dice la palabra en voz alta. Grande, calmado y hecho para personas autistas no verbales.</span>
         <span data-en>TalkPics turns real photos from your child's life into a simple board that <b>speaks for them</b>. Tap a photo, it grows large and the device says the word out loud. Big, calm, and built for non-speaking autistic people.</span>
+        <span data-ca>TalkPics converteix fotos reals de la vida del teu fill o filla en un tauler senzill que <b>parla per ell</b>. Toca una foto, s'amplia i el dispositiu diu la paraula en veu alta. Gran, calmat i fet per a persones autistes no verbals.</span>
       </p>
       <div class="cta-row">
-        <a href="#precio" class="btn"><span data-es>Conseguir la app gratis</span><span data-en>Get the app free</span></a>
-        <a href="#instalar" class="btn ghost"><span data-es>Instalar en mi dispositivo</span><span data-en>Install on my device</span></a>
+        <a href="#precio" class="btn"><span data-es>Conseguir la app gratis</span><span data-en>Get the app free</span><span data-ca>Aconsegueix l'app gratis</span></a>
+        <a href="#instalar" class="btn ghost"><span data-es>Instalar en mi dispositivo</span><span data-en>Install on my device</span><span data-ca>Instal·la-la al meu dispositiu</span></a>
       </div>
       <p class="cta-note">
         <span data-es>◉ Funciona sin internet · ◉ Sin anuncios · ◉ Las fotos nunca salen del dispositivo</span>
         <span data-en>◉ Works offline · ◉ No ads · ◉ Photos never leave the device</span>
+        <span data-ca>◉ Funciona sense internet · ◉ Sense anuncis · ◉ Les fotos mai surten del dispositiu</span>
       </p>
     </div>
 
@@ -253,14 +258,14 @@
         <div class="grid3">
           <div class="pcard sel">
             <span class="emoji">💧</span>
-            <span class="cap"><span data-es>Agua</span><span data-en>Water</span></span>
-            <div><span class="speak">🔊 <span data-es>"Agua"</span><span data-en>"Water"</span></span></div>
+            <span class="cap"><span data-es>Agua</span><span data-en>Water</span><span data-ca>Aigua</span></span>
+            <div><span class="speak">🔊 <span data-es>"Agua"</span><span data-en>"Water"</span><span data-ca>"Aigua"</span></span></div>
           </div>
-          <div class="pcard"><span class="emoji">🍎</span><span class="cap"><span data-es>Manzana</span><span data-en>Apple</span></span></div>
-          <div class="pcard"><span class="emoji">🧸</span><span class="cap"><span data-es>Oso</span><span data-en>Teddy</span></span></div>
-          <div class="pcard"><span class="emoji">🏞️</span><span class="cap"><span data-es>Parque</span><span data-en>Park</span></span></div>
-          <div class="pcard"><span class="emoji">👩</span><span class="cap"><span data-es>Mamá</span><span data-en>Mum</span></span></div>
-          <div class="pcard"><span class="emoji">😴</span><span class="cap"><span data-es>Dormir</span><span data-en>Sleep</span></span></div>
+          <div class="pcard"><span class="emoji">🍎</span><span class="cap"><span data-es>Manzana</span><span data-en>Apple</span><span data-ca>Poma</span></span></div>
+          <div class="pcard"><span class="emoji">🧸</span><span class="cap"><span data-es>Oso</span><span data-en>Teddy</span><span data-ca>Os</span></span></div>
+          <div class="pcard"><span class="emoji">🏞️</span><span class="cap"><span data-es>Parque</span><span data-en>Park</span><span data-ca>Parc</span></span></div>
+          <div class="pcard"><span class="emoji">👩</span><span class="cap"><span data-es>Mamá</span><span data-en>Mum</span><span data-ca>Mama</span></span></div>
+          <div class="pcard"><span class="emoji">😴</span><span class="cap"><span data-es>Dormir</span><span data-en>Sleep</span><span data-ca>Dormir</span></span></div>
         </div>
       </div>
     </div>
@@ -270,10 +275,10 @@
 <!-- TRUST BAR -->
 <div class="bar">
   <div class="wrap">
-    <div class="stat"><b>1-2</b><span data-es>toques para "decir" una palabra</span><span data-en>taps to "say" a word</span></div>
-    <div class="stat"><b>100%</b><span data-es>funciona sin conexión</span><span data-en>works offline</span></div>
-    <div class="stat"><b>4</b><span data-es>plataformas: iPad, iPhone, Android</span><span data-en>platforms: iPad, iPhone, Android</span></div>
-    <div class="stat"><b>0</b><span data-es>anuncios y rastreo</span><span data-en>ads and tracking</span></div>
+    <div class="stat"><b>1-2</b><span data-es>toques para "decir" una palabra</span><span data-en>taps to "say" a word</span><span data-ca>tocs per «dir» una paraula</span></div>
+    <div class="stat"><b>100%</b><span data-es>funciona sin conexión</span><span data-en>works offline</span><span data-ca>funciona sense connexió</span></div>
+    <div class="stat"><b>4</b><span data-es>plataformas: iPad, iPhone, Android</span><span data-en>platforms: iPad, iPhone, Android</span><span data-ca>plataformes: iPad, iPhone, Android</span></div>
+    <div class="stat"><b>0</b><span data-es>anuncios y rastreo</span><span data-en>ads and tracking</span><span data-ca>anuncis i rastreig</span></div>
   </div>
 </div>
 
@@ -281,17 +286,18 @@
 <section class="problem">
   <div class="wrap p-grid">
     <div>
-      <span class="eyebrow"><span data-es>El problema</span><span data-en>The problem</span></span>
+      <span class="eyebrow"><span data-es>El problema</span><span data-en>The problem</span><span data-ca>El problema</span></span>
       <p class="quote" style="margin-top:16px">
         <span data-es>Cuando un niño no puede pedir <span>agua</span>, <span>un abrazo</span> o decir que algo <span>le duele</span>, la frustración crece para toda la familia.</span>
-        <span data-en>When a child can't ask for <span>water</span>, <span>a hug</span>, or say that something <span>hurts</span>, frustration grows for the whole family.</span>
+        <span data-en>When a child can't ask for <span>water</span>
+        <span data-ca>Quan un infant no pot demanar <span>aigua</span>, <span>una abraçada</span> o dir que alguna cosa <span>li fa mal</span>, la frustració creix per a tota la família.</span>, <span>a hug</span>, or say that something <span>hurts</span>, frustration grows for the whole family.</span>
       </p>
     </div>
     <ul class="p-list">
-      <li><span class="ic">🔤</span><span data-es>Los pictogramas genéricos no se parecen a <b>su</b> taza, <b>su</b> cocina, <b>su</b> familia.</span><span data-en>Generic symbols don't look like <b>their</b> cup, <b>their</b> kitchen, <b>their</b> family.</span></li>
-      <li><span class="ic">😵</span><span data-es>Las apps existentes son caras, cargadas de botones y fáciles de romper con un toque.</span><span data-en>Existing apps are expensive, cluttered with buttons, and easy to break with one tap.</span></li>
-      <li><span class="ic">🔒</span><span data-es>Suben las fotos del niño a la nube. Datos sensibles fuera de tu control.</span><span data-en>They upload the child's photos to the cloud. Sensitive data out of your control.</span></li>
-      <li><span class="ic">📶</span><span data-es>Sin internet, muchas dejan de funcionar justo cuando más se necesitan.</span><span data-en>Without internet, many stop working right when they're needed most.</span></li>
+      <li><span class="ic">🔤</span><span data-es>Los pictogramas genéricos no se parecen a <b>su</b> taza, <b>su</b> cocina, <b>su</b> familia.</span><span data-en>Generic symbols don't look like <b>their</b> cup, <b>their</b> kitchen, <b>their</b> family.</span><span data-ca>Els pictogrames genèrics no s'assemblen a <b>la seva</b> tassa, <b>la seva</b> cuina, <b>la seva</b> família.</span></li>
+      <li><span class="ic">😵</span><span data-es>Las apps existentes son caras, cargadas de botones y fáciles de romper con un toque.</span><span data-en>Existing apps are expensive, cluttered with buttons, and easy to break with one tap.</span><span data-ca>Les apps existents són cares, carregades de botons i fàcils de trencar amb un toc.</span></li>
+      <li><span class="ic">🔒</span><span data-es>Suben las fotos del niño a la nube. Datos sensibles fuera de tu control.</span><span data-en>They upload the child's photos to the cloud. Sensitive data out of your control.</span><span data-ca>Pugen les fotos de l'infant al núvol. Dades sensibles fora del teu control.</span></li>
+      <li><span class="ic">📶</span><span data-es>Sin internet, muchas dejan de funcionar justo cuando más se necesitan.</span><span data-en>Without internet, many stop working right when they're needed most.</span><span data-ca>Sense internet, moltes deixen de funcionar just quan més es necessiten.</span></li>
     </ul>
   </div>
 </section>
@@ -300,17 +306,17 @@
 <section id="features">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow"><span data-es>Qué hace la app</span><span data-en>What the app does</span></span>
-      <h2><span data-es>Todo lo que necesita una familia, nada que sobre</span><span data-en>Everything a family needs, nothing they don't</span></h2>
-      <p><span data-es>Diseñada con terapeutas del lenguaje alrededor de un principio: la foto real de tu hijo comunica más rápido que cualquier símbolo.</span><span data-en>Designed with speech therapists around one principle: your child's real photo communicates faster than any symbol.</span></p>
+      <span class="eyebrow"><span data-es>Qué hace la app</span><span data-en>What the app does</span><span data-ca>Què fa l'app</span></span>
+      <h2><span data-es>Todo lo que necesita una familia, nada que sobre</span><span data-en>Everything a family needs, nothing they don't</span><span data-ca>Tot el que necessita una família, res que sobri</span></h2>
+      <p><span data-es>Diseñada con terapeutas del lenguaje alrededor de un principio: la foto real de tu hijo comunica más rápido que cualquier símbolo.</span><span data-en>Designed with speech therapists around one principle: your child's real photo communicates faster than any symbol.</span><span data-ca>Dissenyada amb logopedes al voltant d'un principi: la foto real del teu fill o filla comunica més ràpid que qualsevol símbol.</span></p>
     </div>
     <div class="feat-grid">
-      <div class="feat"><div class="fic">📸</div><h3><span data-es>Fotos reales</span><span data-en>Real photos</span></h3><p><span data-es>Haz una foto o súbela desde la galería. La taza azul de casa, no un dibujo cualquiera.</span><span data-en>Snap a photo or upload from the gallery. The blue cup from home, not a generic drawing.</span></p></div>
-      <div class="feat"><div class="fic">🔊</div><h3><span data-es>Habla en voz alta</span><span data-en>Speaks aloud</span></h3><p><span data-es>Al tocar, dice la palabra. Puedes grabar tu propia voz: la que el niño reconoce.</span><span data-en>On tap, it says the word. You can record your own voice — the one the child knows.</span></p></div>
-      <div class="feat"><div class="fic">🔍</div><h3><span data-es>Enfoque y zoom</span><span data-en>Focus &amp; zoom</span></h3><p><span data-es>La foto elegida crece hasta llenar la pantalla para que todos la vean con claridad.</span><span data-en>The chosen photo grows to fill the screen so everyone sees it clearly.</span></p></div>
-      <div class="feat"><div class="fic">🗂️</div><h3><span data-es>Categorías y filtros</span><span data-en>Categories &amp; filters</span></h3><p><span data-es>Comida, personas, lugares, emociones. Ordena, etiqueta y marca favoritos a tu manera.</span><span data-en>Food, people, places, feelings. Sort, tag and star favorites your way.</span></p></div>
-      <div class="feat"><div class="fic">🧩</div><h3><span data-es>Modo simple y bloqueo</span><span data-en>Simple mode &amp; lock</span></h3><p><span data-es>Menos tarjetas, más grandes, sin botones de edición. El niño no puede borrar ni salir por error.</span><span data-en>Fewer, larger cards, no edit buttons. The child can't delete or exit by accident.</span></p></div>
-      <div class="feat"><div class="fic">💬</div><h3><span data-es>Tira de frases</span><span data-en>Sentence strip</span></h3><p><span data-es>Encadena tarjetas para construir frases: "Quiero" + "agua". Actívala solo cuando esté listo.</span><span data-en>Chain cards to build phrases: "I want" + "water". Turn it on only when ready.</span></p></div>
+      <div class="feat"><div class="fic">📸</div><h3><span data-es>Fotos reales</span><span data-en>Real photos</span><span data-ca>Fotos reals</span></h3><p><span data-es>Haz una foto o súbela desde la galería. La taza azul de casa, no un dibujo cualquiera.</span><span data-en>Snap a photo or upload from the gallery. The blue cup from home, not a generic drawing.</span><span data-ca>Fes una foto o puja-la des de la galeria. La tassa blava de casa, no un dibuix qualsevol.</span></p></div>
+      <div class="feat"><div class="fic">🔊</div><h3><span data-es>Habla en voz alta</span><span data-en>Speaks aloud</span><span data-ca>Parla en veu alta</span></h3><p><span data-es>Al tocar, dice la palabra. Puedes grabar tu propia voz: la que el niño reconoce.</span><span data-en>On tap, it says the word. You can record your own voice — the one the child knows.</span><span data-ca>En tocar, diu la paraula. Pots gravar la teva pròpia veu: la que l'infant reconeix.</span></p></div>
+      <div class="feat"><div class="fic">🔍</div><h3><span data-es>Enfoque y zoom</span><span data-en>Focus &amp; zoom</span><span data-ca>Enfocament i zoom</span></h3><p><span data-es>La foto elegida crece hasta llenar la pantalla para que todos la vean con claridad.</span><span data-en>The chosen photo grows to fill the screen so everyone sees it clearly.</span><span data-ca>La foto triada creix fins a omplir la pantalla perquè tothom la vegi amb claredat.</span></p></div>
+      <div class="feat"><div class="fic">🗂️</div><h3><span data-es>Categorías y filtros</span><span data-en>Categories &amp; filters</span><span data-ca>Categories i filtres</span></h3><p><span data-es>Comida, personas, lugares, emociones. Ordena, etiqueta y marca favoritos a tu manera.</span><span data-en>Food, people, places, feelings. Sort, tag and star favorites your way.</span><span data-ca>Menjar, persones, llocs, emocions. Ordena, etiqueta i marca preferits a la teva manera.</span></p></div>
+      <div class="feat"><div class="fic">🧩</div><h3><span data-es>Modo simple y bloqueo</span><span data-en>Simple mode &amp; lock</span><span data-ca>Mode simple i bloqueig</span></h3><p><span data-es>Menos tarjetas, más grandes, sin botones de edición. El niño no puede borrar ni salir por error.</span><span data-en>Fewer, larger cards, no edit buttons. The child can't delete or exit by accident.</span><span data-ca>Menys targetes, més grans, sense botons d'edició. L'infant no pot esborrar ni sortir per error.</span></p></div>
+      <div class="feat"><div class="fic">💬</div><h3><span data-es>Tira de frases</span><span data-en>Sentence strip</span><span data-ca>Tira de frases</span></h3><p><span data-es>Encadena tarjetas para construir frases: "Quiero" + "agua". Actívala solo cuando esté listo.</span><span data-en>Chain cards to build phrases: "I want" + "water". Turn it on only when ready.</span><span data-ca>Encadena targetes per construir frases: «Vull» + «aigua». Activa-la només quan estigui a punt.</span></p></div>
     </div>
   </div>
 </section>
@@ -319,13 +325,13 @@
 <section id="how" class="how">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow"><span data-es>Cómo funciona</span><span data-en>How it works</span></span>
-      <h2><span data-es>Listo en tres pasos</span><span data-en>Ready in three steps</span></h2>
+      <span class="eyebrow"><span data-es>Cómo funciona</span><span data-en>How it works</span><span data-ca>Com funciona</span></span>
+      <h2><span data-es>Listo en tres pasos</span><span data-en>Ready in three steps</span><span data-ca>A punt en tres passos</span></h2>
     </div>
     <div class="steps">
-      <div class="step"><div class="num">1</div><h3><span data-es>Añade fotos</span><span data-en>Add photos</span></h3><p><span data-es>El cuidador toma o sube fotos de las cosas, personas y lugares del día a día del niño y les pone nombre.</span><span data-en>The caregiver takes or uploads photos of the child's everyday things, people and places, and names them.</span></p></div>
-      <div class="step"><div class="num">2</div><h3><span data-es>Bloquea en modo niño</span><span data-en>Lock into child mode</span></h3><p><span data-es>Un gesto seguro deja la app en una vista simple donde nada se puede romper ni borrar.</span><span data-en>A safe gesture leaves the app in a simple view where nothing can break or be deleted.</span></p></div>
-      <div class="step"><div class="num">3</div><h3><span data-es>El niño se comunica</span><span data-en>The child communicates</span></h3><p><span data-es>Toca la foto que quiere, se agranda y suena la palabra. Uno o dos toques, sin esperas.</span><span data-en>They tap the photo they want, it grows and the word plays. One or two taps, no waiting.</span></p></div>
+      <div class="step"><div class="num">1</div><h3><span data-es>Añade fotos</span><span data-en>Add photos</span><span data-ca>Afegeix fotos</span></h3><p><span data-es>El cuidador toma o sube fotos de las cosas, personas y lugares del día a día del niño y les pone nombre.</span><span data-en>The caregiver takes or uploads photos of the child's everyday things, people and places, and names them.</span><span data-ca>El cuidador fa o puja fotos de les coses, persones i llocs del dia a dia de l'infant i els posa nom.</span></p></div>
+      <div class="step"><div class="num">2</div><h3><span data-es>Bloquea en modo niño</span><span data-en>Lock into child mode</span><span data-ca>Bloqueja en mode infant</span></h3><p><span data-es>Un gesto seguro deja la app en una vista simple donde nada se puede romper ni borrar.</span><span data-en>A safe gesture leaves the app in a simple view where nothing can break or be deleted.</span><span data-ca>Un gest segur deixa l'app en una vista simple on res no es pot trencar ni esborrar.</span></p></div>
+      <div class="step"><div class="num">3</div><h3><span data-es>El niño se comunica</span><span data-en>The child communicates</span><span data-ca>L'infant es comunica</span></h3><p><span data-es>Toca la foto que quiere, se agranda y suena la palabra. Uno o dos toques, sin esperas.</span><span data-en>They tap the photo they want, it grows and the word plays. One or two taps, no waiting.</span><span data-ca>Toca la foto que vol, s'amplia i sona la paraula. Un o dos tocs, sense esperes.</span></p></div>
     </div>
   </div>
 </section>
@@ -334,24 +340,24 @@
 <section id="instalar" class="install">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow"><span data-es>Instalar y compartir</span><span data-en>Install &amp; share</span></span>
-      <h2><span data-es>En tu móvil, tablet u ordenador en 30 segundos</span><span data-en>On your phone, tablet or computer in 30 seconds</span></h2>
-      <p><span data-es>Sin tienda de apps, sin cuentas y sin descargas pesadas. Una vez instalada, funciona sin internet.</span><span data-en>No app store, no accounts, no big downloads. Once installed, it works offline.</span></p>
+      <span class="eyebrow"><span data-es>Instalar y compartir</span><span data-en>Install &amp; share</span><span data-ca>Instal·lar i compartir</span></span>
+      <h2><span data-es>En tu móvil, tablet u ordenador en 30 segundos</span><span data-en>On your phone, tablet or computer in 30 seconds</span><span data-ca>Al teu mòbil, tauleta o ordinador en 30 segons</span></h2>
+      <p><span data-es>Sin tienda de apps, sin cuentas y sin descargas pesadas. Una vez instalada, funciona sin internet.</span><span data-en>No app store, no accounts, no big downloads. Once installed, it works offline.</span><span data-ca>Sense botiga d'apps, sense comptes i sense descàrregues pesades. Un cop instal·lada, funciona sense internet.</span></p>
     </div>
 
     <div class="inst-top">
       <div class="qrcard">
         <img src="qr-talkpics.png" alt="Código QR de TalkPics" width="600" height="600">
-        <p><span data-es>Escanéalo con la cámara del móvil o la tablet</span><span data-en>Scan it with your phone or tablet camera</span></p>
+        <p><span data-es>Escanéalo con la cámara del móvil o la tablet</span><span data-en>Scan it with your phone or tablet camera</span><span data-ca>Escaneja'l amb la càmera del mòbil o la tauleta</span></p>
       </div>
       <div>
         <div class="share-url">sebaandrada-cell.github.io/talkpics</div>
         <div class="share-btns">
-          <button class="btn" type="button" onclick="shareTP()"><span data-es>📤 Compartir enlace</span><span data-en>📤 Share link</span></button>
-          <button class="btn ghost" type="button" onclick="copyTP()"><span data-es>📋 Copiar enlace</span><span data-en>📋 Copy link</span></button>
-          <a class="btn ghost" id="wa" href="#" target="_blank" rel="noopener" onclick="return waTP(this)"><span data-es>💬 Enviar por WhatsApp</span><span data-en>💬 Send via WhatsApp</span></a>
-          <a class="btn ghost" href="qr-talkpics.png" download="TalkPics-QR.png"><span data-es>⬇ Descargar QR</span><span data-en>⬇ Download QR</span></a>
-          <a class="btn ghost" href="TalkPics-QR-hoja.pdf" target="_blank" rel="noopener"><span data-es>🖨 Hoja para imprimir</span><span data-en>🖨 Printable sheet</span></a>
+          <button class="btn" type="button" onclick="shareTP()"><span data-es>📤 Compartir enlace</span><span data-en>📤 Share link</span><span data-ca>📤 Comparteix l'enllaç</span></button>
+          <button class="btn ghost" type="button" onclick="copyTP()"><span data-es>📋 Copiar enlace</span><span data-en>📋 Copy link</span><span data-ca>📋 Copia l'enllaç</span></button>
+          <a class="btn ghost" id="wa" href="#" target="_blank" rel="noopener" onclick="return waTP(this)"><span data-es>💬 Enviar por WhatsApp</span><span data-en>💬 Send via WhatsApp</span><span data-ca>💬 Envia per WhatsApp</span></a>
+          <a class="btn ghost" href="qr-talkpics.png" download="TalkPics-QR.png"><span data-es>⬇ Descargar QR</span><span data-en>⬇ Download QR</span><span data-ca>⬇ Descarrega el QR</span></a>
+          <a class="btn ghost" href="TalkPics-QR-hoja.pdf" target="_blank" rel="noopener"><span data-es>🖨 Hoja para imprimir</span><span data-en>🖨 Printable sheet</span><span data-ca>🖨 Full per imprimir</span></a>
         </div>
       </div>
     </div>
@@ -360,35 +366,35 @@
       <div class="inst-card">
         <h3>📱 iPhone / iPad</h3>
         <ol>
-          <li><span data-es>Abre el enlace con <b>Safari</b>.</span><span data-en>Open the link in <b>Safari</b>.</span></li>
-          <li><span data-es>Pulsa <b>Compartir</b> (el cuadrado con la flecha ↑).</span><span data-en>Tap <b>Share</b> (the square with the ↑ arrow).</span></li>
-          <li><span data-es>Elige <b>Añadir a pantalla de inicio</b> y pulsa Añadir.</span><span data-en>Choose <b>Add to Home Screen</b> and tap Add.</span></li>
-          <li><span data-es>Abre TalkPics desde el nuevo icono.</span><span data-en>Open TalkPics from the new icon.</span></li>
+          <li><span data-es>Abre el enlace con <b>Safari</b>.</span><span data-en>Open the link in <b>Safari</b>.</span><span data-ca>Obre l'enllaç amb <b>Safari</b>.</span></li>
+          <li><span data-es>Pulsa <b>Compartir</b> (el cuadrado con la flecha ↑).</span><span data-en>Tap <b>Share</b> (the square with the ↑ arrow).</span><span data-ca>Prem <b>Compartir</b> (el quadrat amb la fletxa ↑).</span></li>
+          <li><span data-es>Elige <b>Añadir a pantalla de inicio</b> y pulsa Añadir.</span><span data-en>Choose <b>Add to Home Screen</b> and tap Add.</span><span data-ca>Tria <b>Afegeix a la pantalla d'inici</b> i prem Afegeix.</span></li>
+          <li><span data-es>Abre TalkPics desde el nuevo icono.</span><span data-en>Open TalkPics from the new icon.</span><span data-ca>Obre TalkPics des de la nova icona.</span></li>
         </ol>
       </div>
       <div class="inst-card">
         <h3>🤖 Android</h3>
         <ol>
-          <li><span data-es>Abre el enlace con <b>Chrome</b>.</span><span data-en>Open the link in <b>Chrome</b>.</span></li>
-          <li><span data-es>Pulsa el menú <b>⋮</b> (arriba a la derecha).</span><span data-en>Tap the <b>⋮</b> menu (top right).</span></li>
-          <li><span data-es>Elige <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</span><span data-en>Choose <b>Install app</b> or <b>Add to Home screen</b>.</span></li>
-          <li><span data-es>Abre TalkPics desde el nuevo icono.</span><span data-en>Open TalkPics from the new icon.</span></li>
+          <li><span data-es>Abre el enlace con <b>Chrome</b>.</span><span data-en>Open the link in <b>Chrome</b>.</span><span data-ca>Obre l'enllaç amb <b>Chrome</b>.</span></li>
+          <li><span data-es>Pulsa el menú <b>⋮</b> (arriba a la derecha).</span><span data-en>Tap the <b>⋮</b> menu (top right).</span><span data-ca>Prem el menú <b>⋮</b> (a dalt a la dreta).</span></li>
+          <li><span data-es>Elige <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</span><span data-en>Choose <b>Install app</b> or <b>Add to Home screen</b>.</span><span data-ca>Tria <b>Instal·la l'aplicació</b> o <b>Afegeix a la pantalla d'inici</b>.</span></li>
+          <li><span data-es>Abre TalkPics desde el nuevo icono.</span><span data-en>Open TalkPics from the new icon.</span><span data-ca>Obre TalkPics des de la nova icona.</span></li>
         </ol>
       </div>
       <div class="inst-card">
-        <h3>💻 <span data-es>Ordenador</span><span data-en>Computer</span></h3>
+        <h3>💻 <span data-es>Ordenador</span><span data-en>Computer</span><span data-ca>Ordinador</span></h3>
         <ol>
-          <li><span data-es>Abre el enlace con Chrome, Edge o Safari.</span><span data-en>Open the link in Chrome, Edge or Safari.</span></li>
-          <li><span data-es>Pulsa <b>Abrir la app</b> y úsala directamente, sin instalar nada.</span><span data-en>Tap <b>Open the app</b> and use it right away, no install needed.</span></li>
-          <li><span data-es>Opcional: en Chrome o Edge, pulsa el icono de instalar de la barra de direcciones.</span><span data-en>Optional: in Chrome or Edge, click the install icon in the address bar.</span></li>
+          <li><span data-es>Abre el enlace con Chrome, Edge o Safari.</span><span data-en>Open the link in Chrome, Edge or Safari.</span><span data-ca>Obre l'enllaç amb Chrome, Edge o Safari.</span></li>
+          <li><span data-es>Pulsa <b>Abrir la app</b> y úsala directamente, sin instalar nada.</span><span data-en>Tap <b>Open the app</b> and use it right away, no install needed.</span><span data-ca>Prem <b>Obrir l'app</b> i fes-la servir directament, sense instal·lar res.</span></li>
+          <li><span data-es>Opcional: en Chrome o Edge, pulsa el icono de instalar de la barra de direcciones.</span><span data-en>Optional: in Chrome or Edge, click the install icon in the address bar.</span><span data-ca>Opcional: a Chrome o Edge, prem la icona d'instal·lar de la barra d'adreces.</span></li>
         </ol>
       </div>
     </div>
 
     <div class="inst-note">
-      <p><span data-es><b>Importante en iPhone y iPad:</b> el navegador y el icono de inicio guardan los datos por separado. Instala primero el icono y <b>añade las fotos desde la app instalada</b>.</span><span data-en><b>Important on iPhone and iPad:</b> the browser and the home-screen icon store data separately. Install the icon first and <b>add photos from the installed app</b>.</span></p>
-      <p><span data-es><b>Tus fotos y voces se guardan solo en ese dispositivo.</b> Para pasarlas a otro móvil o a un terapeuta, usa la opción de exportar copia de seguridad dentro de la app.</span><span data-en><b>Your photos and voices are stored only on that device.</b> To move them to another phone or to a therapist, use the export backup option inside the app.</span></p>
-      <p><span data-es>La primera vez necesitas internet para abrirla. Después abre sin conexión. Solo la búsqueda de pictogramas ARASAAC requiere internet.</span><span data-en>You need internet the first time you open it. After that it opens offline. Only the ARASAAC pictogram search needs internet.</span></p>
+      <p><span data-es><b>Importante en iPhone y iPad:</b> el navegador y el icono de inicio guardan los datos por separado. Instala primero el icono y <b>añade las fotos desde la app instalada</b>.</span><span data-en><b>Important on iPhone and iPad:</b> the browser and the home-screen icon store data separately. Install the icon first and <b>add photos from the installed app</b>.</span><span data-ca><b>Important a iPhone i iPad:</b> el navegador i la icona d'inici guarden les dades per separat. Instal·la primer la icona i <b>afegeix les fotos des de l'app instal·lada</b>.</span></p>
+      <p><span data-es><b>Tus fotos y voces se guardan solo en ese dispositivo.</b> Para pasarlas a otro móvil o a un terapeuta, usa la opción de exportar copia de seguridad dentro de la app.</span><span data-en><b>Your photos and voices are stored only on that device.</b> To move them to another phone or to a therapist, use the export backup option inside the app.</span><span data-ca><b>Les teves fotos i veus es guarden només en aquest dispositiu.</b> Per passar-les a un altre mòbil o a un terapeuta, fes servir l'opció d'exportar còpia de seguretat dins de l'app.</span></p>
+      <p><span data-es>La primera vez necesitas internet para abrirla. Después abre sin conexión. Solo la búsqueda de pictogramas ARASAAC requiere internet.</span><span data-en>You need internet the first time you open it. After that it opens offline. Only the ARASAAC pictogram search needs internet.</span><span data-ca>La primera vegada necessites internet per obrir-la. Després obre sense connexió. Només la cerca de pictogrames ARASAAC requereix internet.</span></p>
     </div>
   </div>
 </section>
@@ -397,16 +403,16 @@
 <section>
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow"><span data-es>Ventajas</span><span data-en>Advantages</span></span>
-      <h2><span data-es>Por qué TalkPics es diferente</span><span data-en>Why TalkPics is different</span></h2>
+      <span class="eyebrow"><span data-es>Ventajas</span><span data-en>Advantages</span><span data-ca>Avantatges</span></span>
+      <h2><span data-es>Por qué TalkPics es diferente</span><span data-en>Why TalkPics is different</span><span data-ca>Per què TalkPics és diferent</span></h2>
     </div>
     <div class="adv-grid">
-      <div class="adv"><span class="check">✓</span><div><b><span data-es>Privado por defecto</span><span data-en>Private by default</span></b><p><span data-es>Las fotos y datos del niño se quedan en el dispositivo. Nada se sube sin tu permiso explícito.</span><span data-en>The child's photos and data stay on the device. Nothing is uploaded without your explicit consent.</span></p></div></div>
-      <div class="adv"><span class="check">✓</span><div><b><span data-es>Funciona sin conexión</span><span data-en>Works offline</span></b><p><span data-es>En casa, en el coche o en el súper. Sin depender del wifi ni de un spinner de carga.</span><span data-en>At home, in the car, at the store. No wifi dependence, no loading spinner.</span></p></div></div>
-      <div class="adv"><span class="check">✓</span><div><b><span data-es>Calmado y sensorial</span><span data-en>Calm &amp; sensory-friendly</span></b><p><span data-es>Colores suaves, animaciones reducibles, control de volumen y modo silencio para niños sensibles.</span><span data-en>Muted colors, reducible animation, volume control and silent mode for sensitive children.</span></p></div></div>
-      <div class="adv"><span class="check">✓</span><div><b><span data-es>A prueba de errores</span><span data-en>Mistake-proof</span></b><p><span data-es>Objetivos grandes, mucho espacio y acciones destructivas tras un candado. Nada se rompe con un toque.</span><span data-en>Big targets, generous spacing, destructive actions behind a lock. Nothing breaks with a tap.</span></p></div></div>
-      <div class="adv"><span class="check">✓</span><div><b><span data-es>Bilingüe y con tu voz</span><span data-en>Bilingual &amp; your voice</span></b><p><span data-es>Muestra una palabra y pronuncia otra, o graba tu propia voz para cada foto.</span><span data-en>Show one word and speak another, or record your own voice for each photo.</span></p></div></div>
-      <div class="adv"><span class="check">✓</span><div><b><span data-es>Crece con la familia</span><span data-en>Grows with the family</span></b><p><span data-es>Varios perfiles, copias de seguridad y sincronización opcional entre casa y colegio.</span><span data-en>Multiple profiles, backups and optional sync between home and school.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Privado por defecto</span><span data-en>Private by default</span><span data-ca>Privat per defecte</span></b><p><span data-es>Las fotos y datos del niño se quedan en el dispositivo. Nada se sube sin tu permiso explícito.</span><span data-en>The child's photos and data stay on the device. Nothing is uploaded without your explicit consent.</span><span data-ca>Les fotos i dades de l'infant es queden al dispositiu. Res es puja sense el teu permís explícit.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Funciona sin conexión</span><span data-en>Works offline</span><span data-ca>Funciona sense connexió</span></b><p><span data-es>En casa, en el coche o en el súper. Sin depender del wifi ni de un spinner de carga.</span><span data-en>At home, in the car, at the store. No wifi dependence, no loading spinner.</span><span data-ca>A casa, al cotxe o al súper. Sense dependre del wifi ni d'un spinner de càrrega.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Calmado y sensorial</span><span data-en>Calm &amp; sensory-friendly</span><span data-ca>Calmat i sensorial</span></b><p><span data-es>Colores suaves, animaciones reducibles, control de volumen y modo silencio para niños sensibles.</span><span data-en>Muted colors, reducible animation, volume control and silent mode for sensitive children.</span><span data-ca>Colors suaus, animacions reduïbles, control de volum i mode silenci per a infants sensibles.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>A prueba de errores</span><span data-en>Mistake-proof</span><span data-ca>A prova d'errors</span></b><p><span data-es>Objetivos grandes, mucho espacio y acciones destructivas tras un candado. Nada se rompe con un toque.</span><span data-en>Big targets, generous spacing, destructive actions behind a lock. Nothing breaks with a tap.</span><span data-ca>Objectius grans, molt d'espai i accions destructives darrere d'un cadenat. Res es trenca amb un toc.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Bilingüe y con tu voz</span><span data-en>Bilingual &amp; your voice</span><span data-ca>Bilingüe i amb la teva veu</span></b><p><span data-es>Muestra una palabra y pronuncia otra, o graba tu propia voz para cada foto.</span><span data-en>Show one word and speak another, or record your own voice for each photo.</span><span data-ca>Mostra una paraula i pronuncia'n una altra, o grava la teva pròpia veu per a cada foto.</span></p></div></div>
+      <div class="adv"><span class="check">✓</span><div><b><span data-es>Crece con la familia</span><span data-en>Grows with the family</span><span data-ca>Creix amb la família</span></b><p><span data-es>Varios perfiles, copias de seguridad y sincronización opcional entre casa y colegio.</span><span data-en>Multiple profiles, backups and optional sync between home and school.</span><span data-ca>Diversos perfils, còpies de seguretat i sincronització opcional entre casa i escola.</span></p></div></div>
     </div>
   </div>
 </section>
@@ -415,13 +421,13 @@
 <section class="how">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow"><span data-es>Para quién</span><span data-en>Who it's for</span></span>
-      <h2><span data-es>Hecho para todo el círculo de apoyo</span><span data-en>Made for the whole support circle</span></h2>
+      <span class="eyebrow"><span data-es>Para quién</span><span data-en>Who it's for</span><span data-ca>Per a qui</span></span>
+      <h2><span data-es>Hecho para todo el círculo de apoyo</span><span data-en>Made for the whole support circle</span><span data-ca>Fet per a tot el cercle de suport</span></h2>
     </div>
     <div class="aud-grid">
-      <div class="aud"><div class="ail">👧</div><h3><span data-es>Niños y adultos no verbales</span><span data-en>Non-speaking children &amp; adults</span></h3><p><span data-es>Autistas mínimamente verbales que necesitan una forma clara, grande y predecible de expresarse.</span><span data-en>Minimally verbal autistic people who need a clear, big, predictable way to express themselves.</span></p></div>
-      <div class="aud"><div class="ail">👨‍👩‍👧</div><h3><span data-es>Familias</span><span data-en>Families</span></h3><p><span data-es>Padres y hermanos que quieren entender qué necesita su ser querido y reducir la frustración diaria.</span><span data-en>Parents and siblings who want to understand what their loved one needs and reduce daily frustration.</span></p></div>
-      <div class="aud"><div class="ail">🧑‍🏫</div><h3><span data-es>Terapeutas y colegios</span><span data-en>Therapists &amp; schools</span></h3><p><span data-es>Logopedas y docentes que buscan una herramienta CAA seria, con datos de uso privados para objetivos de terapia.</span><span data-en>Speech therapists and teachers wanting a serious AAC tool with private usage data for therapy goals.</span></p></div>
+      <div class="aud"><div class="ail">👧</div><h3><span data-es>Niños y adultos no verbales</span><span data-en>Non-speaking children &amp; adults</span><span data-ca>Infants i adults no verbals</span></h3><p><span data-es>Autistas mínimamente verbales que necesitan una forma clara, grande y predecible de expresarse.</span><span data-en>Minimally verbal autistic people who need a clear, big, predictable way to express themselves.</span><span data-ca>Autistes mínimament verbals que necessiten una manera clara, gran i predictible d'expressar-se.</span></p></div>
+      <div class="aud"><div class="ail">👨‍👩‍👧</div><h3><span data-es>Familias</span><span data-en>Families</span><span data-ca>Famílies</span></h3><p><span data-es>Padres y hermanos que quieren entender qué necesita su ser querido y reducir la frustración diaria.</span><span data-en>Parents and siblings who want to understand what their loved one needs and reduce daily frustration.</span><span data-ca>Pares i germans que volen entendre què necessita la persona estimada i reduir la frustració diària.</span></p></div>
+      <div class="aud"><div class="ail">🧑‍🏫</div><h3><span data-es>Terapeutas y colegios</span><span data-en>Therapists &amp; schools</span><span data-ca>Terapeutes i escoles</span></h3><p><span data-es>Logopedas y docentes que buscan una herramienta CAA seria, con datos de uso privados para objetivos de terapia.</span><span data-en>Speech therapists and teachers wanting a serious AAC tool with private usage data for therapy goals.</span><span data-ca>Logopedes i docents que busquen una eina CAA seriosa, amb dades d'ús privades per a objectius de teràpia.</span></p></div>
     </div>
   </div>
 </section>
@@ -430,20 +436,20 @@
 <section id="precio" class="price">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow"><span data-es>Colaboración</span><span data-en>Contribution</span></span>
-      <h2><span data-es>Ad honorem. Aporta lo que quieras.</span><span data-en>Pay what you want. No obligation.</span></h2>
-      <p><span data-es>TalkPics es de uso libre. Si te ayuda y quieres colaborar, aporta lo que te parezca. 10€ es solo una referencia: puedes dar 0€ o más.</span><span data-en>TalkPics is free to use. If it helps and you'd like to support it, give what feels right. €10 is just a reference: you can give €0 or more.</span></p>
+      <span class="eyebrow"><span data-es>Colaboración</span><span data-en>Contribution</span><span data-ca>Col·laboració</span></span>
+      <h2><span data-es>Ad honorem. Aporta lo que quieras.</span><span data-en>Pay what you want. No obligation.</span><span data-ca>Ad honorem. Aporta el que vulguis.</span></h2>
+      <p><span data-es>TalkPics es de uso libre. Si te ayuda y quieres colaborar, aporta lo que te parezca. 10€ es solo una referencia: puedes dar 0€ o más.</span><span data-en>TalkPics is free to use. If it helps and you'd like to support it, give what feels right. €10 is just a reference: you can give €0 or more.</span><span data-ca>TalkPics és d'ús lliure. Si t'ajuda i vols col·laborar, aporta el que et sembli. 10€ és només una referència: pots donar 0€ o més.</span></p>
     </div>
 
     <div class="price-card">
       <div class="price-tag"><span class="amount">10</span><span class="cur">€</span></div>
-      <p class="price-sub"><span data-es>Aporte sugerido · Puedes dar 0€ o más · Todas las funciones</span><span data-en>Suggested contribution · Give €0 or more · All features</span></p>
+      <p class="price-sub"><span data-es>Aporte sugerido · Puedes dar 0€ o más · Todas las funciones</span><span data-en>Suggested contribution · Give €0 or more · All features</span><span data-ca>Aportació suggerida · Pots donar 0€ o més · Totes les funcions</span></p>
 
       <ul class="incl">
-        <li><span class="c">✓</span> <span data-es>App completa para iPad, iPhone y Android</span><span data-en>Full app for iPad, iPhone and Android</span></li>
-        <li><span class="c">✓</span> <span data-es>Fotos, voz, categorías, modo simple y tira de frases</span><span data-en>Photos, voice, categories, simple mode and sentence strip</span></li>
-        <li><span class="c">✓</span> <span data-es>Funciona sin internet y sin anuncios</span><span data-en>Works offline and ad-free</span></li>
-        <li><span class="c">✓</span> <span data-es>Actualizaciones incluidas</span><span data-en>Updates included</span></li>
+        <li><span class="c">✓</span> <span data-es>App completa para iPad, iPhone y Android</span><span data-en>Full app for iPad, iPhone and Android</span><span data-ca>App completa per a iPad, iPhone i Android</span></li>
+        <li><span class="c">✓</span> <span data-es>Fotos, voz, categorías, modo simple y tira de frases</span><span data-en>Photos, voice, categories, simple mode and sentence strip</span><span data-ca>Fotos, veu, categories, mode simple i tira de frases</span></li>
+        <li><span class="c">✓</span> <span data-es>Funciona sin internet y sin anuncios</span><span data-en>Works offline and ad-free</span><span data-ca>Funciona sense internet i sense anuncis</span></li>
+        <li><span class="c">✓</span> <span data-es>Actualizaciones incluidas</span><span data-en>Updates included</span><span data-ca>Actualitzacions incloses</span></li>
       </ul>
 
       <div class="pay-methods">
@@ -452,14 +458,14 @@
           <div class="pmbody">
             <b>Bizum</b>
             <code>+34 675 541 167</code><br>
-            <span data-es>Concepto: TalkPics + tu email</span><span data-en>Reference: TalkPics + your email</span>
+            <span data-es>Concepto: TalkPics + tu email</span><span data-en>Reference: TalkPics + your email</span><span data-ca>Concepte: TalkPics + el teu correu</span>
           </div>
         </div>
         <div class="pm">
           <span class="pmic">💳</span>
           <div class="pmbody">
             <b>PayPal</b>
-            <span data-es>Paga de forma segura con tarjeta o saldo PayPal.</span><span data-en>Pay securely with card or PayPal balance.</span><br>
+            <span data-es>Paga de forma segura con tarjeta o saldo PayPal.</span><span data-en>Pay securely with card or PayPal balance.</span><span data-ca>Paga de manera segura amb targeta o saldo PayPal.</span><br>
             <a href="https://paypal.me/noviembrepunk" style="color:var(--accent);font-weight:700;font-size:14px">paypal.me/noviembrepunk</a>
           </div>
         </div>
@@ -467,17 +473,17 @@
 
       <div class="steps-pay">
         <ol>
-          <li><span data-es>Si quieres colaborar, aporta lo que te parezca (0€ o más) por cualquiera de los métodos.</span><span data-en>If you'd like to support it, give what feels right (€0 or more) by any method.</span></li>
-          <li><span data-es>Pulsa "Abrir la app" para usarla al momento, gratis.</span><span data-en>Tap "Open the app" to use it right away, for free.</span></li>
-          <li><span data-es>¿Algún problema? Escríbeme y lo resolvemos.</span><span data-en>Any issue? Write to me and we'll sort it out.</span></li>
+          <li><span data-es>Si quieres colaborar, aporta lo que te parezca (0€ o más) por cualquiera de los métodos.</span><span data-en>If you'd like to support it, give what feels right (€0 or more) by any method.</span><span data-ca>Si vols col·laborar, aporta el que et sembli (0€ o més) per qualsevol dels mètodes.</span></li>
+          <li><span data-es>Pulsa "Abrir la app" para usarla al momento, gratis.</span><span data-en>Tap "Open the app" to use it right away, for free.</span><span data-ca>Prem «Obrir l'app» per fer-la servir al moment, gratis.</span></li>
+          <li><span data-es>¿Algún problema? Escríbeme y lo resolvemos.</span><span data-en>Any issue? Write to me and we'll sort it out.</span><span data-ca>Algun problema? Escriu-me i ho resolem.</span></li>
         </ol>
       </div>
 
       <div class="cta-row" style="justify-content:center">
-        <a href="TalkPics.html" class="btn"><span data-es>⬇ Abrir la app</span><span data-en>⬇ Open the app</span></a>
-        <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Pago%20y%20descarga" class="btn ghost"><span data-es>Ayuda con el pago</span><span data-en>Payment help</span></a>
+        <a href="TalkPics.html" class="btn"><span data-es>⬇ Abrir la app</span><span data-en>⬇ Open the app</span><span data-ca>⬇ Obrir l'app</span></a>
+        <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Pago%20y%20descarga" class="btn ghost"><span data-es>Ayuda con el pago</span><span data-en>Payment help</span><span data-ca>Ajuda amb el pagament</span></a>
       </div>
-      <p class="price-note"><span data-es>La app es de uso libre. Cualquier aporte es voluntario y ayuda a mantener y mejorar el proyecto. ¡Gracias!</span><span data-en>The app is free to use. Any contribution is voluntary and helps keep and improve the project. Thank you!</span></p>
+      <p class="price-note"><span data-es>La app es de uso libre. Cualquier aporte es voluntario y ayuda a mantener y mejorar el proyecto. ¡Gracias!</span><span data-en>The app is free to use. Any contribution is voluntary and helps keep and improve the project. Thank you!</span><span data-ca>L'app és d'ús lliure. Qualsevol aportació és voluntària i ajuda a mantenir i millorar el projecte. Gràcies!</span></p>
     </div>
   </div>
 </section>
@@ -485,11 +491,11 @@
 <!-- FINAL CTA -->
 <section id="cta" class="final">
   <div class="wrap">
-    <h2><span data-es>Dale una voz. Gratis.</span><span data-en>Give them a voice. For free.</span></h2>
-    <p><span data-es>Úsala gratis y, si quieres, colabora con lo que te parezca. Empieza hoy a comunicaros con fotos reales.</span><span data-en>Use it for free and, if you like, contribute what feels right. Start communicating with real photos today.</span></p>
+    <h2><span data-es>Dale una voz. Gratis.</span><span data-en>Give them a voice. For free.</span><span data-ca>Dona-li una veu. Gratis.</span></h2>
+    <p><span data-es>Úsala gratis y, si quieres, colabora con lo que te parezca. Empieza hoy a comunicaros con fotos reales.</span><span data-en>Use it for free and, if you like, contribute what feels right. Start communicating with real photos today.</span><span data-ca>Fes-la servir gratis i, si vols, col·labora amb el que et sembli. Comença avui a comunicar-vos amb fotos reals.</span></p>
     <div class="cta-row" style="justify-content:center">
-      <a href="#precio" class="btn"><span data-es>Empezar gratis</span><span data-en>Start free</span></a>
-      <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Colaboraci%C3%B3n" class="btn ghost"><span data-es>Contactar / Colaborar</span><span data-en>Contact / Partner</span></a>
+      <a href="#precio" class="btn"><span data-es>Empezar gratis</span><span data-en>Start free</span><span data-ca>Comença gratis</span></a>
+      <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Colaboraci%C3%B3n" class="btn ghost"><span data-es>Contactar / Colaborar</span><span data-en>Contact / Partner</span><span data-ca>Contactar / Col·laborar</span></a>
     </div>
   </div>
 </section>
@@ -497,37 +503,46 @@
 <footer>
   <div class="wrap">
     <div class="brand"><span class="logo">◉</span> TalkPics</div>
-    <p><span data-es>Comunicación con fotos reales para personas autistas no verbales y sus familias.</span><span data-en>Real-photo communication for non-speaking autistic people and their families.</span></p>
+    <p><span data-es>Comunicación con fotos reales para personas autistas no verbales y sus familias.</span><span data-en>Real-photo communication for non-speaking autistic people and their families.</span><span data-ca>Comunicació amb fotos reals per a persones autistes no verbals i les seves famílies.</span></p>
     <p style="margin-top:8px">© 2026 TalkPics · sebaandrada@gmail.com</p>
   </div>
 </footer>
 
 <script>
   var TP_URL="https://sebaandrada-cell.github.io/talkpics/";
-  function tpEn(){return document.body.classList.contains('en');}
-  function tpMsg(){return tpEn()
-    ? "TalkPics: free app to communicate with real photos for non-speaking autistic people. Works offline: "
-    : "TalkPics: app gratuita para comunicarse con fotos reales, pensada para personas autistas no verbales. Funciona sin internet: ";}
+  function tpLang(){return document.body.classList.contains('en')?'en':(document.body.classList.contains('ca')?'ca':'es');}
+  var TP_MSG={
+    es:"TalkPics: app gratuita para comunicarse con fotos reales, pensada para personas autistas no verbales. Funciona sin internet: ",
+    ca:"TalkPics: app gratuïta per comunicar-se amb fotos reals, pensada per a persones autistes no verbals. Funciona sense internet: ",
+    en:"TalkPics: free app to communicate with real photos for non-speaking autistic people. Works offline: "};
+  var TP_COPIED={es:'Enlace copiado',ca:'Enllaç copiat',en:'Link copied'};
+  function tpUrl(){var l=tpLang();return l==='es'?TP_URL:TP_URL+'?lang='+l;}
   function tpToast(t){var e=document.getElementById('copied');e.textContent=t;e.classList.add('show');setTimeout(function(){e.classList.remove('show');},2200);}
   function copyTP(){
-    var ok=function(){tpToast(tpEn()?'Link copied':'Enlace copiado');};
-    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(TP_URL).then(ok,function(){window.prompt('',TP_URL);});}
-    else{window.prompt('',TP_URL);}
+    var ok=function(){tpToast(TP_COPIED[tpLang()]);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(tpUrl()).then(ok,function(){window.prompt('',tpUrl());});}
+    else{window.prompt('',tpUrl());}
   }
   function shareTP(){
-    if(navigator.share){navigator.share({title:'TalkPics',text:tpMsg(),url:TP_URL}).catch(function(){});}
+    if(navigator.share){navigator.share({title:'TalkPics',text:TP_MSG[tpLang()],url:tpUrl()}).catch(function(){});}
     else{copyTP();}
   }
-  function waTP(a){a.href='https://wa.me/?text='+encodeURIComponent(tpMsg()+TP_URL);return true;}
+  function waTP(a){a.href='https://wa.me/?text='+encodeURIComponent(TP_MSG[tpLang()]+tpUrl());return true;}
 </script>
 <div id="copied" class="copied" role="status" aria-live="polite"></div>
 <script>
   function setLang(l){
     document.body.classList.toggle('en', l==='en');
+    document.body.classList.toggle('ca', l==='ca');
     document.documentElement.lang = l;
-    document.getElementById('es').classList.toggle('on', l==='es');
-    document.getElementById('en').classList.toggle('on', l==='en');
+    ['es','ca','en'].forEach(function(k){document.getElementById(k).classList.toggle('on', k===l);});
   }
+  (function(){
+    var q=null; try{q=new URLSearchParams(location.search).get('lang');}catch(e){}
+    var nl=((navigator.language||'es')+'').slice(0,2).toLowerCase();
+    var l=(q==='ca'||q==='en'||q==='es')?q:((nl==='ca'||nl==='en')?nl:'es');
+    if(l!=='es') setLang(l);
+  })();
 </script>
 <script>
 /* Modo sin internet + instalable como app */
