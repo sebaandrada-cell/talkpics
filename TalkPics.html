@@ -6,6 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#f4f1ea">
+<meta name="apple-mobile-web-app-title" content="TalkPics">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>TalkPics — Comunicación con fotos</title>
 <style>
   :root{
@@ -1268,6 +1273,15 @@ $("#helpBtn").onclick=()=>{ $("#setScrim").classList.remove("show"); showWelcome
   // Calienta la voz en el primer toque (mejor compatibilidad en tablets)
   window.addEventListener("pointerdown",warmTTS,{once:true});
 })();
+</script>
+<script>
+/* Modo sin internet + instalable como app */
+if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+    try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+  });
+}
 </script>
 </body>
 </html>

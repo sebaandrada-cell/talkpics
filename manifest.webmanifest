@@ -1,0 +1,19 @@
+{
+  "name": "TalkPics — Comunicación con fotos",
+  "short_name": "TalkPics",
+  "description": "Comunicación aumentativa con fotos reales para personas autistas no verbales y sus familias. Funciona sin internet.",
+  "lang": "es",
+  "id": "./TalkPics.html",
+  "start_url": "./TalkPics.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f1ea",
+  "theme_color": "#f4f1ea",
+  "categories": ["education", "medical", "utilities"],
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

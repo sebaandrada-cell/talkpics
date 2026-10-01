@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f4f1ea">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://sebaandrada-cell.github.io/talkpics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TalkPics — Las fotos que dan voz a quien no puede hablar">
+<meta property="og:description" content="App gratuita de comunicación con fotos reales para personas autistas no verbales y sus familias. Funciona sin internet.">
+<meta property="og:url" content="https://sebaandrada-cell.github.io/talkpics/">
+<meta property="og:image" content="https://sebaandrada-cell.github.io/talkpics/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <title>TalkPics — Comunicación con fotos reales</title>
 <meta name="description" content="TalkPics es una app de comunicación aumentativa para personas autistas no verbales y sus familias. Fotos reales, grandes y calmadas, que hablan.">
 <style>
@@ -162,6 +174,27 @@
   .steps-pay li{font-size:14px; color:var(--accent-dark); padding:3px 0;}
   .price-note{font-size:13px; color:var(--muted); margin-top:14px;}
 
+
+  /* Install / share */
+  .install{background:var(--bg);}
+  .inst-top{display:grid; grid-template-columns:320px 1fr; gap:36px; align-items:center; max-width:900px; margin:0 auto 40px;}
+  .qrcard{background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px; text-align:center;}
+  .qrcard img{width:100%; height:auto; display:block; border-radius:12px;}
+  .qrcard p{font-size:14px; color:var(--muted); margin-top:10px;}
+  .share-url{font-weight:800; font-size:20px; word-break:break-all; margin-bottom:16px; color:var(--accent-dark);}
+  .share-btns{display:flex; flex-wrap:wrap; gap:10px;}
+  .share-btns .btn{font-size:15px; padding:12px 20px;}
+  .inst-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:1000px; margin:0 auto;}
+  .inst-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow);}
+  .inst-card h3{font-size:20px; margin-bottom:12px;}
+  .inst-card ol{padding-left:20px; font-size:15px; color:var(--ink);}
+  .inst-card li{padding:4px 0;}
+  .inst-note{max-width:1000px; margin:26px auto 0; background:var(--accent-soft); color:var(--accent-dark); border-radius:16px; padding:18px 22px; font-size:15px;}
+  .inst-note b{font-weight:800;}
+  .inst-note p+p{margin-top:8px;}
+  .copied{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#2b2b2b; color:#fff; padding:10px 18px; border-radius:30px; font-size:15px; opacity:0; transition:opacity .2s; pointer-events:none; z-index:90;}
+  .copied.show{opacity:.95;}
+  @media(max-width:860px){ .inst-top,.inst-grid{grid-template-columns:1fr;} .qrcard{max-width:320px; margin:0 auto;} .inst-top{text-align:center;} .share-btns{justify-content:center;} }
   [data-en]{display:none;}
   body.en [data-es]{display:none;}
   body.en [data-en]{display:revert;}
@@ -206,7 +239,7 @@
       </p>
       <div class="cta-row">
         <a href="#precio" class="btn"><span data-es>Conseguir la app gratis</span><span data-en>Get the app free</span></a>
-        <a href="#how" class="btn ghost"><span data-es>Ver cómo funciona</span><span data-en>See how it works</span></a>
+        <a href="#instalar" class="btn ghost"><span data-es>Instalar en mi dispositivo</span><span data-en>Install on my device</span></a>
       </div>
       <p class="cta-note">
         <span data-es>◉ Funciona sin internet · ◉ Sin anuncios · ◉ Las fotos nunca salen del dispositivo</span>
@@ -293,6 +326,69 @@
       <div class="step"><div class="num">1</div><h3><span data-es>Añade fotos</span><span data-en>Add photos</span></h3><p><span data-es>El cuidador toma o sube fotos de las cosas, personas y lugares del día a día del niño y les pone nombre.</span><span data-en>The caregiver takes or uploads photos of the child's everyday things, people and places, and names them.</span></p></div>
       <div class="step"><div class="num">2</div><h3><span data-es>Bloquea en modo niño</span><span data-en>Lock into child mode</span></h3><p><span data-es>Un gesto seguro deja la app en una vista simple donde nada se puede romper ni borrar.</span><span data-en>A safe gesture leaves the app in a simple view where nothing can break or be deleted.</span></p></div>
       <div class="step"><div class="num">3</div><h3><span data-es>El niño se comunica</span><span data-en>The child communicates</span></h3><p><span data-es>Toca la foto que quiere, se agranda y suena la palabra. Uno o dos toques, sin esperas.</span><span data-en>They tap the photo they want, it grows and the word plays. One or two taps, no waiting.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL & SHARE -->
+<section id="instalar" class="install">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-es>Instalar y compartir</span><span data-en>Install &amp; share</span></span>
+      <h2><span data-es>En tu móvil, tablet u ordenador en 30 segundos</span><span data-en>On your phone, tablet or computer in 30 seconds</span></h2>
+      <p><span data-es>Sin tienda de apps, sin cuentas y sin descargas pesadas. Una vez instalada, funciona sin internet.</span><span data-en>No app store, no accounts, no big downloads. Once installed, it works offline.</span></p>
+    </div>
+
+    <div class="inst-top">
+      <div class="qrcard">
+        <img src="qr-talkpics.png" alt="Código QR de TalkPics" width="600" height="600">
+        <p><span data-es>Escanéalo con la cámara del móvil o la tablet</span><span data-en>Scan it with your phone or tablet camera</span></p>
+      </div>
+      <div>
+        <div class="share-url">sebaandrada-cell.github.io/talkpics</div>
+        <div class="share-btns">
+          <button class="btn" type="button" onclick="shareTP()"><span data-es>📤 Compartir enlace</span><span data-en>📤 Share link</span></button>
+          <button class="btn ghost" type="button" onclick="copyTP()"><span data-es>📋 Copiar enlace</span><span data-en>📋 Copy link</span></button>
+          <a class="btn ghost" id="wa" href="#" target="_blank" rel="noopener" onclick="return waTP(this)"><span data-es>💬 Enviar por WhatsApp</span><span data-en>💬 Send via WhatsApp</span></a>
+          <a class="btn ghost" href="qr-talkpics.png" download="TalkPics-QR.png"><span data-es>⬇ Descargar QR</span><span data-en>⬇ Download QR</span></a>
+          <a class="btn ghost" href="TalkPics-QR-hoja.pdf" target="_blank" rel="noopener"><span data-es>🖨 Hoja para imprimir</span><span data-en>🖨 Printable sheet</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="inst-grid">
+      <div class="inst-card">
+        <h3>📱 iPhone / iPad</h3>
+        <ol>
+          <li><span data-es>Abre el enlace con <b>Safari</b>.</span><span data-en>Open the link in <b>Safari</b>.</span></li>
+          <li><span data-es>Pulsa <b>Compartir</b> (el cuadrado con la flecha ↑).</span><span data-en>Tap <b>Share</b> (the square with the ↑ arrow).</span></li>
+          <li><span data-es>Elige <b>Añadir a pantalla de inicio</b> y pulsa Añadir.</span><span data-en>Choose <b>Add to Home Screen</b> and tap Add.</span></li>
+          <li><span data-es>Abre TalkPics desde el nuevo icono.</span><span data-en>Open TalkPics from the new icon.</span></li>
+        </ol>
+      </div>
+      <div class="inst-card">
+        <h3>🤖 Android</h3>
+        <ol>
+          <li><span data-es>Abre el enlace con <b>Chrome</b>.</span><span data-en>Open the link in <b>Chrome</b>.</span></li>
+          <li><span data-es>Pulsa el menú <b>⋮</b> (arriba a la derecha).</span><span data-en>Tap the <b>⋮</b> menu (top right).</span></li>
+          <li><span data-es>Elige <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</span><span data-en>Choose <b>Install app</b> or <b>Add to Home screen</b>.</span></li>
+          <li><span data-es>Abre TalkPics desde el nuevo icono.</span><span data-en>Open TalkPics from the new icon.</span></li>
+        </ol>
+      </div>
+      <div class="inst-card">
+        <h3>💻 <span data-es>Ordenador</span><span data-en>Computer</span></h3>
+        <ol>
+          <li><span data-es>Abre el enlace con Chrome, Edge o Safari.</span><span data-en>Open the link in Chrome, Edge or Safari.</span></li>
+          <li><span data-es>Pulsa <b>Abrir la app</b> y úsala directamente, sin instalar nada.</span><span data-en>Tap <b>Open the app</b> and use it right away, no install needed.</span></li>
+          <li><span data-es>Opcional: en Chrome o Edge, pulsa el icono de instalar de la barra de direcciones.</span><span data-en>Optional: in Chrome or Edge, click the install icon in the address bar.</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="inst-note">
+      <p><span data-es><b>Importante en iPhone y iPad:</b> el navegador y el icono de inicio guardan los datos por separado. Instala primero el icono y <b>añade las fotos desde la app instalada</b>.</span><span data-en><b>Important on iPhone and iPad:</b> the browser and the home-screen icon store data separately. Install the icon first and <b>add photos from the installed app</b>.</span></p>
+      <p><span data-es><b>Tus fotos y voces se guardan solo en ese dispositivo.</b> Para pasarlas a otro móvil o a un terapeuta, usa la opción de exportar copia de seguridad dentro de la app.</span><span data-en><b>Your photos and voices are stored only on that device.</b> To move them to another phone or to a therapist, use the export backup option inside the app.</span></p>
+      <p><span data-es>La primera vez necesitas internet para abrirla. Después abre sin conexión. Solo la búsqueda de pictogramas ARASAAC requiere internet.</span><span data-en>You need internet the first time you open it. After that it opens offline. Only the ARASAAC pictogram search needs internet.</span></p>
     </div>
   </div>
 </section>
@@ -407,12 +503,40 @@
 </footer>
 
 <script>
+  var TP_URL="https://sebaandrada-cell.github.io/talkpics/";
+  function tpEn(){return document.body.classList.contains('en');}
+  function tpMsg(){return tpEn()
+    ? "TalkPics: free app to communicate with real photos for non-speaking autistic people. Works offline: "
+    : "TalkPics: app gratuita para comunicarse con fotos reales, pensada para personas autistas no verbales. Funciona sin internet: ";}
+  function tpToast(t){var e=document.getElementById('copied');e.textContent=t;e.classList.add('show');setTimeout(function(){e.classList.remove('show');},2200);}
+  function copyTP(){
+    var ok=function(){tpToast(tpEn()?'Link copied':'Enlace copiado');};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(TP_URL).then(ok,function(){window.prompt('',TP_URL);});}
+    else{window.prompt('',TP_URL);}
+  }
+  function shareTP(){
+    if(navigator.share){navigator.share({title:'TalkPics',text:tpMsg(),url:TP_URL}).catch(function(){});}
+    else{copyTP();}
+  }
+  function waTP(a){a.href='https://wa.me/?text='+encodeURIComponent(tpMsg()+TP_URL);return true;}
+</script>
+<div id="copied" class="copied" role="status" aria-live="polite"></div>
+<script>
   function setLang(l){
     document.body.classList.toggle('en', l==='en');
     document.documentElement.lang = l;
     document.getElementById('es').classList.toggle('on', l==='es');
     document.getElementById('en').classList.toggle('on', l==='en');
   }
+</script>
+<script>
+/* Modo sin internet + instalable como app */
+if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+    try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+  });
+}
 </script>
 </body>
 </html>
