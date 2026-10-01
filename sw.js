@@ -1,6 +1,6 @@
 /* TalkPics service worker: guarda la app en el dispositivo para que abra sin internet.
    Para publicar una actualización, cambia el número de VERSION. */
-const VERSION = "talkpics-v1";
+const VERSION = "talkpics-v2";
 const CORE = [
   "./", "index.html", "TalkPics.html", "manifest.webmanifest",
   "icon-192.png", "icon-512.png", "icon-maskable-512.png",
