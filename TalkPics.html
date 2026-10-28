@@ -342,6 +342,11 @@
     <div style="font-size:13px; color:var(--muted); margin:6px 2px 14px; line-height:1.4" data-i18n-html="shareHelp">Crea un archivo único con la app dentro. Podrás elegir <b>con fotos</b> (copia completa, para respaldo o tu otro dispositivo) o <b>sin fotos</b> (solo la plantilla, para compartir con otra familia cuidando la privacidad). En el móvil abre WhatsApp/correo para enviarlo; en el ordenador lo descarga. Sin internet ni instalar nada.</div>
     <button class="bigbtn ghost" id="exportBtn" data-i18n="backup">💾 Copia de seguridad (.json)</button>
     <button class="bigbtn ghost" id="importBtn" style="margin-top:10px" data-i18n="restore">📂 Restaurar copia (.json)</button>
+    <div class="credits" style="background:#eef6f0">
+      <div class="credits-h" data-i18n="supportTitle">♥ Apoya TalkPics</div>
+      <p data-i18n="supportBody">TalkPics es gratis y no se vende. Si te ayuda, una donación, aunque sea de 1 €, la mantiene viva.</p>
+      <a class="bigbtn ghost" style="margin-top:10px; text-decoration:none; display:flex; align-items:center; justify-content:center" href="https://sebaandrada-cell.github.io/talkpics/#precio" target="_blank" rel="noopener" data-i18n="supportBtn">Donar</a>
+    </div>
     <div class="credits">
       <div class="credits-h" data-i18n="creditsTitle">Créditos y licencia</div>
       <p data-i18n-html="creditsBody">Algunas imágenes usan pictogramas de ARASAAC. Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.</p>
@@ -768,6 +773,7 @@ const I18N={
     help:"❓ Cómo se usa", newCat:"Nueva categoría", catNamePh:"Nombre",
     shareApp:"📤 Compartir / Exportar app", backup:"💾 Copia de seguridad (.json)", restore:"📂 Restaurar copia (.json)", close:"Cerrar",
     creditsTitle:"Créditos y licencia",
+    supportTitle:"♥ Apoya TalkPics", supportBody:"TalkPics es gratis y no se vende. Si te ayuda, una donación, aunque sea de 1 €, la mantiene viva.", supportBtn:"♥ Donar",
     arasaacTitle:"Buscar pictograma", arasaacPh:"Escribe una palabra… (ej: comer)", arasaacSearch:"Buscar", arasaacHint:"Pictogramas de ARASAAC. Necesita internet solo para buscar; una vez elegido queda guardado y funciona sin conexión.", arasaacSearching:"Buscando…", arasaacNone:"No se encontraron pictogramas. Prueba con otra palabra.", arasaacErr:"No hay conexión con ARASAAC. Revisa tu internet.", arasaacLoading:"Guardando pictograma…",
     welcomeTitle:"🗣️ Bienvenido/a a TalkPics", welcomeStart:"Comenzar",
     welcomeIntro:"Una forma sencilla de comunicarse con <b>fotos y dibujos</b>. Pensada para acompañar a peques que hablan poco o no hablan.",
@@ -810,6 +816,7 @@ const I18N={
     help:"❓ Com s'utilitza", newCat:"Nova categoria", catNamePh:"Nom",
     shareApp:"📤 Compartir / Exportar app", backup:"💾 Còpia de seguretat (.json)", restore:"📂 Restaurar còpia (.json)", close:"Tancar",
     creditsTitle:"Crèdits i llicència",
+    supportTitle:"♥ Dona suport a TalkPics", supportBody:"TalkPics és gratis i no es ven. Si t'ajuda, una donació, encara que sigui d'1 €, la manté viva.", supportBtn:"♥ Donar",
     arasaacTitle:"Cercar pictograma", arasaacPh:"Escriu una paraula… (ex: menjar)", arasaacSearch:"Cerca", arasaacHint:"Pictogrames d'ARASAAC. Només cal internet per cercar; un cop triat queda desat i funciona sense connexió.", arasaacSearching:"Cercant…", arasaacNone:"No s'han trobat pictogrames. Prova una altra paraula.", arasaacErr:"No hi ha connexió amb ARASAAC. Revisa el teu internet.", arasaacLoading:"Desant pictograma…",
     welcomeTitle:"🗣️ Benvingut/da a TalkPics", welcomeStart:"Comença",
     welcomeIntro:"Una manera senzilla de comunicar-se amb <b>fotos i dibuixos</b>. Pensada per acompanyar nens que parlen poc o no parlen.",
@@ -834,6 +841,7 @@ const I18N={
     help:"❓ How to use it", newCat:"New category", catNamePh:"Name",
     shareApp:"📤 Share / Export app", backup:"💾 Backup (.json)", restore:"📂 Restore backup (.json)", close:"Close",
     creditsTitle:"Credits and licence",
+    supportTitle:"♥ Support TalkPics", supportBody:"TalkPics is free and not for sale. If it helps you, a donation, even €1, keeps it alive.", supportBtn:"♥ Donate",
     arasaacTitle:"Search a pictogram", arasaacPh:"Type a word… (e.g. eat)", arasaacSearch:"Search", arasaacHint:"Pictograms from ARASAAC. Internet is only needed to search; once chosen, the pictogram is saved and works offline.", arasaacSearching:"Searching…", arasaacNone:"No pictograms found. Try another word.", arasaacErr:"Can't reach ARASAAC. Check your internet connection.", arasaacLoading:"Saving pictogram…",
     welcomeTitle:"🗣️ Welcome to TalkPics", welcomeStart:"Start",
     welcomeIntro:"A simple way to communicate with <b>photos and pictures</b>. Made to support children who speak little or not at all.",

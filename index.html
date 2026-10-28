@@ -173,6 +173,10 @@
   .steps-pay ol{margin:0; padding-left:20px;}
   .steps-pay li{font-size:14px; color:var(--accent-dark); padding:3px 0;}
   .price-note{font-size:13px; color:var(--muted); margin-top:14px;}
+  .amts{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:10px;}
+  .amts a{display:flex; align-items:center; justify-content:center; min-height:56px; border-radius:14px; border:2px solid var(--accent); color:var(--accent); font-weight:800; font-size:20px; text-decoration:none; background:#fff;}
+  .amts a:hover,.amts a:focus-visible{background:var(--accent); color:#fff;}
+  .amts a.other{grid-column:1/-1; min-height:50px; font-size:16px; border-style:dashed;}
 
 
   /* Install / share */
@@ -440,25 +444,25 @@
   </div>
 </section>
 
-<!-- PRICING / PAYMENT -->
+<!-- DONATIONS -->
 <section id="precio" class="price">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow"><span data-es>Colaboración</span><span data-en>Contribution</span><span data-ca>Col·laboració</span></span>
-      <h2><span data-es>Ad honorem. Aporta lo que quieras.</span><span data-en>Pay what you want. No obligation.</span><span data-ca>Ad honorem. Aporta el que vulguis.</span></h2>
-      <p><span data-es>TalkPics es de uso libre. Si te ayuda y quieres colaborar, aporta lo que te parezca. 10€ es solo una referencia: puedes dar 0€ o más.</span><span data-en>TalkPics is free to use. If it helps and you'd like to support it, give what feels right. €10 is just a reference: you can give €0 or more.</span><span data-ca>TalkPics és d'ús lliure. Si t'ajuda i vols col·laborar, aporta el que et sembli. 10€ és només una referència: pots donar 0€ o més.</span></p>
+      <span class="eyebrow"><span data-es>Donación</span><span data-en>Donate</span><span data-ca>Donació</span></span>
+      <h2><span data-es>TalkPics no se vende. Se sostiene con donaciones.</span><span data-en>TalkPics isn't for sale. Donations keep it going.</span><span data-ca>TalkPics no es ven. Es sosté amb donacions.</span></h2>
+      <p><span data-es>Es gratis y lo seguirá siendo. Si te sirve y puedes, una donación ayuda a mantenerla y mejorarla. Aunque sea 1&nbsp;€, todo suma.</span><span data-en>It's free and will stay free. If it helps you and you can, a donation helps keep it running and improve it. Even €1 adds up.</span><span data-ca>És gratis i ho seguirà sent. Si t'ajuda i pots, una donació ajuda a mantenir-la i millorar-la. Encara que sigui 1&nbsp;€, tot suma.</span></p>
     </div>
 
     <div class="price-card">
-      <div class="price-tag"><span class="amount">10</span><span class="cur">€</span></div>
-      <p class="price-sub"><span data-es>Aporte sugerido · Puedes dar 0€ o más · Todas las funciones</span><span data-en>Suggested contribution · Give €0 or more · All features</span><span data-ca>Aportació suggerida · Pots donar 0€ o més · Totes les funcions</span></p>
-
-      <ul class="incl">
-        <li><span class="c">✓</span> <span data-es>App completa para iPad, iPhone y Android</span><span data-en>Full app for iPad, iPhone and Android</span><span data-ca>App completa per a iPad, iPhone i Android</span></li>
-        <li><span class="c">✓</span> <span data-es>Fotos, voz, categorías, modo simple y tira de frases</span><span data-en>Photos, voice, categories, simple mode and sentence strip</span><span data-ca>Fotos, veu, categories, mode simple i tira de frases</span></li>
-        <li><span class="c">✓</span> <span data-es>Funciona sin internet y sin anuncios</span><span data-en>Works offline and ad-free</span><span data-ca>Funciona sense internet i sense anuncis</span></li>
-        <li><span class="c">✓</span> <span data-es>Actualizaciones incluidas</span><span data-en>Updates included</span><span data-ca>Actualitzacions incloses</span></li>
-      </ul>
+      <p class="price-sub" style="margin-bottom:14px"><span data-es>Elige un importe</span><span data-en>Pick an amount</span><span data-ca>Tria un import</span></p>
+      <div class="amts">
+        <a href="https://paypal.me/noviembrepunk/1EUR" target="_blank" rel="noopener">1&nbsp;€</a>
+        <a href="https://paypal.me/noviembrepunk/3EUR" target="_blank" rel="noopener">3&nbsp;€</a>
+        <a href="https://paypal.me/noviembrepunk/5EUR" target="_blank" rel="noopener">5&nbsp;€</a>
+        <a href="https://paypal.me/noviembrepunk/10EUR" target="_blank" rel="noopener">10&nbsp;€</a>
+        <a href="https://paypal.me/noviembrepunk" target="_blank" rel="noopener" class="other"><span data-es>Otro importe</span><span data-en>Other amount</span><span data-ca>Un altre import</span></a>
+      </div>
+      <p class="price-sub" style="margin-bottom:22px"><span data-es>Se abre PayPal con el importe ya puesto. Puedes cambiarlo.</span><span data-en>PayPal opens with the amount filled in. You can change it.</span><span data-ca>S'obre PayPal amb l'import ja posat. Pots canviar-lo.</span></p>
 
       <div class="pay-methods">
         <div class="pm">
@@ -466,32 +470,22 @@
           <div class="pmbody">
             <b>Bizum</b>
             <code>+34 675 541 167</code><br>
-            <span data-es>Concepto: TalkPics + tu email</span><span data-en>Reference: TalkPics + your email</span><span data-ca>Concepte: TalkPics + el teu correu</span>
-          </div>
-        </div>
-        <div class="pm">
-          <span class="pmic">💳</span>
-          <div class="pmbody">
-            <b>PayPal</b>
-            <span data-es>Paga de forma segura con tarjeta o saldo PayPal.</span><span data-en>Pay securely with card or PayPal balance.</span><span data-ca>Paga de manera segura amb targeta o saldo PayPal.</span><br>
-            <a href="https://paypal.me/noviembrepunk" style="color:var(--accent);font-weight:700;font-size:14px">paypal.me/noviembrepunk</a>
+            <span data-es>Concepto: Donación TalkPics</span><span data-en>Reference: TalkPics donation</span><span data-ca>Concepte: Donació TalkPics</span>
           </div>
         </div>
       </div>
 
-      <div class="steps-pay">
-        <ol>
-          <li><span data-es>Si quieres colaborar, aporta lo que te parezca (0€ o más) por cualquiera de los métodos.</span><span data-en>If you'd like to support it, give what feels right (€0 or more) by any method.</span><span data-ca>Si vols col·laborar, aporta el que et sembli (0€ o més) per qualsevol dels mètodes.</span></li>
-          <li><span data-es>Pulsa "Abrir la app" para usarla al momento, gratis.</span><span data-en>Tap "Open the app" to use it right away, for free.</span><span data-ca>Prem «Obrir l'app» per fer-la servir al moment, gratis.</span></li>
-          <li><span data-es>¿Algún problema? Escríbeme y lo resolvemos.</span><span data-en>Any issue? Write to me and we'll sort it out.</span><span data-ca>Algun problema? Escriu-me i ho resolem.</span></li>
-        </ol>
-      </div>
+      <ul class="incl">
+        <li><span class="c">♥</span> <span data-es>Mantener la app y esta web, sin anuncios</span><span data-en>Keep the app and this site running, ad-free</span><span data-ca>Mantenir l'app i aquest web, sense anuncis</span></li>
+        <li><span class="c">♥</span> <span data-es>Añadir mejoras, pictogramas e idiomas</span><span data-en>Add improvements, pictograms and languages</span><span data-ca>Afegir millores, pictogrames i idiomes</span></li>
+        <li><span class="c">♥</span> <span data-es>Seguir regalándola a familias y escuelas</span><span data-en>Keep giving it free to families and schools</span><span data-ca>Seguir regalant-la a famílies i escoles</span></li>
+      </ul>
 
       <div class="cta-row" style="justify-content:center">
         <a href="TalkPics.html" class="btn"><span data-es>⬇ Abrir la app</span><span data-en>⬇ Open the app</span><span data-ca>⬇ Obrir l'app</span></a>
-        <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Pago%20y%20descarga" class="btn ghost"><span data-es>Ayuda con el pago</span><span data-en>Payment help</span><span data-ca>Ajuda amb el pagament</span></a>
+        <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Donaci%C3%B3n" class="btn ghost"><span data-es>¿Dudas? Escríbeme</span><span data-en>Questions? Write to me</span><span data-ca>Dubtes? Escriu-me</span></a>
       </div>
-      <p class="price-note"><span data-es>La app es de uso libre. Cualquier aporte es voluntario y ayuda a mantener y mejorar el proyecto. ¡Gracias!</span><span data-en>The app is free to use. Any contribution is voluntary and helps keep and improve the project. Thank you!</span><span data-ca>L'app és d'ús lliure. Qualsevol aportació és voluntària i ajuda a mantenir i millorar el projecte. Gràcies!</span></p>
+      <p class="price-note"><span data-es>No hace falta donar para usar la app: todas las funciones son gratis para todo el mundo. Una donación no es una compra. ¡Gracias!</span><span data-en>You don't need to donate to use the app: every feature is free for everyone. A donation is not a purchase. Thank you!</span><span data-ca>No cal donar per fer servir l'app: totes les funcions són gratis per a tothom. Una donació no és una compra. Gràcies!</span></p>
     </div>
   </div>
 </section>
@@ -500,9 +494,10 @@
 <section id="cta" class="final">
   <div class="wrap">
     <h2><span data-es>Dale una voz. Gratis.</span><span data-en>Give them a voice. For free.</span><span data-ca>Dona-li una veu. Gratis.</span></h2>
-    <p><span data-es>Úsala gratis y, si quieres, colabora con lo que te parezca. Empieza hoy a comunicaros con fotos reales.</span><span data-en>Use it for free and, if you like, contribute what feels right. Start communicating with real photos today.</span><span data-ca>Fes-la servir gratis i, si vols, col·labora amb el que et sembli. Comença avui a comunicar-vos amb fotos reals.</span></p>
+    <p><span data-es>Úsala gratis. Si puedes, una donación, aunque sea de 1&nbsp;€, ayuda a que siga adelante.</span><span data-en>Use it for free. If you can, a donation, even €1, helps keep it going.</span><span data-ca>Fes-la servir gratis. Si pots, una donació, encara que sigui d'1&nbsp;€, ajuda que continuï.</span></p>
     <div class="cta-row" style="justify-content:center">
-      <a href="#precio" class="btn"><span data-es>Empezar gratis</span><span data-en>Start free</span><span data-ca>Comença gratis</span></a>
+      <a href="TalkPics.html" class="btn"><span data-es>Abrir la app</span><span data-en>Open the app</span><span data-ca>Obrir l'app</span></a>
+      <a href="#precio" class="btn ghost"><span data-es>♥ Donar</span><span data-en>♥ Donate</span><span data-ca>♥ Donar</span></a>
       <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Colaboraci%C3%B3n" class="btn ghost"><span data-es>Contactar / Colaborar</span><span data-en>Contact / Partner</span><span data-ca>Contactar / Col·laborar</span></a>
     </div>
   </div>
