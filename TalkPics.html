@@ -144,7 +144,7 @@
   .hidden{display:none!important;}
   /* ---- Selector de idioma (segmentado) ---- */
   .seg{display:flex; gap:8px;}
-  .segbtn{flex:1; height:54px; border-radius:14px; border:2px solid var(--line); background:#fff; color:var(--muted); font-size:17px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;}
+  .segbtn{flex:1; min-width:0; height:54px; border-radius:14px; border:2px solid var(--line); background:#fff; color:var(--muted); font-size:17px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;}
   .segbtn.on{background:var(--accent); border-color:var(--accent); color:#fff;}
   /* ---- Créditos / licencia ---- */
   .credits{margin:16px 0 6px; padding:14px; border:1px solid var(--line); border-radius:14px; background:#fbf8f1;}
@@ -205,10 +205,10 @@
 <div id="app">
   <header>
     <div class="title">🗣️ TalkPics <small id="modeLabel">modo niño</small></div>
-    <button class="iconbtn plain hidden" id="addBtn" title="Agregar" aria-label="Agregar foto">＋ <span class="lbl" data-i18n="lblPhoto">Foto</span></button>
-    <button class="iconbtn plain hidden" id="setBtn" title="Ajustes" aria-label="Ajustes">⚙️</button>
-    <button class="iconbtn" id="lockBtn" title="Editar (mantén presionado)" aria-label="Modo editor: mantén presionado">🔒</button>
-    <button class="iconbtn solid hidden" id="doneBtn" title="Listo" aria-label="Listo, volver a modo niño">✓ <span class="lbl" data-i18n="lblDone">Listo</span></button>
+    <button class="iconbtn plain hidden" id="addBtn" title="Agregar" aria-label="Agregar foto" data-i18n-title="ttAdd" data-i18n-aria="ttAdd">＋ <span class="lbl" data-i18n="lblPhoto">Foto</span></button>
+    <button class="iconbtn plain hidden" id="setBtn" title="Ajustes" aria-label="Ajustes" data-i18n-title="setTitle" data-i18n-aria="setTitle">⚙️</button>
+    <button class="iconbtn" id="lockBtn" title="Editar (mantén presionado)" aria-label="Modo editor: mantén presionado" data-i18n-title="ttLock" data-i18n-aria="ttLockAria">🔒</button>
+    <button class="iconbtn solid hidden" id="doneBtn" title="Listo" aria-label="Listo, volver a modo niño" data-i18n-title="lblDone" data-i18n-aria="ttDoneAria">✓ <span class="lbl" data-i18n="lblDone">Listo</span></button>
   </header>
 
   <nav id="cats"></nav>
@@ -221,7 +221,7 @@
       <option value="recent" data-i18n="sortRecent">Recientes</option>
       <option value="used" data-i18n="sortUsed">Más usadas</option>
     </select>
-    <button class="iconbtn solid" id="shareBar" title="Guardar / Compartir">📤 <span class="lbl" data-i18n="lblSave">Guardar</span></button>
+    <button class="iconbtn solid" id="shareBar" title="Guardar / Compartir" data-i18n-title="ttShareBar">📤 <span class="lbl" data-i18n="lblSave">Guardar</span></button>
   </div>
 
   <main><div class="grid" id="grid"></div><div class="empty hidden" id="empty"></div></main>
@@ -234,8 +234,8 @@
 </div>
 
 <!-- Zoom -->
-<div id="zoom" role="dialog" aria-modal="true" aria-label="Imagen seleccionada">
-  <button id="closeZoom" aria-label="Cerrar"><span class="x">✕</span> Cerrar</button>
+<div id="zoom" role="dialog" aria-modal="true" aria-label="Imagen seleccionada" data-i18n-aria="ttZoom">
+  <button id="closeZoom" aria-label="Cerrar" data-i18n-aria="close"><span class="x">✕</span> <span data-i18n="close">Cerrar</span></button>
   <div id="zoomCard"><div class="zimg" id="zImg"></div><div class="zname" id="zName"></div></div>
 </div>
 
@@ -246,7 +246,7 @@
     <button class="bigbtn primary" id="takePhoto" data-i18n="takePhoto">📷 Tomar una foto</button>
     <button class="bigbtn ghost" id="pickPhoto" style="margin-top:12px" data-i18n="pickPhoto">🖼️ Elegir de la galería</button>
     <button class="bigbtn ghost" id="arasaacOpen" style="margin-top:12px" data-i18n="arasaacBtn">🔎 Buscar pictograma (ARASAAC)</button>
-    <div class="araNote">Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.</div>
+    <div class="araNote" data-i18n-html="araNote">Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.</div>
     <button class="bigbtn ghost" id="addCancel" style="margin-top:18px" data-i18n="cancel">Cancelar</button>
   </div>
 </div>
@@ -258,8 +258,8 @@
     <div style="position:relative; width:100%; max-width:340px; margin:0 auto 14px; aspect-ratio:1/1; background:#000; border-radius:16px; overflow:hidden">
       <video id="camVideo" playsinline autoplay muted style="width:100%; height:100%; object-fit:cover"></video>
     </div>
-    <button class="bigbtn primary" id="camShoot">📸 Capturar</button>
-    <button class="bigbtn ghost" id="camFlip" style="margin-top:12px">🔄 Cambiar cámara</button>
+    <button class="bigbtn primary" id="camShoot" data-i18n="camShoot">📸 Capturar</button>
+    <button class="bigbtn ghost" id="camFlip" style="margin-top:12px" data-i18n="camFlip">🔄 Cambiar cámara</button>
     <button class="bigbtn ghost" id="camCancel" style="margin-top:12px" data-i18n="cancel">Cancelar</button>
   </div>
 </div>
@@ -270,7 +270,7 @@
     <h2 data-i18n="arasaacTitle">Buscar pictograma</h2>
     <div style="display:flex; gap:10px; margin-bottom:12px">
       <input type="text" id="araQuery" placeholder="Escribe una palabra… (ej: comer)" data-i18n-ph="arasaacPh" style="flex:1; height:52px; border-radius:14px; border:2px solid var(--line); padding:0 14px; font-size:18px; background:#fff; color:var(--ink)">
-      <button class="iconbtn solid" id="araGo" aria-label="Buscar">🔎</button>
+      <button class="iconbtn solid" id="araGo" aria-label="Buscar" data-i18n-aria="arasaacSearch">🔎</button>
     </div>
     <div id="araStatus" style="font-size:14px; color:var(--muted); min-height:20px; margin-bottom:8px"></div>
     <div class="grid" id="araResults" style="grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:10px; max-height:44vh; overflow-y:auto"></div>
@@ -285,8 +285,9 @@
     <h2 id="editTitle">Nueva imagen</h2>
     <div class="preview" id="editPreview" data-i18n="noImg">sin imagen</div>
     <button class="bigbtn ghost" id="arasaacOpen2" style="margin:0 0 12px" data-i18n="arasaacBtn">🔎 Buscar pictograma (ARASAAC)</button>
-    <div class="field"><label data-i18n="fldName">Nombre (lo que dice en voz alta)</label><input type="text" id="fName" placeholder="Ej: Agua"></div>
+    <div class="field"><label data-i18n="fldName">Nombre (lo que dice en voz alta)</label><input type="text" id="fName" placeholder="Ej: Agua" data-i18n-ph="phName"></div>
     <div class="field"><label data-i18n="fldNameCa">Nombre en catalán (opcional)</label><input type="text" id="fNameCa" placeholder="Ex: Aigua"></div>
+    <div class="field"><label data-i18n="fldNameEn">Nombre en inglés (opcional)</label><input type="text" id="fNameEn" placeholder="Ex: Water"></div>
     <div class="field"><label data-i18n="fldCat">Categoría</label><select id="fCat"></select></div>
     <div class="field"><label data-i18n="fldTags">Etiquetas (para filtrar)</label>
       <input type="text" id="fTags" placeholder="Ej: desayuno, favorito">
@@ -294,9 +295,9 @@
     </div>
     <div class="field"><label data-i18n="fldVoice">🎙️ Voz de un familiar (opcional)</label>
       <div class="row">
-        <button class="bigbtn ghost" id="recBtn" style="margin-top:0">🎙️ Grabar</button>
+        <button class="bigbtn ghost" id="recBtn" style="margin-top:0" data-i18n="recDo">🎙️ Grabar</button>
         <button class="bigbtn ghost hidden" id="recPlay" style="margin-top:0" data-i18n="recHear">▶️ Oír</button>
-        <button class="bigbtn danger hidden" id="recDel" style="margin-top:0" aria-label="Borrar grabación">🗑️</button>
+        <button class="bigbtn danger hidden" id="recDel" style="margin-top:0" aria-label="Borrar grabación" data-i18n-aria="ttRecDel">🗑️</button>
       </div>
       <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.4" data-i18n="voiceHelp">Graba a mamá, papá o a quien acompaña diciendo la palabra. El peque suele responder mejor a una voz conocida. Si hay grabación, se reproduce en lugar de la voz del dispositivo.</div>
     </div>
@@ -315,6 +316,7 @@
       <div class="seg">
         <button class="segbtn" id="langEs" type="button">🇪🇸 Español</button>
         <button class="segbtn" id="langCa" type="button">🟨🟥 Català</button>
+        <button class="segbtn" id="langEn" type="button">🇬🇧 English</button>
       </div>
     </div>
     <div class="toggle"><span data-i18n="stSimple">🔠 Modo simple grande</span> <div class="sw" id="swSimple"></div></div>
@@ -324,7 +326,7 @@
     <div class="toggle"><span data-i18n="stHaptic">📳 Vibración suave al tocar</span> <div class="sw" id="swHaptic"></div></div>
     <div class="field" style="margin-top:16px"><label data-i18n="stVoice">Voz</label>
       <select id="voiceSel"></select>
-      <div style="font-size:12px; color:var(--muted); margin-top:4px" data-i18n="stVoiceHelp">Elige una voz en español o catalán. Toca para escuchar una prueba.</div>
+      <div style="font-size:12px; color:var(--muted); margin-top:4px" data-i18n="stVoiceHelp">Elige una voz en español, catalán o inglés. Toca para escuchar una prueba.</div>
     </div>
     <div class="field"><label data-i18n="stRate">Velocidad de la voz</label>
       <input type="range" id="rate" min="0.5" max="1.2" step="0.1" value="0.8" style="width:100%">
@@ -337,12 +339,12 @@
       <div class="row"><input type="text" id="newCatName" placeholder="Nombre" data-i18n-ph="catNamePh"><button class="iconbtn solid" id="addCat">＋</button></div>
     </div>
     <button class="bigbtn primary" id="shareBtn" data-i18n="shareApp">📤 Compartir / Exportar app</button>
-    <div style="font-size:13px; color:var(--muted); margin:6px 2px 14px; line-height:1.4">Crea un archivo único con la app dentro. Podrás elegir <b>con fotos</b> (copia completa, para respaldo o tu otro dispositivo) o <b>sin fotos</b> (solo la plantilla, para compartir con otra familia cuidando la privacidad). En el móvil abre WhatsApp/correo para enviarlo; en el ordenador lo descarga. Sin internet ni instalar nada.</div>
+    <div style="font-size:13px; color:var(--muted); margin:6px 2px 14px; line-height:1.4" data-i18n-html="shareHelp">Crea un archivo único con la app dentro. Podrás elegir <b>con fotos</b> (copia completa, para respaldo o tu otro dispositivo) o <b>sin fotos</b> (solo la plantilla, para compartir con otra familia cuidando la privacidad). En el móvil abre WhatsApp/correo para enviarlo; en el ordenador lo descarga. Sin internet ni instalar nada.</div>
     <button class="bigbtn ghost" id="exportBtn" data-i18n="backup">💾 Copia de seguridad (.json)</button>
     <button class="bigbtn ghost" id="importBtn" style="margin-top:10px" data-i18n="restore">📂 Restaurar copia (.json)</button>
     <div class="credits">
       <div class="credits-h" data-i18n="creditsTitle">Créditos y licencia</div>
-      <p>Algunas imágenes usan pictogramas de ARASAAC. Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.</p>
+      <p data-i18n-html="creditsBody">Algunas imágenes usan pictogramas de ARASAAC. Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.</p>
     </div>
     <button class="bigbtn ghost" id="setClose" style="margin-top:18px" data-i18n="close">Cerrar</button>
   </div>
@@ -351,13 +353,13 @@
 <!-- Elegir cómo exportar: con o sin fotos -->
 <div class="scrim" id="exportScrim">
   <div class="sheet">
-    <h2>📤 Compartir / Exportar</h2>
-    <p style="font-size:14px; color:var(--muted); margin:0 0 14px; line-height:1.45">Crea un archivo único con la app dentro. Elige si incluir las fotos.</p>
-    <button class="bigbtn primary" id="expWith">📷 Con fotos — copia completa</button>
-    <div style="font-size:12.5px; color:var(--muted); margin:6px 2px 14px; line-height:1.4">Incluye tus fotos y grabaciones. Ideal como respaldo o para pasar la app a tu otro dispositivo.</div>
-    <button class="bigbtn ghost" id="expWithout">🔒 Sin fotos — solo la plantilla</button>
-    <div style="font-size:12.5px; color:var(--muted); margin:6px 2px 16px; line-height:1.4">Comparte nombres, categorías, ajustes y pictogramas, <b>sin las fotos ni las grabaciones</b> de tu peque. Ideal para enviar a otra familia o al terapeuta cuidando la privacidad.</div>
-    <button class="bigbtn ghost" id="expCancel">Cancelar</button>
+    <h2 data-i18n="expTitle">📤 Compartir / Exportar</h2>
+    <p style="font-size:14px; color:var(--muted); margin:0 0 14px; line-height:1.45" data-i18n="expIntro">Crea un archivo único con la app dentro. Elige si incluir las fotos.</p>
+    <button class="bigbtn primary" id="expWith" data-i18n="expWith">📷 Con fotos — copia completa</button>
+    <div style="font-size:12.5px; color:var(--muted); margin:6px 2px 14px; line-height:1.4" data-i18n="expWithHelp">Incluye tus fotos y grabaciones. Ideal como respaldo o para pasar la app a tu otro dispositivo.</div>
+    <button class="bigbtn ghost" id="expWithout" data-i18n="expWithout">🔒 Sin fotos — solo la plantilla</button>
+    <div style="font-size:12.5px; color:var(--muted); margin:6px 2px 16px; line-height:1.4" data-i18n-html="expWithoutHelp">Comparte nombres, categorías, ajustes y pictogramas, <b>sin las fotos ni las grabaciones</b> de tu peque. Ideal para enviar a otra familia o al terapeuta cuidando la privacidad.</div>
+    <button class="bigbtn ghost" id="expCancel" data-i18n="cancel">Cancelar</button>
   </div>
 </div>
 
@@ -365,11 +367,11 @@
 <!-- Aviso para guardar/exportar al salir del editor -->
 <div class="scrim" id="saveScrim">
   <div class="sheet">
-    <h2>💾 Guarda tus cambios</h2>
-    <p style="font-size:16px; line-height:1.5; margin:0 0 8px">Agregaste o cambiaste fotos. Para que <b>no se pierdan</b> al mover la app o al pasarla a otro dispositivo, y para <b>compartirlas con otra familia</b>, guarda un archivo con todo incluido.</p>
-    <p style="font-size:13px; color:var(--muted); margin:0 0 16px">Es el archivo que envías al móvil o a la madre: lo abren y ven exactamente tus fotos.</p>
-    <button class="bigbtn primary" id="saveExport">📤 Guardar / Compartir ahora</button>
-    <button class="bigbtn ghost" id="saveLater" style="margin-top:10px">Ahora no</button>
+    <h2 data-i18n="saveTitle">💾 Guarda tus cambios</h2>
+    <p style="font-size:16px; line-height:1.5; margin:0 0 8px" data-i18n-html="saveBody">Agregaste o cambiaste fotos. Para que <b>no se pierdan</b> al mover la app o al pasarla a otro dispositivo, y para <b>compartirlas con otra familia</b>, guarda un archivo con todo incluido.</p>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 16px" data-i18n="saveNote">Es el archivo que envías al móvil o a la madre: lo abren y ven exactamente tus fotos.</p>
+    <button class="bigbtn primary" id="saveExport" data-i18n="saveNow">📤 Guardar / Compartir ahora</button>
+    <button class="bigbtn ghost" id="saveLater" style="margin-top:10px" data-i18n="saveLater">Ahora no</button>
   </div>
 </div>
 
@@ -426,13 +428,13 @@ function updateShareBadge(){
 }
 const DEFAULT_SETTINGS={simple:false, speak:true, strip:true, rate:0.8, volume:1, calm:false, haptic:false, lang:"es"};
 const DEFAULT_CATS=[
-  {id:"comida", name:"Comida", nameCa:"Menjar", dot:"🍽️"},
-  {id:"acciones", name:"Acciones", nameCa:"Accions", dot:"🏃"},
-  {id:"emociones", name:"Emociones", nameCa:"Emocions", dot:"😊"},
-  {id:"necesidades", name:"Necesito", nameCa:"Necessito", dot:"🙋"},
-  {id:"lugares", name:"Salidas", nameCa:"Sortides", dot:"🚗"},
-  {id:"respuestas", name:"Respuestas", nameCa:"Respostes", dot:"💬"},
-  {id:"personas", name:"Personas", nameCa:"Persones", dot:"👪"},
+  {id:"comida", name:"Comida", nameCa:"Menjar", nameEn:"Food", dot:"🍽️"},
+  {id:"acciones", name:"Acciones", nameCa:"Accions", nameEn:"Actions", dot:"🏃"},
+  {id:"emociones", name:"Emociones", nameCa:"Emocions", nameEn:"Feelings", dot:"😊"},
+  {id:"necesidades", name:"Necesito", nameCa:"Necessito", nameEn:"I need", dot:"🙋"},
+  {id:"lugares", name:"Salidas", nameCa:"Sortides", nameEn:"Outings", dot:"🚗"},
+  {id:"respuestas", name:"Respuestas", nameCa:"Respostes", nameEn:"Answers", dot:"💬"},
+  {id:"personas", name:"Personas", nameCa:"Persones", nameEn:"People", dot:"👪"},
 ];
 /* ---- Traducción ES → CA de las tarjetas base (pictogramas independientes del idioma) ---- */
 const CA_NAMES={
@@ -448,6 +450,8 @@ const CA_NAMES={
   "Tengo hambre":"Tinc gana","Tengo sed":"Tinc set","Tengo sueño":"Tinc son","Me duele":"Em fa mal","Pis":"Pipí","Caca":"Caca","Frío":"Fred","Calor":"Calor","Abrazo":"Abraçada","Descansar":"Descansar","Medicina":"Medecina",
   "Quiero":"Vull","No quiero":"No vull","Ya terminé":"Ja he acabat","Otra vez":"Una altra vegada","Espera":"Espera","No sé":"No ho sé","Por favor":"Si us plau","Gracias":"Gràcies","Hola":"Hola","Adiós":"Adéu"
 };
+/* ---- Traducción ES → EN de las tarjetas base ---- */
+const EN_NAMES={"Agua":"Water","Comida":"Food","Más":"More","Menos":"Less","Fideo":"Noodles","Patata":"Potato","Rabas":"Fried squid rings","Tortilla":"Omelette","Pastas rellenas":"Stuffed pasta","Arroz con salsa de tomate":"Rice with tomato sauce","Tortilla de espinaca":"Spinach omelette","Chocolate":"Chocolate","Calamares a la romana":"Fried calamari","Patatas bravas":"Spicy potatoes","Patatas fritas":"French fries","Patatas hervidas":"Boiled potatoes","Agua mineral":"Mineral water","Pan baguette":"Baguette","Capeletti de verdura":"Vegetable cappelletti","Chorizo":"Chorizo","Ravioles de verduras":"Vegetable ravioli","Baño":"Bathroom","Jugar":"Play","Dormir":"Sleep","Ayuda":"Help","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Bathtub","Lavarse los dientes":"Brush teeth","Limpiarse la cola":"Wipe bottom","Salir":"Go out","Ir a la playa":"Go to the beach","Ir al parque":"Go to the park","Ir a la escuela":"Go to school","Sí":"Yes","No":"No","Mamá":"Mum","Papá":"Dad","Playa":"Beach","Piscina":"Pool","Parque de juegos":"Playground","Feliz":"Happy","Triste":"Sad","Enojado":"Angry","Cansado":"Tired","Con miedo":"Scared","Tranquilo":"Calm","Nervioso":"Nervous","Aburrido":"Bored","Sorprendido":"Surprised","Quiero llorar":"I want to cry","Me gusta":"I like it","No me gusta":"I don't like it","Tengo hambre":"I'm hungry","Tengo sed":"I'm thirsty","Tengo sueño":"I'm sleepy","Me duele":"It hurts","Pis":"Pee","Caca":"Poop","Frío":"Cold","Calor":"Hot","Abrazo":"Hug","Descansar":"Rest","Medicina":"Medicine","Quiero":"I want","No quiero":"I don't want","Ya terminé":"I'm finished","Otra vez":"Again","Espera":"Wait","No sé":"I don't know","Por favor":"Please","Gracias":"Thank you","Hola":"Hello","Adiós":"Goodbye"};
 const SEED=[
   ["Agua","💧","#dff0e7","comida"],["Comida","🍽️","#fde6d6","comida"],["Más","➕","#e7e3f7","comida"],["Menos","➖","#f1e3d8","comida"],
   ["Fideo","🍝","#fdeacb","comida"],["Patata","🥔","#efe2c4","comida"],["Rabas","🍤","#f6e3c4","comida"],["Tortilla","🍳","#fdf0c9","comida"],["Pastas rellenas","🥟","#fae2cf","comida"],
@@ -572,15 +576,20 @@ function readEmbedded(){
   if(!el) return null;
   try{ const d=JSON.parse(el.textContent.trim()); return (d&&Array.isArray(d.pics)&&d.pics.length)?d:null; }catch(e){ return null; }
 }
+const EN_CATS={comida:"Food",acciones:"Actions",emociones:"Feelings",necesidades:"I need",lugares:"Outings",respuestas:"Answers",personas:"People"};
+function fillEnNames(){
+  state.pics.forEach(p=>{ if(!p.nameEn && EN_NAMES[p.name]) p.nameEn=EN_NAMES[p.name]; });
+  state.cats.forEach(c=>{ if(!c.nameEn && EN_CATS[c.id]) c.nameEn=EN_CATS[c.id]; });
+}
 async function load(){
   state.pics=await dbGet("pics"); state.cats=await dbGet("cats"); state.settings=await dbGet("settings");
   if(!state.settings){
     state.settings={...DEFAULT_SETTINGS};
     // Primera vez en este dispositivo: idioma según ?lang= del enlace o el idioma del navegador
     try{
-      const q=new URLSearchParams(location.search).get("lang");
+      const q=(new URLSearchParams(location.search).get("lang")||"").toLowerCase();
       const nl=((navigator.language||"es")+"").slice(0,2).toLowerCase();
-      if(q==="ca"||(q!=="es"&&nl==="ca")) state.settings.lang="ca";
+      state.settings.lang = ["es","ca","en"].includes(q) ? q : (["es","ca","en"].includes(nl) ? nl : "en");
     }catch(e){}
   }
   if(!state.cats) state.cats=[...DEFAULT_CATS];
@@ -591,6 +600,7 @@ async function load(){
       state.pics=emb.pics;
       if(Array.isArray(emb.cats)&&emb.cats.length) state.cats=emb.cats;
       state.settings={...DEFAULT_SETTINGS, ...(emb.settings||{})};
+      fillEnNames();
       await save();
       return;
     }
@@ -676,17 +686,25 @@ async function load(){
     if(state.settings.strip!==true) state.settings.strip=true;
     state.settings.seedV14=true; await save();
   }
+  if(!state.settings.seedV15){
+    // Inglés: añade los nombres en inglés de las tarjetas y categorías base
+    fillEnNames();
+    state.settings.seedV15=true; await save();
+  }
 }
 
 /* ============ Voz (offline) ============ */
 function voiceList(){ // solo español y catalán, nunca inglés
   return ("speechSynthesis" in window ? speechSynthesis.getVoices() : [])
-    .filter(v=>v.lang && /^(es|ca)/i.test(v.lang));
+    .filter(v=>v.lang && /^(es|ca|en)/i.test(v.lang));
 }
 function pickVoice(){
   const all=("speechSynthesis" in window)?speechSynthesis.getVoices():[];
   if(state.settings.voiceURI){ const v=all.find(v=>v.voiceURI===state.settings.voiceURI); if(v) return v; }
   // Preferencia según el idioma elegido; con reserva al otro idioma
+  if(lang()==="en"){
+    return all.find(v=>/^en-GB/i.test(v.lang)) || all.find(v=>/^en-US/i.test(v.lang)) || all.find(v=>/^en/i.test(v.lang)) || null;
+  }
   if(lang()==="ca"){
     return all.find(v=>/^ca/i.test(v.lang)) || all.find(v=>/^es-ES/i.test(v.lang)) || all.find(v=>/^es/i.test(v.lang)) || null;
   }
@@ -695,7 +713,7 @@ function pickVoice(){
 function makeUtter(text){
   const u=new SpeechSynthesisUtterance(text);
   const v=pickVoice();
-  if(v){ u.voice=v; u.lang=v.lang; } else { u.lang=lang()==="ca"?"ca-ES":"es-ES"; }
+  if(v){ u.voice=v; u.lang=v.lang; } else { u.lang=lang()==="ca"?"ca-ES":(lang()==="en"?"en-GB":"es-ES"); }
   u.rate=state.settings.rate||0.9; u.pitch=1;
   u.volume=(state.settings.volume==null?1:state.settings.volume);
   return u;
@@ -728,9 +746,9 @@ function sayCard(p, onStart, onEnd){
 
 /* ============ Idioma (Español / Català) ============ */
 const STRIP_MAX=10; // frases de hasta 10 pictogramas
-function lang(){ return (state.settings && state.settings.lang==="ca") ? "ca" : "es"; }
-function dispName(p){ return (lang()==="ca" && p.nameCa) ? p.nameCa : p.name; }
-function dispCat(c){ return (lang()==="ca" && c.nameCa) ? c.nameCa : c.name; }
+function lang(){ const l=state.settings&&state.settings.lang; return (l==="ca"||l==="en") ? l : "es"; }
+function dispName(p){ if(lang()==="ca" && p.nameCa) return p.nameCa; if(lang()==="en" && p.nameEn) return p.nameEn; return p.name; }
+function dispCat(c){ if(lang()==="ca" && c.nameCa) return c.nameCa; if(lang()==="en" && c.nameEn) return c.nameEn; return c.name; }
 const I18N={
   es:{
     modeChild:"modo niño", modeCare:"modo editor", lblPhoto:"Foto", lblDone:"Listo", lblSave:"Guardar",
@@ -746,7 +764,7 @@ const I18N={
     fav:"⭐ Favorito", save:"Guardar", delPic:"🗑️ Borrar esta imagen",
     setTitle:"Ajustes", stLang:"Idioma", stSimple:"🔠 Modo simple grande", stSpeak:"🗣️ Hablar en voz alta",
     stStrip:"📝 Tira de frases siempre visible (hasta "+STRIP_MAX+")", stCalm:"🌙 Modo calmo (menos movimiento)", stHaptic:"📳 Vibración suave al tocar",
-    stVoice:"Voz", stVoiceHelp:"Elige una voz en español o catalán. Toca para escuchar una prueba.", stRate:"Velocidad de la voz", stVol:"Volumen",
+    stVoice:"Voz", stVoiceHelp:"Elige una voz en español, catalán o inglés. Toca para escuchar una prueba.", stRate:"Velocidad de la voz", stVol:"Volumen",
     help:"❓ Cómo se usa", newCat:"Nueva categoría", catNamePh:"Nombre",
     shareApp:"📤 Compartir / Exportar app", backup:"💾 Copia de seguridad (.json)", restore:"📂 Restaurar copia (.json)", close:"Cerrar",
     creditsTitle:"Créditos y licencia",
@@ -754,7 +772,25 @@ const I18N={
     welcomeTitle:"🗣️ Bienvenido/a a TalkPics", welcomeStart:"Comenzar",
     welcomeIntro:"Una forma sencilla de comunicarse con <b>fotos y dibujos</b>. Pensada para acompañar a peques que hablan poco o no hablan.",
     welcomeFoot:"Todo funciona sin internet y sin crear cuentas. Tus fotos se guardan solo en este dispositivo.",
-    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imagen</b>: <b>dice la palabra en voz alta</b> al instante y se suma a la <b>frase</b> de abajo. Toca la miniatura de la frase para verla grande.</div><div style="margin-bottom:10px">📝 La <b>tira de frases</b> está siempre lista: usa <b>un solo pictograma</b> o arma frases de <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y óyelas con ▶. ⌫ la borra.</div><div style="margin-bottom:10px">⭐ Arriba cambias de categoría: Comida, Acciones, Salidas…</div><div style="margin-bottom:10px">🔒 <b>Mantén presionado el candado</b> (arriba) para entrar al <b>modo editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En modo editor puedes <b>agregar o cambiar fotos</b> (cámara, galería o <b>buscar un pictograma de ARASAAC</b>) y ponerles nombre.</div><div style="margin-bottom:10px">🎙️ Puedes <b>grabar la voz de un familiar</b> en cada tarjeta. El peque responde mejor a una voz conocida.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 En Ajustes ⚙️ cambias entre <b>Español y Català</b> (textos y voz).</div>'
+    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imagen</b>: <b>dice la palabra en voz alta</b> al instante y se suma a la <b>frase</b> de abajo. Toca la miniatura de la frase para verla grande.</div><div style="margin-bottom:10px">📝 La <b>tira de frases</b> está siempre lista: usa <b>un solo pictograma</b> o arma frases de <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y óyelas con ▶. ⌫ la borra.</div><div style="margin-bottom:10px">⭐ Arriba cambias de categoría: Comida, Acciones, Salidas…</div><div style="margin-bottom:10px">🔒 <b>Mantén presionado el candado</b> (arriba) para entrar al <b>modo editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En modo editor puedes <b>agregar o cambiar fotos</b> (cámara, galería o <b>buscar un pictograma de ARASAAC</b>) y ponerles nombre.</div><div style="margin-bottom:10px">🎙️ Puedes <b>grabar la voz de un familiar</b> en cada tarjeta. El peque responde mejor a una voz conocida.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 En Ajustes ⚙️ cambias entre <b>Español y Català</b> (textos y voz).</div>',
+    ttAdd:"Agregar foto", ttLock:"Editar (mantén presionado)", ttLockAria:"Modo editor: mantén presionado", ttDoneAria:"Listo, volver a modo niño", ttShareBar:"Guardar / Compartir", ttZoom:"Imagen seleccionada", ttRecDel:"Borrar grabación",
+    fldNameEn:"Nombre en inglés (opcional)", phName:"Ej: Agua",
+    voiceAuto:"Automática", voiceSearching:"(Buscando voces del dispositivo…)", voiceTest:"Hola, soy tu voz",
+    araNote:'Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.',
+    creditsBody:'Algunas imágenes usan pictogramas de ARASAAC. Los símbolos pictográficos utilizados son propiedad del Gobierno de Aragón y han sido creados por Sergio Palao para <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, que los distribuye bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener">Licencia Creative Commons BY-NC-SA</a>.',
+    shareHelp:"Crea un archivo único con la app dentro. Podrás elegir <b>con fotos</b> (copia completa, para respaldo o tu otro dispositivo) o <b>sin fotos</b> (solo la plantilla, para compartir con otra familia cuidando la privacidad). En el móvil abre WhatsApp/correo para enviarlo; en el ordenador lo descarga. Sin internet ni instalar nada.",
+    expTitle:"📤 Compartir / Exportar", expIntro:"Crea un archivo único con la app dentro. Elige si incluir las fotos.",
+    expWith:"📷 Con fotos — copia completa", expWithHelp:"Incluye tus fotos y grabaciones. Ideal como respaldo o para pasar la app a tu otro dispositivo.",
+    expWithout:"🔒 Sin fotos — solo la plantilla", expWithoutHelp:"Comparte nombres, categorías, ajustes y pictogramas, <b>sin las fotos ni las grabaciones</b> de tu peque. Ideal para enviar a otra familia o al terapeuta cuidando la privacidad.",
+    saveTitle:"💾 Guarda tus cambios", saveBody:"Agregaste o cambiaste fotos. Para que <b>no se pierdan</b> al mover la app o al pasarla a otro dispositivo, y para <b>compartirlas con otra familia</b>, guarda un archivo con todo incluido.",
+    saveNote:"Es el archivo que envías al móvil o a la madre: lo abren y ven exactamente tus fotos.", saveNow:"📤 Guardar / Compartir ahora", saveLater:"Ahora no",
+    camShoot:"📸 Capturar", camFlip:"🔄 Cambiar cámara",
+    hStripFull:"Ya hay "+STRIP_MAX+" imágenes — toca ▶ para oírla o ⌫ para borrar", hHold:"Mantén presionado para editar…", hCamNotReady:"La cámara aún no está lista", hCamFlipFail:"No se pudo cambiar de cámara",
+    hManyAdded:" imágenes agregadas — ponles nombre tocando ✏️", hNoRec:"Este dispositivo no permite grabar aquí", hRecReady:"Grabación lista ✓", hMicFail:"No se pudo usar el micrófono",
+    hRecDeleted:"Grabación borrada", hRecFinish:"Termina la grabación y toca Guardar otra vez", hCatAdded:"Categoría agregada",
+    hTplDone:"Plantilla exportada (sin fotos)", hAppDone:"App exportada — comparte ese archivo", hExportFail:"No se pudo exportar la app", hRestored:"Copia restaurada", hReadFail:"No se pudo leer el archivo",
+    shareTextFull:"Abre este archivo en el navegador para usar TalkPics. Funciona sin internet.", shareTextTpl:"Plantilla de TalkPics (sin fotos ni grabaciones). Ábrela en el navegador y agrega tus propias fotos.",
+    dbFail:"Tu navegador no permite guardar datos aquí. Ábrelo desde un servidor o agrégalo a la pantalla de inicio.", ariaRemove:"Quitar ", ariaEdit:"Editar "
   },
   ca:{
     modeChild:"mode nen", modeCare:"mode editor", lblPhoto:"Foto", lblDone:"Fet", lblSave:"Desa",
@@ -770,7 +806,7 @@ const I18N={
     fav:"⭐ Preferit", save:"Desa", delPic:"🗑️ Esborrar aquesta imatge",
     setTitle:"Configuració", stLang:"Idioma", stSimple:"🔠 Mode simple gran", stSpeak:"🗣️ Parlar en veu alta",
     stStrip:"📝 Tira de frases sempre visible (fins a "+STRIP_MAX+")", stCalm:"🌙 Mode calmat (menys moviment)", stHaptic:"📳 Vibració suau en tocar",
-    stVoice:"Veu", stVoiceHelp:"Tria una veu en espanyol o català. Toca per escoltar una prova.", stRate:"Velocitat de la veu", stVol:"Volum",
+    stVoice:"Veu", stVoiceHelp:"Tria una veu en espanyol, català o anglès. Toca per escoltar una prova.", stRate:"Velocitat de la veu", stVol:"Volum",
     help:"❓ Com s'utilitza", newCat:"Nova categoria", catNamePh:"Nom",
     shareApp:"📤 Compartir / Exportar app", backup:"💾 Còpia de seguretat (.json)", restore:"📂 Restaurar còpia (.json)", close:"Tancar",
     creditsTitle:"Crèdits i llicència",
@@ -779,6 +815,48 @@ const I18N={
     welcomeIntro:"Una manera senzilla de comunicar-se amb <b>fotos i dibuixos</b>. Pensada per acompanyar nens que parlen poc o no parlen.",
     welcomeFoot:"Tot funciona sense internet i sense crear comptes. Les teves fotos es desen només en aquest dispositiu.",
     welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imatge</b>: <b>diu la paraula en veu alta</b> a l\'instant i se suma a la <b>frase</b> de sota. Toca la miniatura de la frase per veure-la gran.</div><div style="margin-bottom:10px">📝 La <b>tira de frases</b> sempre està a punt: fes servir <b>un sol pictograma</b> o fes frases de <b>fins a 10</b> (per exemple “Vull” + “Aigua”) i escolta-les amb ▶. ⌫ l\'esborra.</div><div style="margin-bottom:10px">⭐ A dalt canvies de categoria: Menjar, Accions, Sortides…</div><div style="margin-bottom:10px">🔒 <b>Mantén premut el cadenat</b> (a dalt) per entrar al <b>mode editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En mode editor pots <b>afegir o canviar fotos</b> (càmera, galeria o <b>cercar un pictograma d\'ARASAAC</b>) i posar-los nom.</div><div style="margin-bottom:10px">🎙️ Pots <b>gravar la veu d\'un familiar</b> a cada targeta. El nen respon millor a una veu coneguda.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 A Configuració ⚙️ canvies entre <b>Español i Català</b> (textos i veu).</div>'
+  },
+  en:{
+    modeChild:"child mode", modeCare:"editor mode", lblPhoto:"Photo", lblDone:"Done", lblSave:"Save",
+    searchPh:"Search by name or tag…", sortManual:"Manual order", sortAlpha:"A → Z", sortRecent:"Recent", sortUsed:"Most used",
+    favs:"Favourites",
+    stripHint:"Tap up to "+STRIP_MAX+" pictures to build a sentence…",
+    emptyCare:"There are no pictures here.<br>Tap <b>＋ Photo</b> to add one.", emptyChild:"This category is empty.",
+    addTitle:"Add a picture", takePhoto:"📷 Take a photo", pickPhoto:"🖼️ Choose from gallery", arasaacBtn:"🔎 Search a pictogram (ARASAAC)", cancel:"Cancel",
+    editNew:"New picture", editEdit:"Edit picture", noImg:"no image",
+    fldName:"Name (what it says out loud)", fldNameCa:"Name in Catalan (optional)", fldCat:"Category", fldTags:"Tags (to filter)",
+    fldVoice:"🎙️ A family member's voice (optional)", recDo:"🎙️ Record", recHear:"▶️ Listen", recAgain:"🎙️ Record again", recStop:"⏹️ Stop",
+    voiceHelp:"Record mum, dad or whoever is with the child saying the word. Children often respond better to a familiar voice. If there is a recording, it plays instead of the device voice.",
+    fav:"⭐ Favourite", save:"Save", delPic:"🗑️ Delete this picture",
+    setTitle:"Settings", stLang:"Language", stSimple:"🔠 Large simple mode", stSpeak:"🗣️ Speak out loud",
+    stStrip:"📝 Sentence strip always visible (up to "+STRIP_MAX+")", stCalm:"🌙 Calm mode (less movement)", stHaptic:"📳 Gentle vibration on tap",
+    stVoice:"Voice", stVoiceHelp:"Choose a voice in English, Spanish or Catalan. Tap to hear a sample.", stRate:"Voice speed", stVol:"Volume",
+    help:"❓ How to use it", newCat:"New category", catNamePh:"Name",
+    shareApp:"📤 Share / Export app", backup:"💾 Backup (.json)", restore:"📂 Restore backup (.json)", close:"Close",
+    creditsTitle:"Credits and licence",
+    arasaacTitle:"Search a pictogram", arasaacPh:"Type a word… (e.g. eat)", arasaacSearch:"Search", arasaacHint:"Pictograms from ARASAAC. Internet is only needed to search; once chosen, the pictogram is saved and works offline.", arasaacSearching:"Searching…", arasaacNone:"No pictograms found. Try another word.", arasaacErr:"Can't reach ARASAAC. Check your internet connection.", arasaacLoading:"Saving pictogram…",
+    welcomeTitle:"🗣️ Welcome to TalkPics", welcomeStart:"Start",
+    welcomeIntro:"A simple way to communicate with <b>photos and pictures</b>. Made to support children who speak little or not at all.",
+    welcomeFoot:"Everything works without internet and without creating accounts. Your photos are stored only on this device.",
+    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Tap a picture</b>: it <b>says the word out loud</b> straight away and adds it to the <b>sentence</b> below. Tap a thumbnail in the sentence to see it large.</div><div style="margin-bottom:10px">📝 The <b>sentence strip</b> is always ready: use <b>a single pictogram</b> or build sentences of <b>up to 10</b> (for example “I want” + “Water”) and hear them with ▶. ⌫ clears it.</div><div style="margin-bottom:10px">⭐ At the top you switch category: Food, Actions, Outings…</div><div style="margin-bottom:10px">🔒 <b>Press and hold the padlock</b> (top) to enter <b>editor mode</b>.</div><div style="margin-bottom:10px">✏️ / ＋ In editor mode you can <b>add or change photos</b> (camera, gallery or <b>search an ARASAAC pictogram</b>) and name them.</div><div style="margin-bottom:10px">🎙️ You can <b>record a family member\'s voice</b> on each card. Children respond better to a familiar voice.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥/🇬🇧 In Settings ⚙️ you switch between <b>Español, Català and English</b> (text and voice).</div>',
+    ttAdd:"Add photo", ttLock:"Edit (press and hold)", ttLockAria:"Editor mode: press and hold", ttDoneAria:"Done, back to child mode", ttShareBar:"Save / Share", ttZoom:"Selected picture", ttRecDel:"Delete recording",
+    fldNameEn:"Name in English (optional)", phName:"E.g. Water",
+    voiceAuto:"Automatic", voiceSearching:"(Looking for voices on this device…)", voiceTest:"Hello, this is your voice",
+    araNote:'The pictographic symbols used are the property of the Government of Aragón and were created by Sergio Palao for <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, which distributes them under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">Creative Commons BY-NC-SA licence</a>.',
+    creditsBody:'Some pictures use ARASAAC pictograms. The pictographic symbols used are the property of the Government of Aragón and were created by Sergio Palao for <a href="http://www.arasaac.org/" target="_blank" rel="noopener">ARASAAC (http://www.arasaac.org)</a>, which distributes them under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">Creative Commons BY-NC-SA licence</a>.',
+    shareHelp:"Creates a single file with the app inside. You can choose <b>with photos</b> (full copy, for backup or your other device) or <b>without photos</b> (template only, to share with another family while protecting privacy). On a phone it opens WhatsApp/email to send it; on a computer it downloads. No internet or installation needed.",
+    expTitle:"📤 Share / Export", expIntro:"Creates a single file with the app inside. Choose whether to include the photos.",
+    expWith:"📷 With photos — full copy", expWithHelp:"Includes your photos and recordings. Ideal as a backup or to move the app to your other device.",
+    expWithout:"🔒 Without photos — template only", expWithoutHelp:"Shares names, categories, settings and pictograms, <b>without your child's photos or recordings</b>. Ideal for sending to another family or to a therapist while protecting privacy.",
+    saveTitle:"💾 Save your changes", saveBody:"You added or changed photos. So that they are <b>not lost</b> when you move the app or open it on another device, and to <b>share them with another family</b>, save a file with everything included.",
+    saveNote:"This is the file you send to a phone or to the other parent: they open it and see exactly your photos.", saveNow:"📤 Save / Share now", saveLater:"Not now",
+    camShoot:"📸 Capture", camFlip:"🔄 Switch camera",
+    hStripFull:"There are already "+STRIP_MAX+" pictures — tap ▶ to hear it or ⌫ to clear", hHold:"Press and hold to edit…", hCamNotReady:"The camera isn't ready yet", hCamFlipFail:"Couldn't switch camera",
+    hManyAdded:" pictures added — name them by tapping ✏️", hNoRec:"This device can't record here", hRecReady:"Recording ready ✓", hMicFail:"Couldn't use the microphone",
+    hRecDeleted:"Recording deleted", hRecFinish:"Finish the recording and tap Save again", hCatAdded:"Category added",
+    hTplDone:"Template exported (no photos)", hAppDone:"App exported — share that file", hExportFail:"Couldn't export the app", hRestored:"Backup restored", hReadFail:"Couldn't read the file",
+    shareTextFull:"Open this file in a browser to use TalkPics. It works without internet.", shareTextTpl:"TalkPics template (no photos or recordings). Open it in a browser and add your own photos.",
+    dbFail:"Your browser doesn't allow saving data here. Open it from a web server or add it to your home screen.", ariaRemove:"Remove ", ariaEdit:"Edit ",
   }
 };
 function t(k){ const L=I18N[lang()]||I18N.es; return (k in L)?L[k]:(I18N.es[k]||k); }
@@ -788,9 +866,11 @@ function applyLang(){
   document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(k) el.textContent=t(k); });
   document.querySelectorAll("[data-i18n-html]").forEach(el=>{ const k=el.getAttribute("data-i18n-html"); if(k) el.innerHTML=t(k); });
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ const k=el.getAttribute("data-i18n-ph"); if(k) el.setAttribute("placeholder",t(k)); });
+  document.querySelectorAll("[data-i18n-title]").forEach(el=>{ const k=el.getAttribute("data-i18n-title"); if(k) el.setAttribute("title",t(k)); });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el=>{ const k=el.getAttribute("data-i18n-aria"); if(k) el.setAttribute("aria-label",t(k)); });
   const ml=$("#modeLabel"); if(ml) ml.textContent = state.mode==="care"?t("modeCare"):t("modeChild");
   // Botón de idioma segmentado
-  const bes=$("#langEs"), bca=$("#langCa"); if(bes&&bca){ bes.classList.toggle("on",L==="es"); bca.classList.toggle("on",L==="ca"); }
+  const bes=$("#langEs"), bca=$("#langCa"), ben=$("#langEn"); if(bes&&bca){ bes.classList.toggle("on",L==="es"); bca.classList.toggle("on",L==="ca"); if(ben) ben.classList.toggle("on",L==="en"); }
 }
 
 /* ============ Render ============ */
@@ -822,7 +902,7 @@ function currentList(){
   else if(state.curCat) list=list.filter(p=>p.cat===state.curCat);
   if(state.mode==="care"){
     const q=$("#search").value.trim().toLowerCase();
-    if(q) list=list.filter(p=>p.name.toLowerCase().includes(q)||(p.nameCa||"").toLowerCase().includes(q)||(p.tags||[]).some(t=>t.toLowerCase().includes(q)));
+    if(q) list=list.filter(p=>p.name.toLowerCase().includes(q)||(p.nameCa||"").toLowerCase().includes(q)||(p.nameEn||"").toLowerCase().includes(q)||(p.tags||[]).some(t=>t.toLowerCase().includes(q)));
     const s=$("#sortSel").value;
     if(s==="alpha") list.sort((a,b)=>a.name.localeCompare(b.name));
     else if(s==="recent") list.sort((a,b)=>b.created-a.created);
@@ -843,7 +923,7 @@ function renderBoard(){
   list.forEach(p=>{
     const card=document.createElement("div"); card.className="pcard";
     card.setAttribute("role","button"); card.setAttribute("tabindex","0"); card.setAttribute("aria-label",dispName(p));
-    card.innerHTML=`${p.fav?'<div class="fav">⭐</div>':''}<div class="img" style="background-image:url('${p.img}')"></div><div class="name">${p.audio?'<span class="micdot" aria-hidden="true">🔊</span> ':''}${escapeHtml(dispName(p))}</div><button class="edit" aria-label="Editar ${escapeHtml(dispName(p))}">✏️</button>`;
+    card.innerHTML=`${p.fav?'<div class="fav">⭐</div>':''}<div class="img" style="background-image:url('${p.img}')"></div><div class="name">${p.audio?'<span class="micdot" aria-hidden="true">🔊</span> ':''}${escapeHtml(dispName(p))}</div><button class="edit" aria-label="${escapeHtml(t("ariaEdit"))}${escapeHtml(dispName(p))}">✏️</button>`;
     card.querySelector(".img").onclick=()=>onSelect(p,card);
     card.querySelector(".name").onclick=()=>onSelect(p,card);
     card.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onSelect(p,card); } });
@@ -880,7 +960,7 @@ $("#zoomCard").onclick=()=>{ if(!zoomPic) return; const zc=$("#zoomCard");
 
 /* ============ Tira de frases (hasta 10) ============ */
 function addToStrip(p){
-  if(state.strip.length>=STRIP_MAX){ showHint("Ya hay "+STRIP_MAX+" imágenes — toca ▶ para oírla o ⌫ para borrar"); buzz(); return false; }
+  if(state.strip.length>=STRIP_MAX){ showHint(t("hStripFull")); buzz(); return false; }
   state.strip.push(p); renderStrip(); return true;
 }
 function renderStrip(){
@@ -894,7 +974,7 @@ function renderStrip(){
     const d=document.createElement("div"); d.className="schip"; d.setAttribute("aria-label",dispName(p));
     const th=document.createElement("div"); th.className="thumb"; th.style.backgroundImage=`url('${p.img}')`;
     th.title=dispName(p); th.onclick=e=>{ e.stopPropagation(); openZoom(p); };
-    const rm=document.createElement("button"); rm.className="rm"; rm.textContent="✕"; rm.setAttribute("aria-label","Quitar "+dispName(p));
+    const rm=document.createElement("button"); rm.className="rm"; rm.textContent="✕"; rm.setAttribute("aria-label",t("ariaRemove")+dispName(p));
     rm.onclick=e=>{ e.stopPropagation(); state.strip.splice(idx,1); renderStrip(); };
     const lab=document.createElement("div"); lab.className="lab"; lab.textContent=dispName(p);
     d.appendChild(th); d.appendChild(rm); d.appendChild(lab); w.appendChild(d);
@@ -919,7 +999,7 @@ $("#clearStrip").onclick=()=>{state.strip=[]; renderStrip();};
 /* ============ Bloqueo / modo editor (mantener presionado) ============ */
 let holdT=null;
 const lock=$("#lockBtn");
-function startHold(){ showHint("Mantén presionado para editar…");
+function startHold(){ showHint(t("hHold"));
   holdT=setTimeout(()=>{state.mode="care"; applyBodyClasses(); renderCats(); renderBoard(); hideHint();},1200);}
 function endHold(){clearTimeout(holdT); }
 lock.addEventListener("pointerdown",startHold);
@@ -958,7 +1038,7 @@ function closeCamera(){
 }
 async function shootPhoto(){
   const v=$("#camVideo");
-  if(!v || !v.videoWidth){ showHint("La cámara aún no está lista"); return; }
+  if(!v || !v.videoWidth){ showHint(t("hCamNotReady")); return; }
   const c=document.createElement("canvas");
   c.width=v.videoWidth; c.height=v.videoHeight;
   c.getContext("2d").drawImage(v,0,0);
@@ -974,7 +1054,7 @@ async function flipCamera(){
   try{
     camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFacing}, audio:false});
     $("#camVideo").srcObject=camStream;
-  }catch(e){ showHint("No se pudo cambiar de cámara"); }
+  }catch(e){ showHint(t("hCamFlipFail")); }
 }
 $("#camShoot").onclick=shootPhoto;
 $("#camFlip").onclick=flipCamera;
@@ -989,7 +1069,7 @@ async function handleFiles(files){
     if(i===0){ pending={img, editingId:null, audio:null}; openEditSheet({name:"",cat:state.curCat&&state.curCat!=="__fav"?state.curCat:state.cats[0].id,tags:[],fav:false}); }
     else { state.pics.push({id:uid(),name:"",img,cat:state.cats[0].id,tags:[],fav:false,uses:0,created:Date.now()+i,pos:state.pics.length+i}); }
   }
-  if(arr.length>1){markDirty(); await save(); renderBoard(); showHint(arr.length+" imágenes agregadas — ponles nombre tocando ✏️");}
+  if(arr.length>1){markDirty(); await save(); renderBoard(); showHint(arr.length+t("hManyAdded"));}
   ["#fileCam","#fileLib"].forEach(s=>$(s).value="");
 }
 function readFile(f){return new Promise(res=>{const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(f);});}
@@ -1050,7 +1130,7 @@ function araChoose(id,q){
       $("#editPreview").style.backgroundImage=`url('${dataUrl}')`; $("#editPreview").textContent="";
       $("#editScrim").classList.add("show");
     } else {
-      openEditSheet({name:cap, nameCa:(lang()==="ca"?cap:""), cat:(state.curCat&&state.curCat!=="__fav")?state.curCat:state.cats[0].id, tags:[], fav:false});
+      openEditSheet({name:cap, nameCa:(lang()==="ca"?cap:""), nameEn:(lang()==="en"?cap:""), cat:(state.curCat&&state.curCat!=="__fav")?state.curCat:state.cats[0].id, tags:[], fav:false});
     }
   };
   img.onerror=()=>{ $("#araStatus").textContent=t("arasaacErr"); };
@@ -1061,11 +1141,17 @@ $("#araQuery").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDef
 
 /* ============ Idioma: cambiar Español / Català ============ */
 async function setLang(l){
-  state.settings.lang=(l==="ca")?"ca":"es"; await save();
+  state.settings.lang=(l==="ca"||l==="en")?l:"es";
+  // si la voz elegida es de otro idioma, vuelve a "automática" para que lea bien
+  try{ const cur=state.settings.voiceURI; if(cur && ("speechSynthesis" in window)){
+    const v=speechSynthesis.getVoices().find(x=>x.voiceURI===cur);
+    if(v && !new RegExp("^"+state.settings.lang,"i").test(v.lang)) state.settings.voiceURI=null; } }catch(e){}
+  await save();
   applyLang(); renderCats(); renderBoard(); renderStrip();
 }
 $("#langEs").onclick=()=>setLang("es");
 $("#langCa").onclick=()=>setLang("ca");
+$("#langEn").onclick=()=>setLang("en");
 
 /* ============ Editar imagen ============ */
 let editFav=false;
@@ -1082,7 +1168,7 @@ function openEditSheet(p){
   $("#editTitle").textContent=pending&&!pending.editingId?t("editNew"):t("editEdit");
   $("#editPreview").style.backgroundImage=pending?`url('${pending.img}')`:`url('${p.img}')`;
   $("#editPreview").textContent="";
-  $("#fName").value=p.name||""; $("#fNameCa").value=p.nameCa||""; buildCatSelect(p.cat); $("#fTags").value=(p.tags||[]).join(", ");
+  $("#fName").value=p.name||""; $("#fNameCa").value=p.nameCa||""; $("#fNameEn").value=p.nameEn||""; buildCatSelect(p.cat); $("#fTags").value=(p.tags||[]).join(", ");
   editFav=!!p.fav; $("#fFav").classList.toggle("on",editFav);
   $("#delPic").classList.toggle("hidden", !(pending&&pending.editingId));
   buildTagSuggest();
@@ -1102,7 +1188,7 @@ function updateRecUI(){
 }
 async function startRec(){
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !("MediaRecorder" in window)){
-    showHint("Este dispositivo no permite grabar aquí"); return; }
+    showHint(t("hNoRec")); return; }
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     recChunks=[]; mediaRec=new MediaRecorder(stream);
@@ -1113,31 +1199,32 @@ async function startRec(){
       const blob=new Blob(recChunks,{type});
       const dataUrl=await new Promise(r=>{const fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(blob);});
       if(!pending) pending={img:null,editingId:null,audio:null};
-      pending.audio=dataUrl; updateRecUI(); showHint("Grabación lista ✓");
+      pending.audio=dataUrl; updateRecUI(); showHint(t("hRecReady"));
     };
     mediaRec.start();
     const rb=$("#recBtn"); rb.classList.add("recording"); rb.textContent=t("recStop");
     recTimer=setTimeout(()=>{ if(mediaRec&&mediaRec.state!=="inactive") stopRec(); },6000); // límite 6s
-  }catch(e){ showHint("No se pudo usar el micrófono"); }
+  }catch(e){ showHint(t("hMicFail")); }
 }
 function stopRec(){ clearTimeout(recTimer); if(mediaRec&&mediaRec.state!=="inactive"){ try{mediaRec.stop();}catch(e){} } mediaRec=null; }
 $("#recBtn").onclick=()=>{ if(mediaRec&&mediaRec.state==="recording") stopRec(); else startRec(); };
 $("#recPlay").onclick=()=>{ if(pending&&pending.audio) playClip(pending.audio); };
-$("#recDel").onclick=()=>{ if(pending) pending.audio=null; updateRecUI(); showHint("Grabación borrada"); };
+$("#recDel").onclick=()=>{ if(pending) pending.audio=null; updateRecUI(); showHint(t("hRecDeleted")); };
 $("#fFav").onclick=()=>{editFav=!editFav; $("#fFav").classList.toggle("on",editFav);};
 $("#editCancel").onclick=()=>{$("#editScrim").classList.remove("show"); stopRec(); pending=null;};
 $("#savePic").onclick=async()=>{
-  if(mediaRec&&mediaRec.state==="recording"){ stopRec(); showHint("Termina la grabación y toca Guardar otra vez"); return; }
+  if(mediaRec&&mediaRec.state==="recording"){ stopRec(); showHint(t("hRecFinish")); return; }
   const name=$("#fName").value.trim()||"(sin nombre)";
   const nameCa=$("#fNameCa").value.trim()||null;
+  const nameEn=$("#fNameEn").value.trim()||null;
   const cat=$("#fCat").value; const tags=$("#fTags").value.split(",").map(x=>x.trim()).filter(Boolean);
   const audio=(pending&&pending.audio)||null;
   const arasaac=!!(pending&&pending.arasaac);
   if(pending&&pending.editingId){
     const p=state.pics.find(x=>x.id===pending.editingId);
-    Object.assign(p,{name,nameCa,cat,tags,fav:editFav,audio,arasaac}); if(pending.img)p.img=pending.img;
+    Object.assign(p,{name,nameCa,nameEn,cat,tags,fav:editFav,audio,arasaac}); if(pending.img)p.img=pending.img;
   } else {
-    state.pics.push({id:uid(),name,nameCa,img:pending.img,cat,tags,fav:editFav,audio,arasaac,uses:0,created:Date.now(),pos:state.pics.length});
+    state.pics.push({id:uid(),name,nameCa,nameEn,img:pending.img,cat,tags,fav:editFav,audio,arasaac,uses:0,created:Date.now(),pos:state.pics.length});
   }
   markDirty();
   await save(); pending=null; $("#editScrim").classList.remove("show"); renderCats(); renderBoard();
@@ -1156,12 +1243,12 @@ function populateVoices(){
   const sel=$("#voiceSel"); if(!sel) return;
   const vs=voiceList();
   sel.innerHTML="";
-  const auto=document.createElement("option"); auto.value=""; auto.textContent="Automática (español)"; sel.appendChild(auto);
+  const auto=document.createElement("option"); auto.value=""; auto.textContent=t("voiceAuto"); sel.appendChild(auto);
   vs.forEach(v=>{ const o=document.createElement("option"); o.value=v.voiceURI;
-    const fam=/^ca/i.test(v.lang)?"Català":"Español";
+    const fam=/^ca/i.test(v.lang)?"Català":(/^en/i.test(v.lang)?"English":"Español");
     o.textContent=fam+" — "+v.name; sel.appendChild(o); });
   sel.value=state.settings.voiceURI||"";
-  if(!vs.length){ auto.textContent="(Buscando voces del dispositivo…)"; }
+  if(!vs.length){ auto.textContent=t("voiceSearching"); }
 }
 function syncSettingsUI(){
   $("#swSimple").classList.toggle("on",state.settings.simple);
@@ -1176,7 +1263,7 @@ function syncSettingsUI(){
 }
 $("#voiceSel").onchange=async e=>{
   state.settings.voiceURI=e.target.value||null; await save();
-  const prev=state.settings.speak; state.settings.speak=true; speak("Hola, soy tu voz"); state.settings.speak=prev;
+  const prev=state.settings.speak; state.settings.speak=true; speak(t("voiceTest")); state.settings.speak=prev;
 };
 function bindToggle(swId,key){$(swId).onclick=async()=>{state.settings[key]=!state.settings[key]; $(swId).classList.toggle("on",state.settings[key]); applyBodyClasses(); renderStrip(); await save();};}
 bindToggle("#swSimple","simple"); bindToggle("#swSpeak","speak"); bindToggle("#swStrip","strip");
@@ -1185,7 +1272,7 @@ $("#swHaptic").onclick=async()=>{ state.settings.haptic=!state.settings.haptic; 
 $("#rate").oninput=async e=>{state.settings.rate=parseFloat(e.target.value); await save();};
 $("#vol").oninput=async e=>{state.settings.volume=parseFloat(e.target.value); await save();};
 $("#addCat").onclick=async()=>{const n=$("#newCatName").value.trim(); if(!n)return;
-  state.cats.push({id:uid(),name:n,dot:"📁"}); $("#newCatName").value=""; await save(); renderCats(); showHint("Categoría agregada");};
+  state.cats.push({id:uid(),name:n,dot:"📁"}); $("#newCatName").value=""; await save(); renderCats(); showHint(t("hCatAdded"));};
 
 /* ============ Exportar / compartir app completa (1 archivo) ============ */
 // Quita datos personales: reemplaza fotos reales por un pictograma y borra las grabaciones
@@ -1212,15 +1299,13 @@ function downloadHtml(html, fileName){
   const url=URL.createObjectURL(new Blob([html],{type:"text/html"})), el=document.createElement("a");
   el.href=url; el.download=fileName||"TalkPics.html"; el.click();
   setTimeout(()=>URL.revokeObjectURL(url),4000);
-  showHint(fileName&&fileName.indexOf("plantilla")>=0 ? "Plantilla exportada (sin fotos)" : "App exportada — comparte ese archivo");
+  showHint(fileName&&fileName.indexOf("plantilla")>=0 ? t("hTplDone") : t("hAppDone"));
 }
 async function doShare(includePhotos=true){
   const html=buildExportHtml(includePhotos);
-  if(!html){ showHint("No se pudo exportar la app"); return; }
+  if(!html){ showHint(t("hExportFail")); return; }
   const fileName = includePhotos ? "TalkPics.html" : "TalkPics-plantilla.html";
-  const text = includePhotos
-    ? "Abre este archivo en el navegador para usar TalkPics. Funciona sin internet."
-    : "Plantilla de TalkPics (sin fotos ni grabaciones). Ábrela en el navegador y agrega tus propias fotos.";
+  const text = includePhotos ? t("shareTextFull") : t("shareTextTpl");
   // En el móvil: abrir el menú de compartir (WhatsApp, correo, etc.) con el archivo
   try{
     const file=new File([html],fileName,{type:"text/html"});
@@ -1250,8 +1335,8 @@ $("#importBtn").onclick=()=>$("#fileRestore").click();
 $("#fileRestore").onchange=async e=>{
   const f=e.target.files[0]; if(!f)return; const txt=await f.text();
   try{const d=JSON.parse(txt); if(d.pics)state.pics=d.pics; if(d.cats)state.cats=d.cats; if(d.settings)state.settings=d.settings;
-    await save(); applyBodyClasses(); renderCats(); renderBoard(); showHint("Copia restaurada");}
-  catch(err){showHint("No se pudo leer el archivo");}
+    await save(); applyBodyClasses(); renderCats(); renderBoard(); showHint(t("hRestored"));}
+  catch(err){showHint(t("hReadFail"));}
   e.target.value="";
 };
 
@@ -1269,7 +1354,7 @@ $("#helpBtn").onclick=()=>{ $("#setScrim").classList.remove("show"); showWelcome
 
 /* ============ Inicio ============ */
 (async()=>{
-  try{ db=await openDB(); }catch(e){ alert("Tu navegador no permite guardar datos aquí. Ábrelo desde un servidor o agrégalo a la pantalla de inicio."); }
+  try{ db=await openDB(); }catch(e){ alert(t("dbFail")); }
   await load();
   // Primera vez: si el dispositivo pide "menos movimiento", arrancamos en modo calmo
   if(state.settings.calm===undefined){
