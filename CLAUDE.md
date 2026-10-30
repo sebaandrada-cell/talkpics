@@ -9,7 +9,7 @@ Free communication app (AAC) for non-speaking autistic people and their families
 - `manifest.webmanifest`, icons, QR codes, `TalkPics-QR-hoja.pdf`: PWA and print material.
 
 ## Publishing
-GitHub Pages serves `main` at https://sebaandrada-cell.github.io/talkpics/ . Pushing to `main` publishes immediately to real families. Short links: https://tinyurl.com/talkpics-caa (landing), https://tinyurl.com/talkpics-app (app). Never change file names or paths: the printed QR sheets and shared links point to them.
+GitHub Pages serves the `TalkPics` branch (root) at https://sebaandrada-cell.github.io/talkpics/ . Pushing to `TalkPics` publishes immediately to real families. `main` is only an empty root (the account default for new projects) and holds no app files: do all work on `TalkPics` or on a short branch from it, and open pull requests against `TalkPics`, never `main`. Short links: https://tinyurl.com/talkpics-caa (landing), https://tinyurl.com/talkpics-app (app). Never change file names or paths: the printed QR sheets and shared links point to them.
 
 ## Languages
 App: Spanish (`es`, default), Catalan (`ca`), English (`en`). Strings live in the `I18N` object. Card and category names are stored as `name` (Spanish), `nameCa`, `nameEn`. New strings need all three where possible; missing keys fall back to Spanish.
