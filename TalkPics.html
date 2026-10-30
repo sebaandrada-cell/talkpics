@@ -321,7 +321,7 @@
     </div>
     <div class="toggle"><span data-i18n="stSimple">🔠 Modo simple grande</span> <div class="sw" id="swSimple"></div></div>
     <div class="toggle"><span data-i18n="stSpeak">🗣️ Hablar en voz alta</span> <div class="sw" id="swSpeak"></div></div>
-    <div class="toggle"><span data-i18n="stStrip">📝 Tira de frases siempre visible (hasta 10)</span> <div class="sw" id="swStrip"></div></div>
+    <div class="toggle"><span data-i18n="stStrip">📝 Frases con varios pictogramas (hasta 10)</span> <div class="sw" id="swStrip"></div></div>
     <div class="toggle"><span data-i18n="stCalm">🌙 Modo calmo (menos movimiento)</span> <div class="sw" id="swCalm"></div></div>
     <div class="toggle"><span data-i18n="stHaptic">📳 Vibración suave al tocar</span> <div class="sw" id="swHaptic"></div></div>
     <div class="field" style="margin-top:16px"><label data-i18n="stVoice">Voz</label>
@@ -385,8 +385,8 @@
     <h2 data-i18n="welcomeTitle">🗣️ Bienvenido/a a TalkPics</h2>
     <p style="font-size:16px; line-height:1.5; margin:0 0 14px" data-i18n-html="welcomeIntro">Una forma sencilla de comunicarse con <b>fotos y dibujos</b>. Pensada para acompañar a peques que hablan poco o no hablan.</p>
     <div style="font-size:16px; line-height:1.6" data-i18n-html="welcomeBody">
-      <div style="margin-bottom:10px">👉 <b>Tocá una imagen</b>: <b>dice la palabra en voz alta</b> al instante y se suma a la <b>frase</b> de abajo. Toca la miniatura de la frase para verla grande.</div>
-      <div style="margin-bottom:10px">📝 La <b>tira de frases</b> está siempre lista: usa <b>un solo pictograma</b> o arma frases de <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y óyelas con ▶. ⌫ la borra.</div>
+      <div style="margin-bottom:10px">👉 <b>Tocá una imagen</b>: <b>dice la palabra en voz alta</b> al instante y la muestra grande.</div>
+      <div style="margin-bottom:10px">📝 Si quieres armar frases, activa <b>Frases con varios pictogramas</b> en Ajustes ⚙️ (se abre manteniendo presionado el candado): podrás encadenar <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y oírlas con ▶. ⌫ las borra.</div>
       <div style="margin-bottom:10px">⭐ Arriba cambias de categoría: Comida, Acciones, Salidas…</div>
       <div style="margin-bottom:10px">🔒 <b>Mantené presionado el candado</b> (arriba) para entrar al <b>modo editor</b>.</div>
       <div style="margin-bottom:10px">✏️ / ＋ En modo editor podés <b>agregar o cambiar fotos</b> (cámara, galería o <b>buscar un pictograma de ARASAAC</b>) y ponerles nombre.</div>
@@ -431,7 +431,7 @@ function updateShareBadge(){
   if(l) l.textContent = dirty ? (t("lblSave")+" •") : t("lblSave");
   b.style.background = dirty ? "#e0a92e" : "";
 }
-const DEFAULT_SETTINGS={simple:false, speak:true, strip:true, rate:0.8, volume:1, calm:false, haptic:false, lang:"es"};
+const DEFAULT_SETTINGS={simple:false, speak:true, strip:false, rate:0.8, volume:1, calm:false, haptic:false, lang:"es"};
 const DEFAULT_CATS=[
   {id:"comida", name:"Comida", nameCa:"Menjar", nameEn:"Food", dot:"🍽️"},
   {id:"acciones", name:"Acciones", nameCa:"Accions", nameEn:"Actions", dot:"🏃"},
@@ -687,14 +687,19 @@ async function load(){
     state.pics.forEach(p=>{ if(!p.nameCa && CA_NAMES[p.name]) p.nameCa=CA_NAMES[p.name]; });
     const CA_CATS={comida:"Menjar",acciones:"Accions",emociones:"Emocions",necesidades:"Necessito",lugares:"Sortides",respuestas:"Respostes",personas:"Persones"};
     state.cats.forEach(c=>{ if(!c.nameCa && CA_CATS[c.id]) c.nameCa=CA_CATS[c.id]; });
-    // La tira de frases pasa a estar siempre disponible por defecto (una sola vez; se puede desactivar en Ajustes)
-    if(state.settings.strip!==true) state.settings.strip=true;
     state.settings.seedV14=true; await save();
   }
   if(!state.settings.seedV15){
     // Inglés: añade los nombres en inglés de las tarjetas y categorías base
     fillEnNames();
     state.settings.seedV15=true; await save();
+  }
+  if(!state.settings.seedV16){
+    // Las frases con varios pictogramas pasan a ser opcionales: se apagan una sola vez
+    // en las instalaciones que las tenían encendidas por el valor anterior.
+    // Se vuelven a activar en Ajustes. Esta migración nunca debe encenderlas.
+    state.settings.strip=false;
+    state.settings.seedV16=true; await save();
   }
 }
 
@@ -768,7 +773,7 @@ const I18N={
     voiceHelp:"Graba a mamá, papá o a quien acompaña diciendo la palabra. El peque suele responder mejor a una voz conocida. Si hay grabación, se reproduce en lugar de la voz del dispositivo.",
     fav:"⭐ Favorito", save:"Guardar", delPic:"🗑️ Borrar esta imagen",
     setTitle:"Ajustes", stLang:"Idioma", stSimple:"🔠 Modo simple grande", stSpeak:"🗣️ Hablar en voz alta",
-    stStrip:"📝 Tira de frases siempre visible (hasta "+STRIP_MAX+")", stCalm:"🌙 Modo calmo (menos movimiento)", stHaptic:"📳 Vibración suave al tocar",
+    stStrip:"📝 Frases con varios pictogramas (hasta "+STRIP_MAX+")", stCalm:"🌙 Modo calmo (menos movimiento)", stHaptic:"📳 Vibración suave al tocar",
     stVoice:"Voz", stVoiceHelp:"Elige una voz en español, catalán o inglés. Toca para escuchar una prueba.", stRate:"Velocidad de la voz", stVol:"Volumen",
     help:"❓ Cómo se usa", newCat:"Nueva categoría", catNamePh:"Nombre",
     shareApp:"📤 Compartir / Exportar app", backup:"💾 Copia de seguridad (.json)", restore:"📂 Restaurar copia (.json)", close:"Cerrar",
@@ -778,7 +783,7 @@ const I18N={
     welcomeTitle:"🗣️ Bienvenido/a a TalkPics", welcomeStart:"Comenzar",
     welcomeIntro:"Una forma sencilla de comunicarse con <b>fotos y dibujos</b>. Pensada para acompañar a peques que hablan poco o no hablan.",
     welcomeFoot:"Todo funciona sin internet y sin crear cuentas. Tus fotos se guardan solo en este dispositivo.",
-    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imagen</b>: <b>dice la palabra en voz alta</b> al instante y se suma a la <b>frase</b> de abajo. Toca la miniatura de la frase para verla grande.</div><div style="margin-bottom:10px">📝 La <b>tira de frases</b> está siempre lista: usa <b>un solo pictograma</b> o arma frases de <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y óyelas con ▶. ⌫ la borra.</div><div style="margin-bottom:10px">⭐ Arriba cambias de categoría: Comida, Acciones, Salidas…</div><div style="margin-bottom:10px">🔒 <b>Mantén presionado el candado</b> (arriba) para entrar al <b>modo editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En modo editor puedes <b>agregar o cambiar fotos</b> (cámara, galería o <b>buscar un pictograma de ARASAAC</b>) y ponerles nombre.</div><div style="margin-bottom:10px">🎙️ Puedes <b>grabar la voz de un familiar</b> en cada tarjeta. El peque responde mejor a una voz conocida.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 En Ajustes ⚙️ cambias entre <b>Español y Català</b> (textos y voz).</div>',
+    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imagen</b>: <b>dice la palabra en voz alta</b> al instante y la muestra grande.</div><div style="margin-bottom:10px">📝 Si quieres armar frases, activa <b>Frases con varios pictogramas</b> en Ajustes ⚙️ (se abre manteniendo presionado el candado): podrás encadenar <b>hasta 10</b> (por ejemplo “Quiero” + “Agua”) y oírlas con ▶. ⌫ las borra.</div><div style="margin-bottom:10px">⭐ Arriba cambias de categoría: Comida, Acciones, Salidas…</div><div style="margin-bottom:10px">🔒 <b>Mantén presionado el candado</b> (arriba) para entrar al <b>modo editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En modo editor puedes <b>agregar o cambiar fotos</b> (cámara, galería o <b>buscar un pictograma de ARASAAC</b>) y ponerles nombre.</div><div style="margin-bottom:10px">🎙️ Puedes <b>grabar la voz de un familiar</b> en cada tarjeta. El peque responde mejor a una voz conocida.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 En Ajustes ⚙️ cambias entre <b>Español y Català</b> (textos y voz).</div>',
     ttAdd:"Agregar foto", ttLock:"Editar (mantén presionado)", ttLockAria:"Modo editor: mantén presionado", ttDoneAria:"Listo, volver a modo niño", ttShareBar:"Guardar / Compartir", ttZoom:"Imagen seleccionada", ttRecDel:"Borrar grabación",
     fldNameEn:"Nombre en inglés (opcional)", phName:"Ej: Agua",
     voiceAuto:"Automática", voiceSearching:"(Buscando voces del dispositivo…)", voiceTest:"Hola, soy tu voz",
@@ -811,7 +816,7 @@ const I18N={
     voiceHelp:"Grava la mare, el pare o qui acompanya dient la paraula. El nen sol respondre millor a una veu coneguda. Si hi ha gravació, es reprodueix en lloc de la veu del dispositiu.",
     fav:"⭐ Preferit", save:"Desa", delPic:"🗑️ Esborrar aquesta imatge",
     setTitle:"Configuració", stLang:"Idioma", stSimple:"🔠 Mode simple gran", stSpeak:"🗣️ Parlar en veu alta",
-    stStrip:"📝 Tira de frases sempre visible (fins a "+STRIP_MAX+")", stCalm:"🌙 Mode calmat (menys moviment)", stHaptic:"📳 Vibració suau en tocar",
+    stStrip:"📝 Frases amb diversos pictogrames (fins a "+STRIP_MAX+")", stCalm:"🌙 Mode calmat (menys moviment)", stHaptic:"📳 Vibració suau en tocar",
     stVoice:"Veu", stVoiceHelp:"Tria una veu en espanyol, català o anglès. Toca per escoltar una prova.", stRate:"Velocitat de la veu", stVol:"Volum",
     help:"❓ Com s'utilitza", newCat:"Nova categoria", catNamePh:"Nom",
     shareApp:"📤 Compartir / Exportar app", backup:"💾 Còpia de seguretat (.json)", restore:"📂 Restaurar còpia (.json)", close:"Tancar",
@@ -821,7 +826,7 @@ const I18N={
     welcomeTitle:"🗣️ Benvingut/da a TalkPics", welcomeStart:"Comença",
     welcomeIntro:"Una manera senzilla de comunicar-se amb <b>fotos i dibuixos</b>. Pensada per acompanyar nens que parlen poc o no parlen.",
     welcomeFoot:"Tot funciona sense internet i sense crear comptes. Les teves fotos es desen només en aquest dispositiu.",
-    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imatge</b>: <b>diu la paraula en veu alta</b> a l\'instant i se suma a la <b>frase</b> de sota. Toca la miniatura de la frase per veure-la gran.</div><div style="margin-bottom:10px">📝 La <b>tira de frases</b> sempre està a punt: fes servir <b>un sol pictograma</b> o fes frases de <b>fins a 10</b> (per exemple “Vull” + “Aigua”) i escolta-les amb ▶. ⌫ l\'esborra.</div><div style="margin-bottom:10px">⭐ A dalt canvies de categoria: Menjar, Accions, Sortides…</div><div style="margin-bottom:10px">🔒 <b>Mantén premut el cadenat</b> (a dalt) per entrar al <b>mode editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En mode editor pots <b>afegir o canviar fotos</b> (càmera, galeria o <b>cercar un pictograma d\'ARASAAC</b>) i posar-los nom.</div><div style="margin-bottom:10px">🎙️ Pots <b>gravar la veu d\'un familiar</b> a cada targeta. El nen respon millor a una veu coneguda.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 A Configuració ⚙️ canvies entre <b>Español i Català</b> (textos i veu).</div>'
+    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Toca una imatge</b>: <b>diu la paraula en veu alta</b> a l\'instant i la mostra gran.</div><div style="margin-bottom:10px">📝 Si vols fer frases, activa <b>Frases amb diversos pictogrames</b> a Configuració ⚙️ (s\'obre mantenint premut el cadenat): podràs encadenar <b>fins a 10</b> (per exemple “Vull” + “Aigua”) i escoltar-les amb ▶. ⌫ les esborra.</div><div style="margin-bottom:10px">⭐ A dalt canvies de categoria: Menjar, Accions, Sortides…</div><div style="margin-bottom:10px">🔒 <b>Mantén premut el cadenat</b> (a dalt) per entrar al <b>mode editor</b>.</div><div style="margin-bottom:10px">✏️ / ＋ En mode editor pots <b>afegir o canviar fotos</b> (càmera, galeria o <b>cercar un pictograma d\'ARASAAC</b>) i posar-los nom.</div><div style="margin-bottom:10px">🎙️ Pots <b>gravar la veu d\'un familiar</b> a cada targeta. El nen respon millor a una veu coneguda.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥 A Configuració ⚙️ canvies entre <b>Español i Català</b> (textos i veu).</div>'
   },
   en:{
     modeChild:"child mode", modeCare:"editor mode", lblPhoto:"Photo", lblDone:"Done", lblSave:"Save",
@@ -836,7 +841,7 @@ const I18N={
     voiceHelp:"Record mum, dad or whoever is with the child saying the word. Children often respond better to a familiar voice. If there is a recording, it plays instead of the device voice.",
     fav:"⭐ Favourite", save:"Save", delPic:"🗑️ Delete this picture",
     setTitle:"Settings", stLang:"Language", stSimple:"🔠 Large simple mode", stSpeak:"🗣️ Speak out loud",
-    stStrip:"📝 Sentence strip always visible (up to "+STRIP_MAX+")", stCalm:"🌙 Calm mode (less movement)", stHaptic:"📳 Gentle vibration on tap",
+    stStrip:"📝 Phrases with several pictograms (up to "+STRIP_MAX+")", stCalm:"🌙 Calm mode (less movement)", stHaptic:"📳 Gentle vibration on tap",
     stVoice:"Voice", stVoiceHelp:"Choose a voice in English, Spanish or Catalan. Tap to hear a sample.", stRate:"Voice speed", stVol:"Volume",
     help:"❓ How to use it", newCat:"New category", catNamePh:"Name",
     shareApp:"📤 Share / Export app", backup:"💾 Backup (.json)", restore:"📂 Restore backup (.json)", close:"Close",
@@ -846,7 +851,7 @@ const I18N={
     welcomeTitle:"🗣️ Welcome to TalkPics", welcomeStart:"Start",
     welcomeIntro:"A simple way to communicate with <b>photos and pictures</b>. Made to support children who speak little or not at all.",
     welcomeFoot:"Everything works without internet and without creating accounts. Your photos are stored only on this device.",
-    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Tap a picture</b>: it <b>says the word out loud</b> straight away and adds it to the <b>sentence</b> below. Tap a thumbnail in the sentence to see it large.</div><div style="margin-bottom:10px">📝 The <b>sentence strip</b> is always ready: use <b>a single pictogram</b> or build sentences of <b>up to 10</b> (for example “I want” + “Water”) and hear them with ▶. ⌫ clears it.</div><div style="margin-bottom:10px">⭐ At the top you switch category: Food, Actions, Outings…</div><div style="margin-bottom:10px">🔒 <b>Press and hold the padlock</b> (top) to enter <b>editor mode</b>.</div><div style="margin-bottom:10px">✏️ / ＋ In editor mode you can <b>add or change photos</b> (camera, gallery or <b>search an ARASAAC pictogram</b>) and name them.</div><div style="margin-bottom:10px">🎙️ You can <b>record a family member\'s voice</b> on each card. Children respond better to a familiar voice.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥/🇬🇧 In Settings ⚙️ you switch between <b>Español, Català and English</b> (text and voice).</div>',
+    welcomeBody:'<div style="margin-bottom:10px">👉 <b>Tap a picture</b>: it <b>says the word out loud</b> straight away and shows it large.</div><div style="margin-bottom:10px">📝 To build sentences, turn on <b>Phrases with several pictograms</b> in Settings ⚙️ (press and hold the padlock to open it): you can chain <b>up to 10</b> (for example “I want” + “Water”) and hear them with ▶. ⌫ clears them.</div><div style="margin-bottom:10px">⭐ At the top you switch category: Food, Actions, Outings…</div><div style="margin-bottom:10px">🔒 <b>Press and hold the padlock</b> (top) to enter <b>editor mode</b>.</div><div style="margin-bottom:10px">✏️ / ＋ In editor mode you can <b>add or change photos</b> (camera, gallery or <b>search an ARASAAC pictogram</b>) and name them.</div><div style="margin-bottom:10px">🎙️ You can <b>record a family member\'s voice</b> on each card. Children respond better to a familiar voice.</div><div style="margin-bottom:10px">🇪🇸/🟨🟥/🇬🇧 In Settings ⚙️ you switch between <b>Español, Català and English</b> (text and voice).</div>',
     ttAdd:"Add photo", ttLock:"Edit (press and hold)", ttLockAria:"Editor mode: press and hold", ttDoneAria:"Done, back to child mode", ttShareBar:"Save / Share", ttZoom:"Selected picture", ttRecDel:"Delete recording",
     fldNameEn:"Name in English (optional)", phName:"E.g. Water",
     voiceAuto:"Automatic", voiceSearching:"(Looking for voices on this device…)", voiceTest:"Hello, this is your voice",
@@ -1275,6 +1280,7 @@ $("#voiceSel").onchange=async e=>{
 };
 function bindToggle(swId,key){$(swId).onclick=async()=>{state.settings[key]=!state.settings[key]; $(swId).classList.toggle("on",state.settings[key]); applyBodyClasses(); renderStrip(); await save();};}
 bindToggle("#swSimple","simple"); bindToggle("#swSpeak","speak"); bindToggle("#swStrip","strip");
+$("#swStrip").addEventListener("click",()=>{ if(!state.settings.strip){ state.strip=[]; renderStrip(); } });
 bindToggle("#swCalm","calm");
 $("#swHaptic").onclick=async()=>{ state.settings.haptic=!state.settings.haptic; $("#swHaptic").classList.toggle("on",state.settings.haptic); if(state.settings.haptic) buzz(); await save(); };
 $("#rate").oninput=async e=>{state.settings.rate=parseFloat(e.target.value); await save();};
