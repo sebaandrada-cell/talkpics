@@ -694,6 +694,13 @@ async function load(){
     fillEnNames();
     state.settings.seedV15=true; await save();
   }
+  if(!state.settings.seedV16){
+    // Las frases con varios pictogramas pasan a ser opcionales: se apagan una sola vez
+    // en las instalaciones que las tenían encendidas por el valor anterior.
+    // Se vuelven a activar en Ajustes. Esta migración nunca debe encenderlas.
+    state.settings.strip=false;
+    state.settings.seedV16=true; await save();
+  }
 }
 
 /* ============ Voz (offline) ============ */

@@ -17,7 +17,7 @@ First visit picks `?lang=` or the browser language (es/ca/en; any other language
 
 ## Rules
 - Photos and recordings never leave the device. No analytics, no ads, no accounts.
-- The multi-pictogram sentence strip is optional: toggle "Frases con varios pictogramas" in Settings (opened by holding the lock), setting key `strip`, OFF by default for new installs. Existing installs keep the value they already had. Do not force it on again in a migration.
+- The multi-pictogram sentence strip is optional: toggle "Frases con varios pictogramas" in Settings (opened by holding the lock), setting key `strip`, OFF by default. Migration `seedV16` (2026-10-30) turned it off once on installs that had it on from the old default; users can turn it on again in Settings. Never force it on in a migration and do not reset it again.
 - Pictograms are ARASAAC (CC BY-NC-SA). Keep the attribution text.
 - Must work offline once installed. Keep touch targets large and motion reducible (calm mode).
 - Test with Playwright at phone width before publishing. Show Sebastián the result first.
