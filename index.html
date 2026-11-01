@@ -173,10 +173,19 @@
   .steps-pay ol{margin:0; padding-left:20px;}
   .steps-pay li{font-size:14px; color:var(--accent-dark); padding:3px 0;}
   .price-note{font-size:13px; color:var(--muted); margin-top:14px;}
-  .mailalt{font-size:14px; color:var(--muted); margin-top:14px; text-align:center;}
-  .mailalt a{color:var(--accent); font-weight:700;}
-  .final .mailalt{color:#fff; font-size:14px; max-width:none; margin:18px auto 0; opacity:.92;}
-  .final .mailalt a{color:#fff; text-decoration:underline;}
+  .contact{background:var(--bg);}
+  .cform{max-width:560px; margin:0 auto; display:flex; flex-direction:column; gap:16px; text-align:left;}
+  .cform label{display:flex; flex-direction:column; gap:6px; font-weight:700; font-size:15px;}
+  .cform input[type=text],.cform input[type=email],.cform select,.cform textarea{font:inherit; font-weight:400; color:var(--ink); background:#fff; border:2px solid var(--line); border-radius:14px; padding:12px 14px; width:100%;}
+  .cform textarea{resize:vertical; min-height:120px;}
+  .cform input:focus,.cform select:focus,.cform textarea:focus{outline:3px solid var(--accent-soft); border-color:var(--accent);}
+  .cform label.cons{flex-direction:row; align-items:flex-start; gap:10px; font-weight:400; font-size:13px; color:var(--muted);}
+  .cform label.cons input{margin-top:3px; flex:none; width:18px; height:18px;}
+  .cform .btn{align-self:flex-start;}
+  .cform .hp{position:absolute; left:-9999px; width:1px; height:1px; opacity:0;}
+  .cf-status{min-height:1.4em; font-size:15px; font-weight:700;}
+  .cf-status.ok{color:var(--accent-dark);}
+  .cf-status.err{color:var(--danger);}
 
 
   /* Install / share */
@@ -493,11 +502,42 @@
 
       <div class="cta-row" style="justify-content:center">
         <a href="TalkPics.html" class="btn"><span data-es>⬇ Abrir la app</span><span data-en>⬇ Open the app</span><span data-ca>⬇ Obrir l'app</span></a>
-        <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Pago%20y%20descarga" class="btn ghost" onclick="return mailTP()"><span data-es>Ayuda con el pago</span><span data-en>Payment help</span><span data-ca>Ajuda amb el pagament</span></a>
+        <a href="#contacto" class="btn ghost" onclick="return openContact('dudas')"><span data-es>¿Dudas? Escríbeme</span><span data-en>Questions? Write to me</span><span data-ca>Dubtes? Escriu-me</span></a>
       </div>
-      <p class="mailalt"><span data-es>¿No se abre tu correo? Escríbeme a</span><span data-en>Mail app not opening? Write to</span><span data-ca>No s'obre el correu? Escriu-me a</span> <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=sebaandrada@gmail.com&amp;su=TalkPics%20-%20Pago%20y%20descarga" target="_blank" rel="noopener">sebaandrada@gmail.com</a> · <a href="#" onclick="return copyMail()"><span data-es>Copiar</span><span data-en>Copy</span><span data-ca>Copia</span></a></p>
       <p class="price-note"><span data-es>La app es de uso libre. Cualquier aporte es voluntario y ayuda a mantener y mejorar el proyecto. ¡Gracias!</span><span data-en>The app is free to use. Any contribution is voluntary and helps keep and improve the project. Thank you!</span><span data-ca>L'app és d'ús lliure. Qualsevol aportació és voluntària i ajuda a mantenir i millorar el projecte. Gràcies!</span></p>
     </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section id="contacto" class="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-es>Contacto</span><span data-en>Contact</span><span data-ca>Contacte</span></span>
+      <h2><span data-es>¿Dudas, ayuda o quieres colaborar?</span><span data-en>Questions, help, or want to get involved?</span><span data-ca>Dubtes, ajuda o vols col·laborar?</span></h2>
+      <p><span data-es>Escríbeme desde aquí y te respondo por correo.</span><span data-en>Write to me here and I'll reply by email.</span><span data-ca>Escriu-me des d'aquí i et responc per correu.</span></p>
+    </div>
+    <form id="cform" class="cform" novalidate>
+      <input type="hidden" name="access_key" value="da421947-0ef5-4685-97de-e3ea48dfc795">
+      <input type="checkbox" name="botcheck" id="cf-bot" class="hp" tabindex="-1" autocomplete="off">
+      <label><span data-es>Motivo</span><span data-en>Reason</span><span data-ca>Motiu</span>
+        <select id="cf-topic" name="motivo"><option value="dudas"></option><option value="pago"></option><option value="colaborar"></option><option value="codigo"></option></select>
+      </label>
+      <label><span data-es>Tu nombre</span><span data-en>Your name</span><span data-ca>El teu nom</span>
+        <input id="cf-name" name="name" type="text" maxlength="80" autocomplete="name" required>
+      </label>
+      <label><span data-es>Tu correo (para responderte)</span><span data-en>Your email (so I can reply)</span><span data-ca>El teu correu (per respondre't)</span>
+        <input id="cf-email" name="email" type="email" maxlength="120" autocomplete="email" required>
+      </label>
+      <label><span data-es>Mensaje</span><span data-en>Message</span><span data-ca>Missatge</span>
+        <textarea id="cf-msg" name="message" rows="5" maxlength="2000" required></textarea>
+      </label>
+      <label class="cons"><input id="cf-consent" type="checkbox" required>
+        <span><span data-es>Tu mensaje se envía a través del servicio externo Web3Forms y llega a mi correo. Uso tus datos solo para responderte. Acepto.</span><span data-en>Your message is sent through the external service Web3Forms and reaches my inbox. I use your details only to reply to you. I agree.</span><span data-ca>El teu missatge s'envia a través del servei extern Web3Forms i arriba al meu correu. Faig servir les teves dades només per respondre't. Hi estic d'acord.</span></span>
+      </label>
+      <button class="btn" type="submit"><span data-es>Enviar</span><span data-en>Send</span><span data-ca>Envia</span></button>
+      <p id="cf-status" class="cf-status" role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>
 
@@ -508,9 +548,8 @@
     <p><span data-es>Úsala gratis y, si quieres, colabora con lo que te parezca. Empieza hoy a comunicaros con fotos reales.</span><span data-en>Use it for free and, if you like, contribute what feels right. Start communicating with real photos today.</span><span data-ca>Fes-la servir gratis i, si vols, col·labora amb el que et sembli. Comença avui a comunicar-vos amb fotos reals.</span></p>
     <div class="cta-row" style="justify-content:center">
       <a href="#precio" class="btn"><span data-es>Empezar gratis</span><span data-en>Start free</span><span data-ca>Comença gratis</span></a>
-      <a href="mailto:sebaandrada@gmail.com?subject=TalkPics%20-%20Colaboraci%C3%B3n" class="btn ghost" onclick="return mailTP()"><span data-es>Contactar / Colaborar</span><span data-en>Contact / Partner</span><span data-ca>Contactar / Col·laborar</span></a>
+      <a href="#contacto" class="btn ghost" onclick="return openContact('colaborar')"><span data-es>Contactar / Colaborar</span><span data-en>Contact / Partner</span><span data-ca>Contactar / Col·laborar</span></a>
     </div>
-    <p class="mailalt"><span data-es>¿No se abre tu correo? Escríbeme a</span><span data-en>Mail app not opening? Write to</span><span data-ca>No s'obre el correu? Escriu-me a</span> <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=sebaandrada@gmail.com&amp;su=TalkPics%20-%20Colaboraci%C3%B3n" target="_blank" rel="noopener">sebaandrada@gmail.com</a> · <a href="#" onclick="return copyMail()"><span data-es>Copiar</span><span data-en>Copy</span><span data-ca>Copia</span></a></p>
   </div>
 </section>
 
@@ -518,7 +557,7 @@
   <div class="wrap">
     <div class="brand"><span class="logo">◉</span> TalkPics</div>
     <p><span data-es>Comunicación con fotos reales para personas autistas no verbales y sus familias.</span><span data-en>Real-photo communication for non-speaking autistic people and their families.</span><span data-ca>Comunicació amb fotos reals per a persones autistes no verbals i les seves famílies.</span></p>
-    <p style="margin-top:8px">© 2026 TalkPics · sebaandrada@gmail.com</p>
+    <p style="margin-top:8px">© 2026 TalkPics</p>
   </div>
 </footer>
 
@@ -532,11 +571,52 @@
   var TP_COPIED={es:'Enlace copiado',ca:'Enllaç copiat',en:'Link copied'};
   function tpUrl(){var l=tpLang();return l==='es'?TP_URL:TP_URL+'?lang='+l;}
   function tpToast(t,ms){var e=document.getElementById('copied');e.textContent=t;e.classList.add('show');setTimeout(function(){e.classList.remove('show');},ms||2200);}
-  var TP_MAIL='sebaandrada@gmail.com';
-  var TP_MAILMSG={es:'Correo copiado: ',ca:'Correu copiat: ',en:'Email copied: '};
-  function copyMailQuiet(){try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(TP_MAIL).catch(function(){});}}catch(e){}tpToast(TP_MAILMSG[tpLang()]+TP_MAIL,5000);}
-  function mailTP(){copyMailQuiet();return true;}
-  function copyMail(){copyMailQuiet();return false;}
+  /* Formulario de contacto (Web3Forms). La clave es publica por diseno; el correo de destino no esta en esta pagina. */
+  var CF_KEY_PLACEHOLDER='__WEB3FORMS_'+'ACCESS_KEY__';
+  var CF_T0=Date.now(), CF_LAST=0;
+  var CF_TOPICS={
+    dudas:{es:'Dudas / preguntas',en:'Questions',ca:'Dubtes / preguntes'},
+    pago:{es:'Ayuda con el pago',en:'Payment help',ca:'Ajuda amb el pagament'},
+    colaborar:{es:'Colaborar o proponer algo',en:'Partner or propose something',ca:'Col·laborar o proposar alguna cosa'},
+    codigo:{es:'Pedir acceso al código',en:'Request code access',ca:'Demanar accés al codi'}};
+  var CF_MSG={
+    sending:{es:'Enviando…',en:'Sending…',ca:'Enviant…'},
+    ok:{es:'¡Enviado! Te respondo por correo.',en:'Sent! I will reply by email.',ca:'Enviat! Et responc per correu.'},
+    err:{es:'No se pudo enviar. Inténtalo de nuevo en unos minutos.',en:'Could not send. Please try again in a few minutes.',ca:'No s\'ha pogut enviar. Torna-ho a provar d\'aquí a uns minuts.'},
+    wait:{es:'Espera un minuto antes de enviar otro mensaje.',en:'Please wait a minute before sending another message.',ca:'Espera un minut abans d\'enviar un altre missatge.'},
+    bad:{es:'Revisa el formulario: nombre, correo válido, mensaje de al menos 10 caracteres y la casilla de aceptación.',en:'Please check the form: name, a valid email, a message of at least 10 characters, and the agreement box.',ca:'Revisa el formulari: nom, correu vàlid, missatge d\'almenys 10 caràcters i la casella d\'acceptació.'}};
+  function cfFill(){
+    var l=tpLang(), sel=document.getElementById('cf-topic'); if(!sel) return;
+    for(var i=0;i<sel.options.length;i++){var o=sel.options[i]; o.textContent=CF_TOPICS[o.value][l];}
+  }
+  function cfSay(k,cls){var e=document.getElementById('cf-status'); e.textContent=CF_MSG[k][tpLang()]; e.className='cf-status'+(cls?' '+cls:'');}
+  function openContact(t){
+    var sel=document.getElementById('cf-topic'); if(sel&&CF_TOPICS[t]) sel.value=t;
+    setTimeout(function(){var n=document.getElementById('cf-name'); if(n) n.focus({preventScroll:true});},500);
+    return true;
+  }
+  (function(){
+    var f=document.getElementById('cform'); if(!f) return;
+    f.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var key=f.elements['access_key'].value, name=f.elements['name'].value.trim(),
+          email=f.elements['email'].value.trim(), msg=f.elements['message'].value.trim(),
+          topic=f.elements['motivo'].value, l=tpLang();
+      if(f.elements['botcheck'].checked || Date.now()-CF_T0<5000){ cfSay('ok','ok'); return; } /* bots: sin enviar nada */
+      if(!name||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)||msg.length<10||!document.getElementById('cf-consent').checked){ cfSay('bad','err'); return; }
+      if(Date.now()-CF_LAST<60000){ cfSay('wait','err'); return; }
+      if(key===CF_KEY_PLACEHOLDER){ cfSay('err','err'); return; }
+      cfSay('sending','');
+      var btn=f.querySelector('button[type=submit]'); btn.disabled=true;
+      fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({access_key:key,subject:'TalkPics web - '+CF_TOPICS[topic].es,from_name:'TalkPics (web)',name:name,email:email,replyto:email,motivo:topic,idioma:l,message:msg,botcheck:''})})
+      .then(function(r){return r.json();})
+      .then(function(d){ if(d&&d.success){CF_LAST=Date.now(); f.reset(); cfFill(); cfSay('ok','ok');} else {cfSay('err','err');} })
+      .catch(function(){cfSay('err','err');})
+      .then(function(){btn.disabled=false;});
+    });
+  })();
+  cfFill();
   var tpInstallEv=null;
   window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();tpInstallEv=e;});
   window.addEventListener('appinstalled',function(){tpInstallEv=null;});
@@ -559,6 +639,7 @@
     document.body.classList.toggle('ca', l==='ca');
     document.documentElement.lang = l;
     ['es','ca','en'].forEach(function(k){document.getElementById(k).classList.toggle('on', k===l);});
+    if(window.cfFill){cfFill();}
   }
   (function(){
     var q=null; try{q=new URLSearchParams(location.search).get('lang');}catch(e){}
