@@ -433,16 +433,16 @@ function updateShareBadge(){
 }
 /* ---- Idiomas de la app (2026-11: + FR, IT, PT-BR, DE, LV, UK, RU) ---- */
 const LANGS=[
-  {code:"es", label:"🇪🇸 Español",    tts:["es-ES","es"],        bcp:"es-ES"},
-  {code:"ca", label:"🟨🟥 Català",     tts:["ca","es-ES","es"],   bcp:"ca-ES"},
-  {code:"en", label:"🇬🇧 English",    tts:["en-GB","en-US","en"],bcp:"en-GB"},
-  {code:"fr", label:"🇫🇷 Français",   tts:["fr-FR","fr"],        bcp:"fr-FR"},
-  {code:"it", label:"🇮🇹 Italiano",   tts:["it-IT","it"],        bcp:"it-IT"},
-  {code:"pt", label:"🇧🇷 Português",  tts:["pt-BR","pt"],        bcp:"pt-BR"},
-  {code:"de", label:"🇩🇪 Deutsch",    tts:["de-DE","de"],        bcp:"de-DE"},
-  {code:"lv", label:"🇱🇻 Latviešu",   tts:["lv"],                bcp:"lv-LV"},
-  {code:"uk", label:"🇺🇦 Українська", tts:["uk"],                bcp:"uk-UA"},
-  {code:"ru", label:"🌐 Русский",     tts:["ru"],                bcp:"ru-RU"}
+  {code:"es", label:"Español",    tts:["es-ES","es"],        bcp:"es-ES"},
+  {code:"ca", label:"Català",     tts:["ca","es-ES","es"],   bcp:"ca-ES"},
+  {code:"en", label:"English",    tts:["en-GB","en-US","en"],bcp:"en-GB"},
+  {code:"fr", label:"Français",   tts:["fr-FR","fr"],        bcp:"fr-FR"},
+  {code:"it", label:"Italiano",   tts:["it-IT","it"],        bcp:"it-IT"},
+  {code:"pt", label:"Português",  tts:["pt-BR","pt"],        bcp:"pt-BR"},
+  {code:"de", label:"Deutsch",    tts:["de-DE","de"],        bcp:"de-DE"},
+  {code:"lv", label:"Latviešu",   tts:["lv"],                bcp:"lv-LV"},
+  {code:"uk", label:"Українська", tts:["uk"],                bcp:"uk-UA"},
+  {code:"ru", label:"Русский",     tts:["ru"],                bcp:"ru-RU"}
 ];
 const LANG_CODES=LANGS.map(x=>x.code);
 const LANG_BY=Object.fromEntries(LANGS.map(x=>[x.code,x]));
@@ -1304,7 +1304,7 @@ function populateVoices(){
   const auto=document.createElement("option"); auto.value=""; auto.textContent=t("voiceAuto"); sel.appendChild(auto);
   vs.forEach(v=>{ const o=document.createElement("option"); o.value=v.voiceURI;
     const fam=LANGS.find(x=>v.lang.toLowerCase().startsWith(x.code));
-    o.textContent=(fam?fam.label.replace(/^\S+\s/,""):v.lang)+" — "+v.name; sel.appendChild(o); });
+    o.textContent=(fam?fam.label:v.lang)+" — "+v.name; sel.appendChild(o); });
   sel.value=state.settings.voiceURI||"";
   const anyVoice=("speechSynthesis" in window) && speechSynthesis.getVoices().length>0;
   if(!vs.length && !anyVoice){ auto.textContent=t("voiceSearching"); }
