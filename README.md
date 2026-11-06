@@ -12,7 +12,7 @@ You can copy this project and change it in your own space. Your copy is yours: n
 
 1. Click **Fork** (top right on GitHub), or **Code → Download ZIP**.
 2. The whole app is one file, `TalkPics.html`. Open it in a browser, or publish your copy on GitHub Pages.
-3. If you want your change added here, open a **Pull Request** or write to sebaandrada@gmail.com. The author decides what gets merged.
+3. If you want your change added here, open a **Pull Request** or write to noviembrepunk@gmail.com. The author decides what gets merged.
 
 ## License
 
