@@ -23,6 +23,7 @@ App: Spanish (`es`), Catalan (`ca`), English (`en`, the fallback when nothing el
 ## Rules
 - Photos and recordings never leave the device. No analytics, no ads, no accounts.
 - The multi-pictogram sentence strip is optional: toggle "Frases con varios pictogramas" in Settings (opened by holding the lock), setting key `strip`, OFF by default. Migration `seedV16` (2026-10-30) turned it off once on installs that had it on from the old default; users can turn it on again in Settings. Never force it on in a migration and do not reset it again.
+- Migration `seedV17` (2026-11-06) appends core words (Basta, Mío, Ir) to Respuestas and "it hurts" + where cards (head, tummy, teeth, ear, leg, arm, foot) to Necesito, after the highest existing `pos`, so no existing card moves (motor-planning stability matters in AAC). Names in other languages live in `V17_NAMES`. Never reorder or rename cards a family already has. The help text includes a line on modelling (adult taps the pictograms while speaking).
 - Pictograms are ARASAAC (CC BY-NC-SA). Keep the attribution text.
 - Must work offline once installed. Keep touch targets large and motion reducible (calm mode).
 - Test with Playwright at phone width before publishing. Show Sebastián the result first.
