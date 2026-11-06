@@ -558,6 +558,10 @@ const CORE=[
   ["Adiós","👋","#fde9d6","respuestas"],
 ];
 
+/* ---- v17: palabras para rechazar/protestar y "me duele" + dónde (se añaden al final, sin mover nada) ---- */
+const ADD_V17=[["Basta","✋","#f8dcd6","respuestas"],["Mío","✊","#fdeacb","respuestas"],["Ir","🚶","#e3f2d8","respuestas"],["Me duele la cabeza","🤕","#f8dcd6","necesidades"],["Me duele la barriga","🤢","#e4f0d8","necesidades"],["Me duelen los dientes","🦷","#e6f0fa","necesidades"],["Me duele el oído","👂","#fde9d6","necesidades"],["Me duele la pierna","🦵","#fde6d6","necesidades"],["Me duele el brazo","💪","#fdf0c9","necesidades"],["Me duele el pie","🦶","#efe6da","necesidades"]];
+const V17_NAMES={"ca":{"Basta":"Prou","Mío":"Meu","Ir":"Anar","Me duele la cabeza":"Em fa mal el cap","Me duele la barriga":"Em fa mal la panxa","Me duelen los dientes":"Em fan mal les dents","Me duele el oído":"Em fa mal l'orella","Me duele la pierna":"Em fa mal la cama","Me duele el brazo":"Em fa mal el braç","Me duele el pie":"Em fa mal el peu"},"en":{"Basta":"Stop","Mío":"Mine","Ir":"Go","Me duele la cabeza":"My head hurts","Me duele la barriga":"My tummy hurts","Me duelen los dientes":"My teeth hurt","Me duele el oído":"My ear hurts","Me duele la pierna":"My leg hurts","Me duele el brazo":"My arm hurts","Me duele el pie":"My foot hurts"},"fr":{"Basta":"Stop","Mío":"À moi","Ir":"Aller","Me duele la cabeza":"J'ai mal à la tête","Me duele la barriga":"J'ai mal au ventre","Me duelen los dientes":"J'ai mal aux dents","Me duele el oído":"J'ai mal à l'oreille","Me duele la pierna":"J'ai mal à la jambe","Me duele el brazo":"J'ai mal au bras","Me duele el pie":"J'ai mal au pied"},"it":{"Basta":"Basta","Mío":"Mio","Ir":"Andare","Me duele la cabeza":"Mi fa male la testa","Me duele la barriga":"Mi fa male la pancia","Me duelen los dientes":"Mi fanno male i denti","Me duele el oído":"Mi fa male l'orecchio","Me duele la pierna":"Mi fa male la gamba","Me duele el brazo":"Mi fa male il braccio","Me duele el pie":"Mi fa male il piede"},"pt":{"Basta":"Chega","Mío":"Meu","Ir":"Ir","Me duele la cabeza":"Minha cabeça dói","Me duele la barriga":"Minha barriga dói","Me duelen los dientes":"Meus dentes doem","Me duele el oído":"Meu ouvido dói","Me duele la pierna":"Minha perna dói","Me duele el brazo":"Meu braço dói","Me duele el pie":"Meu pé dói"},"de":{"Basta":"Stopp","Mío":"Meins","Ir":"Gehen","Me duele la cabeza":"Mein Kopf tut weh","Me duele la barriga":"Mein Bauch tut weh","Me duelen los dientes":"Meine Zähne tun weh","Me duele el oído":"Mein Ohr tut weh","Me duele la pierna":"Mein Bein tut weh","Me duele el brazo":"Mein Arm tut weh","Me duele el pie":"Mein Fuß tut weh"},"lv":{"Basta":"Pietiek","Mío":"Mans","Ir":"Iet","Me duele la cabeza":"Man sāp galva","Me duele la barriga":"Man sāp vēders","Me duelen los dientes":"Man sāp zobi","Me duele el oído":"Man sāp auss","Me duele la pierna":"Man sāp kāja","Me duele el brazo":"Man sāp roka","Me duele el pie":"Man sāp pēda"},"uk":{"Basta":"Досить","Mío":"Моє","Ir":"Йти","Me duele la cabeza":"Болить голова","Me duele la barriga":"Болить живіт","Me duelen los dientes":"Болять зуби","Me duele el oído":"Болить вухо","Me duele la pierna":"Болить нога","Me duele el brazo":"Болить рука","Me duele el pie":"Болить стопа"},"ru":{"Basta":"Хватит","Mío":"Моё","Ir":"Идти","Me duele la cabeza":"Болит голова","Me duele la barriga":"Болит живот","Me duelen los dientes":"Болят зубы","Me duele el oído":"Болит ухо","Me duele la pierna":"Болит нога","Me duele el brazo":"Болит рука","Me duele el pie":"Болит ступня"}};
+
 /* ---- Dibuja un pictograma con emoji como imagen ---- */
 function emojiImg(emoji,bg){
   const c=document.createElement("canvas"); c.width=c.height=400; const x=c.getContext("2d");
@@ -583,6 +587,8 @@ const ILLUS=[
   ["Piscina","piscina","lugares",false],
   ["Parque de juegos","parque","lugares",false],
 ];
+["fr","it","pt","de","lv","uk","ru"].forEach(l=>{ BASE_NAMES[l]=Object.assign(BASE_NAMES[l]||{}, V17_NAMES[l]); });
+Object.assign(EN_NAMES, V17_NAMES.en); Object.assign(CA_NAMES, V17_NAMES.ca);
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
 /* ---- Reduce y recorta a cuadrado una foto subida ---- */
@@ -723,6 +729,15 @@ async function load(){
     // Se vuelven a activar en Ajustes. Esta migración nunca debe encenderlas.
     state.settings.strip=false;
     state.settings.seedV16=true; await save();
+  }
+  if(!state.settings.seedV17){
+    // Palabras núcleo (Basta, Mío, Ir) y "me duele" + dónde. Solo añade: no mueve ni cambia tarjetas existentes.
+    // Van detrás de la última posición usada (addCards usa la longitud de la lista y podía intercalarlas).
+    { let maxPos=state.pics.reduce((m,p)=>Math.max(m,(typeof p.pos==="number"?p.pos:0)),0);
+      ADD_V17.forEach((c,i)=>{ if(!existe(c[0])) state.pics.push({id:uid(), name:c[0], img:emojiImg(c[1],c[2]), cat:c[3], tags:[], fav:false, uses:0, created:Date.now()+i, pos:++maxPos}); }); }
+    state.pics.forEach(p=>{ if(!p.nameCa && V17_NAMES.ca[p.name]) p.nameCa=V17_NAMES.ca[p.name];
+                            if(!p.nameEn && V17_NAMES.en[p.name]) p.nameEn=V17_NAMES.en[p.name]; });
+    state.settings.seedV17=true; await save();
   }
 }
 
@@ -901,6 +916,9 @@ const I18N_EXTRA={"fr":{"modeChild":"mode enfant","modeCare":"mode éditeur","lb
 const LANG_LINE={"es":"🌍 En Ajustes ⚙️ eliges el <b>idioma</b> (texto y voz).","ca":"🌍 A Configuració ⚙️ tries l'<b>idioma</b> (text i veu).","en":"🌍 In Settings ⚙️ you choose the <b>language</b> (text and voice)."};
 Object.keys(I18N_EXTRA).forEach(l=>{ I18N[l]=Object.assign(I18N[l]||{}, I18N_EXTRA[l]); });
 Object.keys(LANG_LINE).forEach(l=>{ if(I18N[l]&&I18N[l].welcomeBody) I18N[l].welcomeBody=I18N[l].welcomeBody.replace(/<div[^>]*>🇪🇸\/🟨🟥(?:\/🇬🇧)?[\s\S]*?<\/div>/, '<div style="margin-bottom:10px">'+LANG_LINE[l]+'</div>'); });
+const MODEL_LINE={"es":"👐 <b>Modela tú también</b>: cuando hables con tu peque, toca tú los pictogramas de las palabras importantes mientras las dices. No le pidas que repita: aprende viendo cómo se usa.","ca":"👐 <b>Modela tu també</b>: quan parlis amb el teu infant, toca tu els pictogrames de les paraules importants mentre les dius. No li demanis que repeteixi: aprèn veient com es fa servir.","en":"👐 <b>Model it yourself</b>: when you talk to your child, tap the pictograms for the key words as you say them. Don't ask them to repeat: they learn by seeing how it's used.","fr":"👐 <b>Montrez l'exemple</b> : quand vous parlez à votre enfant, touchez vous-même les pictogrammes des mots importants en les disant. Ne lui demandez pas de répéter : il apprend en voyant comment on s'en sert.","it":"👐 <b>Dai tu l'esempio</b>: quando parli con il bambino, tocca tu i pittogrammi delle parole importanti mentre le dici. Non chiedergli di ripetere: impara vedendo come si usa.","pt":"👐 <b>Dê o exemplo</b>: quando falar com a criança, toque você mesmo nos pictogramas das palavras importantes enquanto as diz. Não peça que ela repita: ela aprende vendo como se usa.","de":"👐 <b>Mach es vor</b>: Wenn du mit deinem Kind sprichst, tippe die Piktogramme der wichtigen Wörter an, während du sie sagst. Verlange nicht, dass es wiederholt: Es lernt, indem es sieht, wie man sie benutzt.","lv":"👐 <b>Rādiet piemēru</b>: runājot ar bērnu, paši pieskarieties svarīgāko vārdu piktogrammām, kamēr tos sakāt. Nelūdziet, lai bērns atkārto: viņš mācās, redzot, kā to lieto.","uk":"👐 <b>Показуйте самі</b>: коли говорите з дитиною, торкайтеся піктограм важливих слів, поки їх вимовляєте. Не просіть дитину повторювати: вона вчиться, бачачи, як цим користуються.","ru":"👐 <b>Показывайте сами</b>: когда говорите с ребёнком, нажимайте на пиктограммы важных слов, пока их произносите. Не просите ребёнка повторять: он учится, видя, как этим пользуются."};
+Object.keys(MODEL_LINE).forEach(l=>{ const d=I18N[l]; if(!d||!d.welcomeBody) return; const div='<div style="margin-bottom:10px">'+MODEL_LINE[l]+'</div>';
+  const i=d.welcomeBody.indexOf('<div style="margin-bottom:10px">🌍'); d.welcomeBody = i>=0 ? d.welcomeBody.slice(0,i)+div+d.welcomeBody.slice(i) : d.welcomeBody+div; });
 Object.values(I18N).forEach(d=>Object.keys(d).forEach(k=>{ if(typeof d[k]==="string") d[k]=d[k].split("{N}").join(String(STRIP_MAX)); }));
 function t(k){ const l=lang(), L=I18N[l]||I18N.es; if(k in L) return L[k];
   if(!["es","ca"].includes(l) && I18N.en[k]!=null) return I18N.en[k]; // idiomas nuevos: reserva en inglés
