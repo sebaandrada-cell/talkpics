@@ -626,6 +626,13 @@ async function load(){
       state.settings.lang = LANG_CODES.includes(q) ? q : (nl || "en");
     }catch(e){}
   }
+  // Viene de "Abrir la app" en la web (from=web): el idioma elegido allí cambia también una app ya usada.
+  // Los enlaces compartidos no llevan from=web y no cambian el idioma guardado.
+  try{
+    const sp=new URLSearchParams(location.search), ql=(sp.get("lang")||"").toLowerCase();
+    if(sp.get("from")==="web" && LANG_CODES.includes(ql) && state.settings.lang!==ql){ state.settings.lang=ql; await dbSet("settings",state.settings); }
+    if(sp.has("from")){ sp.delete("from"); const qs=sp.toString(); history.replaceState(null,"",location.pathname+(qs?"?"+qs:"")+location.hash); }
+  }catch(e){}
   if(!state.cats) state.cats=[...DEFAULT_CATS];
   // Si no hay datos en este dispositivo pero el archivo trae datos incrustados (app compartida), usarlos
   if(!state.pics){
@@ -750,7 +757,7 @@ function voiceList(L){ // voces del dispositivo para el idioma L (por defecto, e
 }
 function pickVoice(){
   const all=("speechSynthesis" in window)?speechSynthesis.getVoices():[];
-  if(state.settings.voiceURI){ const v=all.find(v=>v.voiceURI===state.settings.voiceURI); if(v) return v; }
+  if(state.settings.voiceURI){ const v=all.find(v=>v.voiceURI===state.settings.voiceURI); if(v && voiceList().includes(v)) return v; } // solo si es del idioma actual
   // La primera voz por orden de preferencia del idioma; el catalán puede usar una voz castellana de reserva.
   // Los demás idiomas nunca usan la voz de otro idioma (leería mal las palabras).
   return voiceList()[0] || null;
@@ -1210,9 +1217,10 @@ async function setLang(l){
   // si la voz elegida es de otro idioma, vuelve a "automática" para que lea bien
   try{ const cur=state.settings.voiceURI; if(cur && ("speechSynthesis" in window)){
     const v=speechSynthesis.getVoices().find(x=>x.voiceURI===cur);
-    if(v && !new RegExp("^"+state.settings.lang,"i").test(v.lang)) state.settings.voiceURI=null; } }catch(e){}
+    if(v && !voiceList().includes(v)) state.settings.voiceURI=null; } }catch(e){}
   await save();
   applyLang(); renderCats(); renderBoard(); renderStrip();
+  populateVoices(); // la lista de voces y el aviso "sin voz" pasan al idioma nuevo
 }
 (function(){ const g=document.getElementById("langGrid"); if(!g) return;
   LANGS.forEach(x=>{ const b=document.createElement("button"); b.className="segbtn"; b.type="button";
