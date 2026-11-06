@@ -654,8 +654,8 @@
     var sel=document.getElementById('langSel'); if(sel) sel.value=l;
     var QR_ALT={"es": "Código QR de TalkPics", "ca": "Codi QR de TalkPics", "en": "TalkPics QR code", "fr": "Code QR de TalkPics", "it": "Codice QR di TalkPics", "pt": "Código QR do TalkPics", "de": "QR-Code von TalkPics", "lv": "TalkPics QR kods", "uk": "QR-код TalkPics", "ru": "QR-код TalkPics"}, TITLES={"es": "TalkPics — Comunicación con fotos reales", "ca": "TalkPics — Comunicació amb fotos reals", "en": "TalkPics — Communication with real photos", "fr": "TalkPics — Communiquer avec de vraies photos", "it": "TalkPics — Comunicare con foto reali", "pt": "TalkPics — Comunicação com fotos reais", "de": "TalkPics — Kommunikation mit echten Fotos", "lv": "TalkPics — Saziņa ar īstām fotogrāfijām", "uk": "TalkPics — Спілкування справжніми фото", "ru": "TalkPics — Общение настоящими фото"};
     var qi=document.getElementById('qrImg'); if(qi) qi.alt=QR_ALT[l]; document.title=TITLES[l];
-    // "Abrir la app" abre la app en el idioma que se está viendo (solo decide en la primera visita de ese dispositivo)
-    document.querySelectorAll('a[href^="TalkPics.html"]').forEach(function(a){ a.setAttribute('href','TalkPics.html?lang='+l); });
+    // "Abrir la app" abre la app en el idioma que se está viendo (from=web: también cambia el idioma de una app ya usada)
+    document.querySelectorAll('a[href^="TalkPics.html"]').forEach(function(a){ a.setAttribute('href','TalkPics.html?lang='+l+'&from=web'); });
     if(window.cfFill){cfFill();}
   }
   /* Primera visita: ?lang= válido; si no, el primer idioma del navegador que tenga la web; si no, inglés */
