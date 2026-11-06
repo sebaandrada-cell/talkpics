@@ -614,8 +614,10 @@ async function load(){
     // Primera vez en este dispositivo: idioma según ?lang= del enlace o el idioma del navegador
     try{
       const q=(new URLSearchParams(location.search).get("lang")||"").toLowerCase();
-      const nl=((navigator.language||"es")+"").slice(0,2).toLowerCase();
-      state.settings.lang = LANG_CODES.includes(q) ? q : (LANG_CODES.includes(nl) ? nl : "en");
+      // ?lang= válido; si no, el primer idioma del navegador que tenga TalkPics (revisa toda la lista); si no, inglés
+      const navs=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||""];
+      const nl=navs.map(x=>String(x||"").toLowerCase().split("-")[0]).find(c=>LANG_CODES.includes(c));
+      state.settings.lang = LANG_CODES.includes(q) ? q : (nl || "en");
     }catch(e){}
   }
   if(!state.cats) state.cats=[...DEFAULT_CATS];
