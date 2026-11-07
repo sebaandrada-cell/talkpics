@@ -33,7 +33,7 @@
     display:flex; align-items:center; gap:10px; padding:10px 12px;
     background:var(--card); border-bottom:1px solid var(--line); flex:none;
   }
-  .title{font-size:20px; font-weight:800; letter-spacing:.3px; margin-right:auto; display:flex; align-items:center; gap:8px;}
+  .title{margin:0; font-size:20px; font-weight:800; letter-spacing:.3px; margin-right:auto; display:flex; align-items:center; gap:8px;}
   .title small{font-weight:600; color:var(--muted); font-size:12px;}
   .iconbtn{
     min-width:var(--tap); height:var(--tap); border:none; border-radius:18px;
@@ -206,7 +206,7 @@
 <body>
 <div id="app">
   <header>
-    <div class="title">🗣️ TalkPics <small id="modeLabel">modo niño</small></div>
+    <h1 class="title"><span aria-hidden="true">🗣️</span> TalkPics <small id="modeLabel">modo niño</small></h1>
     <button class="iconbtn plain hidden" id="addBtn" title="Agregar" aria-label="Agregar foto" data-i18n-title="ttAdd" data-i18n-aria="ttAdd">＋ <span class="lbl" data-i18n="lblPhoto">Foto</span></button>
     <button class="iconbtn plain hidden" id="setBtn" title="Ajustes" aria-label="Ajustes" data-i18n-title="setTitle" data-i18n-aria="setTitle">⚙️</button>
     <button class="iconbtn" id="lockBtn" title="Editar (mantén presionado)" aria-label="Modo editor: mantén presionado" data-i18n-title="ttLock" data-i18n-aria="ttLockAria">🔒</button>
@@ -955,6 +955,18 @@ function applyLang(){
   const ml=$("#modeLabel"); if(ml) ml.textContent = state.mode==="care"?t("modeCare"):t("modeChild");
   // Botón de idioma segmentado
   document.querySelectorAll("#langGrid .segbtn").forEach(b=>b.classList.toggle("on", b.dataset.lang===L));
+  a11yNames();
+}
+/* Los lectores de pantalla leen los emojis del principio ("cámara, Tomar una foto").
+   Para botones, títulos y etiquetas de interruptores se da un nombre sin el emoji.
+   El texto visible no cambia y el nombre contiene las mismas palabras (WCAG 2.5.3). */
+const LEAD_EMOJI=/^[\s\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\uFE0F\u200D\u20E3/]+/u;
+function a11yNames(){
+  document.querySelectorAll("button[data-i18n], h2[data-i18n], .toggle > span[data-i18n], .credits-h[data-i18n]").forEach(el=>{
+    if(el.hasAttribute("data-i18n-aria")) return;
+    const txt=el.textContent.trim(), clean=txt.replace(LEAD_EMOJI,"").trim();
+    if(clean && clean!==txt) el.setAttribute("aria-label",clean); else el.removeAttribute("aria-label");
+  });
 }
 
 /* ============ Render ============ */
