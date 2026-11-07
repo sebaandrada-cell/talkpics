@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#f4f1ea">
@@ -1091,9 +1091,12 @@ function startHold(){ showHint(t("hHold"));
     if(kb){ try{ $("#doneBtn").focus(); }catch(e){} } },1200);}
 function endHold(){clearTimeout(holdT); }
 // Teclado / pulsador: mantener Enter o Espacio sobre el candado hace lo mismo que mantener el dedo.
-lock.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); if(!e.repeat) startHold(); } });
-lock.addEventListener("keyup",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); endHold(); } });
-lock.addEventListener("blur",endHold);
+let holdByKey=false;
+lock.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); if(!e.repeat){ holdByKey=true; startHold(); } } });
+lock.addEventListener("keyup",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); holdByKey=false; endHold(); } });
+// Si el foco sale del candado a mitad de una pulsación con teclado, se cancela. Con el dedo no:
+// un cambio de foco (por ejemplo al cerrar una imagen) no debe cortar el gesto.
+lock.addEventListener("blur",()=>{ if(holdByKey){ holdByKey=false; endHold(); } });
 lock.addEventListener("pointerdown",startHold);
 lock.addEventListener("pointerup",endHold);
 lock.addEventListener("pointerleave",endHold);
