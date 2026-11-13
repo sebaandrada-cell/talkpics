@@ -4,7 +4,7 @@ Free communication app (AAC) for non-speaking autistic people and their families
 
 - App: https://tinyurl.com/talkpics-app
 - Info page: https://tinyurl.com/talkpics-caa
-- Languages: Español, Català, English
+- Languages (17): Español, Català, English, Français, Italiano, Português, Deutsch, Latviešu, Українська, Русский, नेपाली, עברית, العربية, 简体中文, 繁體中文, 日本語, 한국어
 
 ## Take the code and make your own version
 
@@ -22,7 +22,7 @@ Pictograms are ARASAAC (CC BY-NC-SA, Government of Aragón, author Sergio Palao)
 
 The name **TalkPics** is not covered by the license. If you publish your own version, give it another name; you can say it is "based on TalkPics".
 
-© 2026 Sebastián (sebaandrada-cell). Author of the code and design of TalkPics.
+© 2026 Sebastián Andrada (sebaandrada-cell). Author of the code and design of TalkPics.
 
 Photos and recordings never leave the device. No analytics, no ads, no accounts.
 
