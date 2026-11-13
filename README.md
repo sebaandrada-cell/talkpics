@@ -20,6 +20,10 @@ CC BY-NC-SA 4.0 (see `LICENSE`): copy, modify and share without commercial use, 
 
 Pictograms are ARASAAC (CC BY-NC-SA, Government of Aragón, author Sergio Palao). Keep the attribution.
 
+The name **TalkPics** is not covered by the license. If you publish your own version, give it another name; you can say it is "based on TalkPics".
+
+© 2026 Sebastián (sebaandrada-cell). Author of the code and design of TalkPics.
+
 Photos and recordings never leave the device. No analytics, no ads, no accounts.
 
 ## Support
