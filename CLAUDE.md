@@ -3,7 +3,7 @@
 Free communication app (AAC) for non-speaking autistic people and their families. Built by Sebastián for his daughter Amelia. Single-file PWA, no build step, no backend.
 
 ## Files
-- `TalkPics.html`: the whole app (HTML, CSS, JS in one file). Data lives in IndexedDB on the device.
+- `TalkPics.html`: the whole app (HTML, CSS, JS in one file). Data lives in IndexedDB on the device. The tab title follows the language: `applyLang` sets `document.title` from `APP_TITLES`, which holds the same 17 texts as `TITLES` in `index.html` (keep both in step); the static `<title>` is the English one, shown before JS runs.
 - `index.html`: landing page in the same 17 languages as the app (each text is a group of `<span data-xx>`; English is the default shown before JS runs). A dropdown (`#langSel`) switches language; every link to the app gets `?lang=` with the language on screen. The tab title and the QR image alt text follow the language (`TITLES`, `QR_ALT` in `setLang`); the share preview (`og:*`) and meta description are static, in Spanish + English, because link previews cannot change language. The printable sheet `TalkPics-QR-hoja.pdf` is Spanish only (other languages pending native review).
 - `sw.js`: service worker. Change `VERSION` on every release so installed copies update.
 - `manifest.webmanifest`, icons, QR codes, `TalkPics-QR-hoja.pdf`: PWA and print material.

@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>TalkPics — Comunicación con fotos</title>
+<title>TalkPics — Communication with real photos</title>
 <style>
   :root{
     --bg:#f4f1ea; --card:#ffffff; --ink:#2b2b2b; --muted:#6b665d; --field-line:#8f887b;
@@ -979,9 +979,12 @@ Object.entries(I18N).forEach(([l,d])=>Object.keys(d).forEach(k=>{ if(typeof d[k]
 function t(k){ const l=lang(), L=I18N[l]||I18N.es; if(k in L) return L[k];
   if(!["es","ca"].includes(l) && I18N.en[k]!=null) return I18N.en[k]; // idiomas nuevos: reserva en inglés
   return (I18N.es[k]!=null)?I18N.es[k]:k; }
+/* Título de la pestaña en cada idioma: los mismos textos que TITLES en index.html */
+const APP_TITLES={"es": "TalkPics — Comunicación con fotos reales", "ca": "TalkPics — Comunicació amb fotos reals", "en": "TalkPics — Communication with real photos", "fr": "TalkPics — Communiquer avec de vraies photos", "it": "TalkPics — Comunicare con foto reali", "pt": "TalkPics — Comunicação com fotos reais", "de": "TalkPics — Kommunikation mit echten Fotos", "lv": "TalkPics — Saziņa ar īstām fotogrāfijām", "uk": "TalkPics — Спілкування справжніми фото", "ru": "TalkPics — Общение настоящими фото", "ne": "TalkPics — वास्तविक फोटोबाट सञ्चार", "he": "TalkPics — תקשורת בתמונות אמיתיות", "ar": "TalkPics — التواصل بالصور الحقيقية", "zh-hans": "TalkPics——用真实照片沟通", "zh-hant": "TalkPics — 用真實照片溝通", "ja": "TalkPics — 本物の写真で伝え合う", "ko": "TalkPics — 실제 사진으로 소통해요"};
 function applyLang(){
   const L=lang();
   document.documentElement.lang=L;
+  document.title=APP_TITLES[L]||APP_TITLES.en;
   document.documentElement.dir=(LANG_BY[L]&&LANG_BY[L].rtl)?"rtl":"ltr";
   document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(k) el.textContent=t(k); });
   document.querySelectorAll("[data-i18n-html]").forEach(el=>{ const k=el.getAttribute("data-i18n-html"); if(k) el.innerHTML=t(k); });
