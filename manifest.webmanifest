@@ -1,8 +1,8 @@
 {
-  "name": "TalkPics — Comunicación con fotos",
+  "name": "TalkPics — Communication with real photos",
   "short_name": "TalkPics",
-  "description": "Comunicación aumentativa con fotos reales para personas autistas no verbales y sus familias. Funciona sin internet.",
-  "lang": "es",
+  "description": "Communication with real photos for non-speaking autistic people and their families. Works offline.",
+  "lang": "en",
   "id": "./TalkPics.html",
   "start_url": "./TalkPics.html?source=pwa",
   "scope": "./",
