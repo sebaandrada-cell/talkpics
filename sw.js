@@ -1,6 +1,6 @@
 /* TalkPics service worker: guarda la app en el dispositivo para que abra sin internet.
    Para publicar una actualización, cambia el número de VERSION. */
-const VERSION = "talkpics-v28";
+const VERSION = "talkpics-v29";
 // Herramienta de "quitar el fondo" (carpeta bg/, unos 8 MB de descarga): caché aparte que NO se borra al cambiar VERSION,
 // para no volver a descargarla en cada actualización. Si cambian esos archivos, sube este número.
 const BG_CACHE = "tp-bgtool-1";
@@ -27,6 +27,9 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   // Solo archivos propios (GET). ARASAAC y demás van directo a internet.
   if (req.method !== "GET" || url.origin !== self.location.origin) return;
+  // Vídeos y peticiones por rangos: directos a la red. La caché no admite respuestas parciales (206)
+  // y con ellas el vídeo de la web dejaría de cargar.
+  if (req.headers.has("range") || url.pathname.includes("/video/")) return;
 
   if (url.pathname.includes("/bg/")) {
     e.respondWith((async () => {
