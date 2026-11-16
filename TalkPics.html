@@ -201,6 +201,89 @@
   .schip .rm{position:absolute; top:0; right:0; width:24px; height:24px; border-radius:50%;
     background:var(--danger); color:#fff; font-size:14px; font-weight:900; line-height:1;
     display:flex; align-items:center; justify-content:center; border:2px solid #fff; cursor:pointer;}
+  /* ---------- 2026-11 (lista de OpenAAC): columnas fijas, etiquetas, toque, barra de habla, alto contraste, imprimir ---------- */
+  /* Columnas fijas: cada tarjeta queda siempre en el mismo sitio (memoria motora) */
+  .grid.fixed{grid-template-columns:repeat(var(--cols),minmax(0,1fr)) !important; gap:clamp(4px,calc(8vw / var(--cols)),18px) !important;}
+  .grid.fixed .pcard .name{font-size:clamp(11px,calc(14.5vw / var(--cols)),28px); padding:.35em .15em; overflow-wrap:anywhere; hyphens:auto; -webkit-hyphens:auto;}
+  /* Qué se ve en las tarjetas */
+  body.lbl-img .pcard{aspect-ratio:1/1;}
+  body.lbl-img .pcard .name{display:none;}
+  body.lbl-text .pcard{aspect-ratio:1/.72;}
+  body.lbl-text .pcard .img{display:none;}
+  body.lbl-text .pcard .name{flex:1; display:flex; align-items:center; justify-content:center; overflow-wrap:anywhere;}
+  /* Elegir manteniendo el dedo: barra que se llena */
+  .pcard.holding{box-shadow:0 0 0 5px var(--accent), var(--shadow);}
+  .pcard.holding::after{content:""; position:absolute; left:0; bottom:0; height:8px; width:100%; background:var(--accent); transform-origin:left; animation:holdfill var(--hold,600ms) linear both;}
+  @keyframes holdfill{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+  body.calm .pcard.holding::after{animation:none;}
+  /* Barra de habla: ayuda, frases rápidas, repetir más fuerte, mostrar el texto */
+  #talkbar{display:none; gap:8px; align-items:center; padding:8px 12px; background:var(--card); border-top:1px solid var(--line); flex:none;}
+  body.talk #talkbar{display:flex;}
+  #quickItems{flex:1; display:flex; gap:8px; overflow-x:auto; min-width:0; padding:4px;}
+  #quickItems::-webkit-scrollbar{display:none;}
+  .qchip{flex:none; min-height:var(--tap); max-width:260px; border-radius:18px; border:2px solid var(--accent); background:var(--accent-soft); color:var(--ink); font-size:17px; font-weight:800; padding:6px 16px; cursor:pointer; line-height:1.15; font-family:inherit;}
+  body:not(.has-quick) #quickItems{visibility:hidden;}
+  body:not(.has-alert) #alertBtn, body:not(.has-tools) #loudBtn, body:not(.has-tools) #showBtn{display:none;}
+  /* Móvil: las frases rápidas van en su propia fila, encima de los botones */
+  @media (max-width:600px){
+    #talkbar{flex-wrap:wrap;}
+    #quickItems{order:-1; flex:0 0 100%;}
+    body:not(.has-quick) #quickItems{display:none;}
+    #loudBtn{margin-inline-start:auto;}
+    body:not(.has-tools) #alertBtn{margin-inline-start:auto;}
+    .qchip{font-size:16px; padding:6px 14px;}
+  }
+  /* Texto en grande para enseñarlo a otra persona */
+  #showScrim{padding:0;}
+  #showScrim .sheet{max-width:none; height:100dvh; max-height:none; border-radius:0; display:flex; flex-direction:column; overflow:hidden;}
+  #showText{flex:1; min-height:0; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:900; font-size:150px; line-height:1.1; overflow:hidden;}
+  #showInner{width:100%; min-width:min-content; overflow-wrap:normal;}
+  #showText.flip{transform:rotate(180deg);}
+  /* Frases rápidas en Ajustes */
+  .qrow{display:flex; gap:8px; align-items:center; margin-bottom:8px;}
+  .qrow span{flex:1; font-size:17px; font-weight:600; overflow-wrap:anywhere;}
+  .qrow .iconbtn{min-width:48px; height:48px; font-size:20px; padding:0;}
+  .fieldhelp{font-size:12px; color:var(--muted); margin-top:4px; line-height:1.4;}
+  /* Alto contraste: fondo negro, texto blanco, acento amarillo */
+  body.hc{--bg:#000; --card:#000; --ink:#fff; --muted:#e6e6e6; --field-line:#fff; --line:#fff; --accent:#ffd400; --accent-soft:#2a2500; --danger:#ff8a70; --shadow:none;}
+  body.hc .pcard{border:2px solid #fff;}
+  body.hc .pcard .img{background-color:#000;}
+  body.hc .cat, body.hc .iconbtn.plain, body.hc .bigbtn.ghost, body.hc .segbtn, body.hc .tagpill{background:#000; color:#fff; border:2px solid #fff;}
+  body.hc .iconbtn{background:#000; color:#ffd400; border:2px solid #ffd400;}
+  body.hc .cat.active, body.hc .iconbtn.solid, body.hc .bigbtn.primary, body.hc .segbtn.on, body.hc .tagpill.on{background:#ffd400 !important; border-color:#ffd400; color:#000;}
+  body.hc .iconbtn.danger, body.hc .bigbtn.danger{background:#000; color:#ff8a70; border:2px solid #ff8a70;}
+  body.hc #carebar, body.hc .sheet, body.hc .credits{background:#000 !important; color:#fff;}
+  body.hc .sheet{border:2px solid #fff;}
+  body.hc input[type=text], body.hc select{background:#000 !important; color:#fff !important; border-color:#fff !important;}
+  body.hc .sw{background:#000; border:2px solid #fff;}
+  body.hc .sw::after{top:1px; left:1px;}
+  body.hc .sw.on{background:#ffd400; border-color:#ffd400;}
+  body.hc .sw.on::after{left:27px; background:#000;}
+  body.hc #zoomCard{background:#000; color:#fff;}
+  body.hc #zoomCard .zimg{background-color:#000;}
+  body.hc #closeZoom{background:#000; color:#ffd400; border:2px solid #ffd400;}
+  body.hc .hint{background:#ffd400; color:#000;}
+  body.hc .schip .thumb{border-color:#fff;}
+  body.hc .schip.slot .thumb{background:#000; border-color:#fff; color:#fff;}
+  body.hc .preview{background-color:#111;}
+  body.hc .qchip{background:#000; color:#fff; border-color:#ffd400;}
+  body.hc #voiceNone{color:#ff8a70 !important;}
+  body.hc .credits a, body.hc .araNote a{color:#ffd400;}
+  body.hc button:focus-visible, body.hc .pcard:focus-visible, body.hc .cat:focus-visible, body.hc input:focus-visible, body.hc select:focus-visible, body.hc .sw:focus-visible{outline-color:#00e5ff;}
+  /* Imprimir el tablero (copia en papel) */
+  #printArea{display:none;}
+  @media print{
+    html,body{height:auto !important; overflow:visible !important; background:#fff !important;}
+    #app, .scrim, #zoom, .hint{display:none !important;}
+    #printArea{display:block; color:#000; background:#fff; font-family:inherit;}
+    #printArea h2{font-size:18pt; margin:0 0 8pt;}
+    .pr-cat{break-after:page; page-break-after:always;}
+    .pr-cat:last-child{break-after:auto; page-break-after:auto;}
+    .pr-grid{display:grid; grid-template-columns:repeat(var(--pc,4),minmax(0,1fr)); gap:6pt;}
+    .pr-card{border:1.5pt solid #000; border-radius:8pt; padding:4pt; text-align:center; break-inside:avoid; page-break-inside:avoid;}
+    .pr-card img{width:100%; aspect-ratio:1/1; object-fit:contain; display:block;}
+    .pr-card div{font-weight:800; font-size:12pt; line-height:1.15; padding-top:3pt; overflow-wrap:anywhere;}
+  }
   /* ---- Derecha a izquierda (hebreo, árabe): espejo de lo que está colocado a izquierda/derecha ---- */
   [dir=rtl] .title{margin-right:0; margin-left:auto;}
   [dir=rtl] .pcard .fav{left:auto; right:8px;}
@@ -210,6 +293,9 @@
   [dir=rtl] .sw::after{left:auto; right:3px;}
   [dir=rtl] .sw.on::after{left:auto; right:29px;}
   [dir=rtl] .schip .rm{right:auto; left:0;}
+  [dir=rtl] .pcard.holding::after{transform-origin:right;}
+  [dir=rtl] body.hc .sw::after{left:auto; right:1px;}
+  [dir=rtl] body.hc .sw.on::after{left:auto; right:27px;}
   /* ---- Chino, japonés, coreano: sin esto el navegador parte las etiquetas carácter a carácter (texto vertical) ---- */
   :lang(zh) .title small, :lang(ja) .title small, :lang(ko) .title small,
   :lang(zh) .iconbtn span.lbl, :lang(ja) .iconbtn span.lbl, :lang(ko) .iconbtn span.lbl{white-space:nowrap;}
@@ -243,6 +329,13 @@
 
   <main><div class="grid" id="grid"></div><div class="empty hidden" id="empty"></div></main>
 
+  <div id="talkbar">
+    <button class="iconbtn danger" id="alertBtn" aria-label="Pedir ayuda" data-i18n-aria="ariaAlert">🔔</button>
+    <div id="quickItems"></div>
+    <button class="iconbtn plain" id="loudBtn" aria-label="Repetir más fuerte" data-i18n-aria="ariaLoud">📢</button>
+    <button class="iconbtn plain" id="showBtn" aria-label="Mostrar el texto en grande" data-i18n-aria="ariaShow">👀</button>
+  </div>
+
   <div id="strip">
     <div id="stripItems"></div>
     <button class="iconbtn solid" id="playStrip" aria-label="Decir la frase" data-i18n-aria="ariaPlayStrip">▶</button>
@@ -254,6 +347,17 @@
 <div id="zoom" role="dialog" aria-modal="true" aria-label="Imagen seleccionada" data-i18n-aria="ttZoom">
   <button id="closeZoom" aria-label="Cerrar" data-i18n-aria="close"><span class="x">✕</span> <span data-i18n="close">Cerrar</span></button>
   <div id="zoomCard"><div class="zimg" id="zImg"></div><div class="zname" id="zName"></div></div>
+</div>
+
+<!-- Texto en grande para enseñarlo a otra persona -->
+<div class="scrim" id="showScrim" aria-label="Mostrar el texto en grande" data-i18n-aria="ariaShow">
+  <div class="sheet">
+    <div id="showText"><div id="showInner"></div></div>
+    <div class="row">
+      <button class="bigbtn ghost" id="showFlip" data-i18n="showFlip">🔄 Girar</button>
+      <button class="bigbtn primary" id="showClose" data-i18n="close">Cerrar</button>
+    </div>
+  </div>
 </div>
 
 <!-- Add source choice -->
@@ -320,6 +424,12 @@
       <div style="font-size:12px; color:var(--muted); margin-top:6px; line-height:1.4" data-i18n="voiceHelp">Graba a mamá, papá o a quien acompaña diciendo la palabra. El peque suele responder mejor a una voz conocida. Si hay grabación, se reproduce en lugar de la voz del dispositivo.</div>
     </div>
     <div class="toggle" style="border-top:1px solid var(--line)"><span id="fFavLbl" data-i18n="fav">⭐ Favorito</span> <div class="sw" id="fFav" role="switch" tabindex="0" aria-checked="false" aria-labelledby="fFavLbl"></div></div>
+    <div class="field hidden" id="moveWrap" style="margin-top:14px"><label id="moveLbl" data-i18n="fldOrder">Posición en el tablero</label>
+      <div class="row" role="group" aria-labelledby="moveLbl">
+        <button class="bigbtn ghost" id="moveBack" style="margin-top:0" data-i18n="moveBack">Mover antes</button>
+        <button class="bigbtn ghost" id="moveFwd" style="margin-top:0" data-i18n="moveFwd">Mover después</button>
+      </div>
+    </div>
     <button class="bigbtn primary" id="savePic" style="margin-top:16px" data-i18n="save">Guardar</button>
     <button class="bigbtn danger hidden" id="delPic" style="margin-top:10px" data-i18n="delPic">🗑️ Borrar esta imagen</button>
     <button class="bigbtn ghost" id="editCancel" style="margin-top:10px" data-i18n="cancel">Cancelar</button>
@@ -338,6 +448,38 @@
     <div class="toggle"><span id="swStripLbl" data-i18n="stStrip">📝 Frases con varios pictogramas (hasta 10)</span> <div class="sw" id="swStrip" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swStripLbl"></div></div>
     <div class="toggle"><span id="swCalmLbl" data-i18n="stCalm">🌙 Modo calmo (menos movimiento)</span> <div class="sw" id="swCalm" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swCalmLbl"></div></div>
     <div class="toggle"><span id="swHapticLbl" data-i18n="stHaptic">📳 Vibración suave al tocar</span> <div class="sw" id="swHaptic" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swHapticLbl"></div></div>
+    <div class="toggle"><span id="swContrastLbl" data-i18n="stContrast">🌓 Alto contraste (fondo oscuro)</span> <div class="sw" id="swContrast" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swContrastLbl"></div></div>
+    <div class="toggle"><span id="swAlertLbl" data-i18n="stAlert">🔔 Botón para pedir ayuda</span> <div class="sw" id="swAlert" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swAlertLbl"></div></div>
+    <div class="toggle"><span id="swToolsLbl" data-i18n="stTools">📢 Repetir más fuerte y mostrar el texto</span> <div class="sw" id="swTools" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swToolsLbl"></div></div>
+    <div class="toggle"><span id="swQuickLbl" data-i18n="stQuick">💬 Frases rápidas</span> <div class="sw" id="swQuick" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swQuickLbl"></div></div>
+    <div class="field hidden" id="quickEditWrap" style="margin-top:12px">
+      <div id="quickEdit"></div>
+      <div class="row"><input type="text" id="quickNew" maxlength="80" placeholder="Nueva frase" aria-label="Nueva frase" data-i18n-ph="quickPh" data-i18n-aria="quickPh"><button class="iconbtn solid" id="quickAdd" aria-label="Agregar frase" data-i18n-aria="ariaAddQuick">＋</button></div>
+    </div>
+    <div class="field" style="margin-top:16px"><label for="colsSel" data-i18n="stCols">Columnas del tablero</label>
+      <select id="colsSel"></select>
+      <div class="fieldhelp" data-i18n="stColsHelp">Con un número fijo, cada tarjeta queda siempre en el mismo sitio aunque gires la pantalla.</div>
+    </div>
+    <div class="field"><label for="labelsSel" data-i18n="stLabels">Qué se ve en las tarjetas</label>
+      <select id="labelsSel">
+        <option value="both" data-i18n="lblBoth">Foto y texto</option>
+        <option value="img" data-i18n="lblImg">Solo foto</option>
+        <option value="text" data-i18n="lblText">Solo texto</option>
+      </select>
+    </div>
+    <div class="field"><label for="tapSel" data-i18n="stTap">Cómo se elige una tarjeta</label>
+      <select id="tapSel">
+        <option value="release" data-i18n="tapRelease">Al levantar el dedo</option>
+        <option value="press" data-i18n="tapPress">Al tocar</option>
+        <option value="hold" data-i18n="tapHold">Manteniendo el dedo</option>
+      </select>
+    </div>
+    <div class="field hidden" id="holdWrap"><label for="holdRange"><span data-i18n="stHoldMs">Tiempo manteniendo el dedo</span>: <span id="holdOut"></span></label>
+      <input type="range" id="holdRange" min="300" max="2000" step="100" value="600" style="width:100%">
+    </div>
+    <div class="field"><label for="debSel" data-i18n="stDebounce">Ignorar toques repetidos durante</label>
+      <select id="debSel"></select>
+    </div>
     <div class="field" style="margin-top:16px"><label for="voiceSel" data-i18n="stVoice">Voz</label>
       <select id="voiceSel"></select>
       <div id="voiceNone" class="hidden" style="font-size:13px; color:#a5432f; margin-top:6px; line-height:1.4" data-i18n="voiceNone"></div>
@@ -357,6 +499,14 @@
     <div style="font-size:13px; color:var(--muted); margin:6px 2px 14px; line-height:1.4" data-i18n-html="shareHelp">Crea un archivo único con la app dentro. Podrás elegir <b>con fotos</b> (copia completa, para respaldo o tu otro dispositivo) o <b>sin fotos</b> (solo la plantilla, para compartir con otra familia cuidando la privacidad). En el móvil abre WhatsApp/correo para enviarlo; en el ordenador lo descarga. Sin internet ni instalar nada.</div>
     <button class="bigbtn ghost" id="exportBtn" data-i18n="backup">💾 Copia de seguridad (.json)</button>
     <button class="bigbtn ghost" id="importBtn" style="margin-top:10px" data-i18n="restore">📂 Restaurar copia (.json)</button>
+    <button class="bigbtn ghost" id="printBtn" style="margin-top:10px" data-i18n="printBtn">🖨️ Imprimir el tablero</button>
+    <button class="bigbtn ghost" id="obzExport" style="margin-top:10px" data-i18n="obzExport">📦 Exportar para otras apps (.obz)</button>
+    <button class="bigbtn ghost" id="obzImport" style="margin-top:10px" data-i18n="obzImport">📥 Importar tablero (.obf / .obz)</button>
+    <div class="fieldhelp" style="margin:6px 2px 0" data-i18n="obzHelp">Open Board Format es un formato abierto que leen otras apps de comunicación. El archivo exportado incluye tus fotos y grabaciones.</div>
+    <div class="credits">
+      <div class="credits-h" data-i18n="resTitle">Guías para familias</div>
+      <p data-i18n-html="resBody"></p>
+    </div>
     <div class="credits" style="background:#eef6f0">
       <div class="credits-h" data-i18n="supportTitle">♥ Apoya TalkPics</div>
       <p data-i18n="supportBody">TalkPics es gratis y no se vende. Si te ayuda, una donación, aunque sea de 1 €, la mantiene viva.</p>
@@ -416,6 +566,8 @@
 <input type="file" id="fileCam" accept="image/*" capture="environment" class="hidden">
 <input type="file" id="fileLib" accept="image/*" multiple class="hidden">
 <input type="file" id="fileRestore" accept="application/json" class="hidden">
+<input type="file" id="fileObz" accept=".obz,.obf,application/zip,application/json" class="hidden">
+<div id="printArea" aria-hidden="true"></div>
 <div class="hint" id="hint"></div>
 
 <!-- Datos incrustados: al exportar la app, aquí quedan guardadas todas las tarjetas y fotos -->
@@ -479,7 +631,8 @@ const ARA_CODE={"zh-hans":"zh","zh-hant":"zh"};
 // Nombres de las tarjetas y categorías base en los idiomas nuevos (clave = nombre en castellano / id)
 const BASE_NAMES={"fr":{"Agua":"Eau","Comida":"Repas","Más":"Plus","Menos":"Moins","Fideo":"Nouilles","Patata":"Pomme de terre","Rabas":"Anneaux de calamar","Tortilla":"Omelette","Pastas rellenas":"Pâtes farcies","Arroz con salsa de tomate":"Riz à la sauce tomate","Tortilla de espinaca":"Omelette aux épinards","Chocolate":"Chocolat","Calamares a la romana":"Calamars à la romaine","Patatas bravas":"Pommes de terre épicées","Patatas fritas":"Frites","Patatas hervidas":"Pommes de terre à l'eau","Agua mineral":"Eau minérale","Pan baguette":"Baguette","Capeletti de verdura":"Cappelletti aux légumes","Chorizo":"Chorizo","Ravioles de verduras":"Raviolis aux légumes","Baño":"Toilettes","Jugar":"Jouer","Dormir":"Dormir","Ayuda":"Aide","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Bain","Lavarse los dientes":"Se brosser les dents","Limpiarse la cola":"S'essuyer les fesses","Salir":"Sortir","Ir a la playa":"Aller à la plage","Ir al parque":"Aller au parc","Ir a la escuela":"Aller à l'école","Sí":"Oui","No":"Non","Mamá":"Maman","Papá":"Papa","Playa":"Plage","Piscina":"Piscine","Parque de juegos":"Aire de jeux","Feliz":"Content","Triste":"Triste","Enojado":"En colère","Cansado":"Fatigué","Con miedo":"J'ai peur","Tranquilo":"Calme","Nervioso":"Nerveux","Aburrido":"Je m'ennuie","Sorprendido":"Surpris","Quiero llorar":"J'ai envie de pleurer","Me gusta":"J'aime","No me gusta":"Je n'aime pas","Tengo hambre":"J'ai faim","Tengo sed":"J'ai soif","Tengo sueño":"J'ai sommeil","Me duele":"J'ai mal","Pis":"Pipi","Caca":"Caca","Frío":"J'ai froid","Calor":"J'ai chaud","Abrazo":"Câlin","Descansar":"Me reposer","Medicina":"Médicament","Quiero":"Je veux","No quiero":"Je ne veux pas","Ya terminé":"J'ai fini","Otra vez":"Encore","Espera":"Attends","No sé":"Je ne sais pas","Por favor":"S'il te plaît","Gracias":"Merci","Hola":"Bonjour","Adiós":"Au revoir"},"it":{"Agua":"Acqua","Comida":"Pasto","Más":"Di più","Menos":"Di meno","Fideo":"Pasta","Patata":"Patata","Rabas":"Anelli di calamaro","Tortilla":"Frittata","Pastas rellenas":"Pasta ripiena","Arroz con salsa de tomate":"Riso al pomodoro","Tortilla de espinaca":"Frittata di spinaci","Chocolate":"Cioccolato","Calamares a la romana":"Calamari fritti","Patatas bravas":"Patate piccanti","Patatas fritas":"Patatine fritte","Patatas hervidas":"Patate lesse","Agua mineral":"Acqua minerale","Pan baguette":"Baguette","Capeletti de verdura":"Cappelletti di verdure","Chorizo":"Chorizo","Ravioles de verduras":"Ravioli di verdure","Baño":"Bagno","Jugar":"Giocare","Dormir":"Dormire","Ayuda":"Aiuto","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Vasca da bagno","Lavarse los dientes":"Lavarsi i denti","Limpiarse la cola":"Pulirsi il sederino","Salir":"Uscire","Ir a la playa":"Andare al mare","Ir al parque":"Andare al parco","Ir a la escuela":"Andare a scuola","Sí":"Sì","No":"No","Mamá":"Mamma","Papá":"Papà","Playa":"Spiaggia","Piscina":"Piscina","Parque de juegos":"Parco giochi","Feliz":"Felice","Triste":"Triste","Enojado":"Arrabbiato","Cansado":"Stanco","Con miedo":"Ho paura","Tranquilo":"Tranquillo","Nervioso":"Nervoso","Aburrido":"Annoiato","Sorprendido":"Sorpreso","Quiero llorar":"Voglio piangere","Me gusta":"Mi piace","No me gusta":"Non mi piace","Tengo hambre":"Ho fame","Tengo sed":"Ho sete","Tengo sueño":"Ho sonno","Me duele":"Mi fa male","Pis":"Pipì","Caca":"Cacca","Frío":"Ho freddo","Calor":"Ho caldo","Abrazo":"Abbraccio","Descansar":"Riposare","Medicina":"Medicina","Quiero":"Voglio","No quiero":"Non voglio","Ya terminé":"Ho finito","Otra vez":"Ancora","Espera":"Aspetta","No sé":"Non lo so","Por favor":"Per favore","Gracias":"Grazie","Hola":"Ciao","Adiós":"Arrivederci"},"pt":{"Agua":"Água","Comida":"Comida","Más":"Mais","Menos":"Menos","Fideo":"Macarrão","Patata":"Batata","Rabas":"Anéis de lula","Tortilla":"Omelete","Pastas rellenas":"Massa recheada","Arroz con salsa de tomate":"Arroz com molho de tomate","Tortilla de espinaca":"Omelete de espinafre","Chocolate":"Chocolate","Calamares a la romana":"Lula à dorê","Patatas bravas":"Batatas picantes","Patatas fritas":"Batata frita","Patatas hervidas":"Batata cozida","Agua mineral":"Água mineral","Pan baguette":"Baguete","Capeletti de verdura":"Capeletti de legumes","Chorizo":"Linguiça","Ravioles de verduras":"Ravióli de legumes","Baño":"Banheiro","Jugar":"Brincar","Dormir":"Dormir","Ayuda":"Ajuda","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Banheira","Lavarse los dientes":"Escovar os dentes","Limpiarse la cola":"Limpar o bumbum","Salir":"Sair","Ir a la playa":"Ir à praia","Ir al parque":"Ir ao parque","Ir a la escuela":"Ir à escola","Sí":"Sim","No":"Não","Mamá":"Mamãe","Papá":"Papai","Playa":"Praia","Piscina":"Piscina","Parque de juegos":"Parquinho","Feliz":"Feliz","Triste":"Triste","Enojado":"Bravo","Cansado":"Cansado","Con miedo":"Com medo","Tranquilo":"Calmo","Nervioso":"Nervoso","Aburrido":"Entediado","Sorprendido":"Surpreso","Quiero llorar":"Quero chorar","Me gusta":"Eu gosto","No me gusta":"Não gosto","Tengo hambre":"Estou com fome","Tengo sed":"Estou com sede","Tengo sueño":"Estou com sono","Me duele":"Está doendo","Pis":"Xixi","Caca":"Cocô","Frío":"Estou com frio","Calor":"Estou com calor","Abrazo":"Abraço","Descansar":"Descansar","Medicina":"Remédio","Quiero":"Eu quero","No quiero":"Não quero","Ya terminé":"Terminei","Otra vez":"De novo","Espera":"Espera","No sé":"Não sei","Por favor":"Por favor","Gracias":"Obrigado","Hola":"Oi","Adiós":"Tchau"},"de":{"Agua":"Wasser","Comida":"Essen","Más":"Mehr","Menos":"Weniger","Fideo":"Nudeln","Patata":"Kartoffel","Rabas":"Tintenfischringe","Tortilla":"Omelett","Pastas rellenas":"Gefüllte Nudeln","Arroz con salsa de tomate":"Reis mit Tomatensoße","Tortilla de espinaca":"Spinat-Omelett","Chocolate":"Schokolade","Calamares a la romana":"Frittierte Calamari","Patatas bravas":"Scharfe Kartoffeln","Patatas fritas":"Pommes","Patatas hervidas":"Salzkartoffeln","Agua mineral":"Mineralwasser","Pan baguette":"Baguette","Capeletti de verdura":"Gemüse-Cappelletti","Chorizo":"Chorizo","Ravioles de verduras":"Gemüse-Ravioli","Baño":"Toilette","Jugar":"Spielen","Dormir":"Schlafen","Ayuda":"Hilfe","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Baden","Lavarse los dientes":"Zähne putzen","Limpiarse la cola":"Po abwischen","Salir":"Rausgehen","Ir a la playa":"Zum Strand","Ir al parque":"Zum Park","Ir a la escuela":"Zur Schule","Sí":"Ja","No":"Nein","Mamá":"Mama","Papá":"Papa","Playa":"Strand","Piscina":"Schwimmbad","Parque de juegos":"Spielplatz","Feliz":"Fröhlich","Triste":"Traurig","Enojado":"Wütend","Cansado":"Müde","Con miedo":"Ich habe Angst","Tranquilo":"Ruhig","Nervioso":"Nervös","Aburrido":"Mir ist langweilig","Sorprendido":"Überrascht","Quiero llorar":"Ich möchte weinen","Me gusta":"Mag ich","No me gusta":"Mag ich nicht","Tengo hambre":"Ich habe Hunger","Tengo sed":"Ich habe Durst","Tengo sueño":"Ich bin schläfrig","Me duele":"Es tut weh","Pis":"Pipi","Caca":"Kacka","Frío":"Mir ist kalt","Calor":"Mir ist warm","Abrazo":"Umarmung","Descansar":"Ausruhen","Medicina":"Medizin","Quiero":"Ich will","No quiero":"Ich will nicht","Ya terminé":"Fertig","Otra vez":"Nochmal","Espera":"Warte","No sé":"Weiß nicht","Por favor":"Bitte","Gracias":"Danke","Hola":"Hallo","Adiós":"Tschüss"},"lv":{"Agua":"Ūdens","Comida":"Ēdiens","Más":"Vairāk","Menos":"Mazāk","Fideo":"Nūdeles","Patata":"Kartupelis","Rabas":"Kalmāru gredzeni","Tortilla":"Omlete","Pastas rellenas":"Pildīti makaroni","Arroz con salsa de tomate":"Rīsi ar tomātu mērci","Tortilla de espinaca":"Spinātu omlete","Chocolate":"Šokolāde","Calamares a la romana":"Cepti kalmāri","Patatas bravas":"Asie kartupeļi","Patatas fritas":"Frī kartupeļi","Patatas hervidas":"Vārīti kartupeļi","Agua mineral":"Minerālūdens","Pan baguette":"Bagete","Capeletti de verdura":"Dārzeņu kapeleti","Chorizo":"Čorizo desa","Ravioles de verduras":"Dārzeņu ravioli","Baño":"Tualete","Jugar":"Spēlēties","Dormir":"Gulēt","Ayuda":"Palīdzība","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Vanna","Lavarse los dientes":"Tīrīt zobus","Limpiarse la cola":"Noslaucīt dibenu","Salir":"Iet ārā","Ir a la playa":"Iet uz pludmali","Ir al parque":"Iet uz parku","Ir a la escuela":"Iet uz skolu","Sí":"Jā","No":"Nē","Mamá":"Mamma","Papá":"Tētis","Playa":"Pludmale","Piscina":"Baseins","Parque de juegos":"Rotaļu laukums","Feliz":"Priecīgs","Triste":"Bēdīgs","Enojado":"Dusmīgs","Cansado":"Noguris","Con miedo":"Man bail","Tranquilo":"Mierīgs","Nervioso":"Nervozs","Aburrido":"Garlaicīgi","Sorprendido":"Pārsteigts","Quiero llorar":"Gribu raudāt","Me gusta":"Man patīk","No me gusta":"Man nepatīk","Tengo hambre":"Gribu ēst","Tengo sed":"Gribu dzert","Tengo sueño":"Gribu gulēt","Me duele":"Man sāp","Pis":"Čurāt","Caca":"Kakāt","Frío":"Man auksti","Calor":"Man karsti","Abrazo":"Apskāviens","Descansar":"Atpūsties","Medicina":"Zāles","Quiero":"Es gribu","No quiero":"Es negribu","Ya terminé":"Esmu pabeidzis","Otra vez":"Vēlreiz","Espera":"Pagaidi","No sé":"Nezinu","Por favor":"Lūdzu","Gracias":"Paldies","Hola":"Sveiki","Adiós":"Atā"},"uk":{"Agua":"Вода","Comida":"Їжа","Más":"Більше","Menos":"Менше","Fideo":"Локшина","Patata":"Картопля","Rabas":"Кільця кальмара","Tortilla":"Омлет","Pastas rellenas":"Паста з начинкою","Arroz con salsa de tomate":"Рис з томатним соусом","Tortilla de espinaca":"Омлет зі шпинатом","Chocolate":"Шоколад","Calamares a la romana":"Кальмари в клярі","Patatas bravas":"Гостра картопля","Patatas fritas":"Картопля фрі","Patatas hervidas":"Варена картопля","Agua mineral":"Мінеральна вода","Pan baguette":"Багет","Capeletti de verdura":"Капелеті з овочами","Chorizo":"Ковбаса чорізо","Ravioles de verduras":"Равіолі з овочами","Baño":"Туалет","Jugar":"Гратися","Dormir":"Спати","Ayuda":"Допомога","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Ванна","Lavarse los dientes":"Чистити зуби","Limpiarse la cola":"Підтерти попу","Salir":"Піти гуляти","Ir a la playa":"Піти на пляж","Ir al parque":"Піти в парк","Ir a la escuela":"Піти до школи","Sí":"Так","No":"Ні","Mamá":"Мама","Papá":"Тато","Playa":"Пляж","Piscina":"Басейн","Parque de juegos":"Дитячий майданчик","Feliz":"Радісний","Triste":"Сумний","Enojado":"Сердитий","Cansado":"Втомлений","Con miedo":"Мені страшно","Tranquilo":"Спокійний","Nervioso":"Нервовий","Aburrido":"Мені нудно","Sorprendido":"Здивований","Quiero llorar":"Хочу плакати","Me gusta":"Мені подобається","No me gusta":"Мені не подобається","Tengo hambre":"Хочу їсти","Tengo sed":"Хочу пити","Tengo sueño":"Хочу спати","Me duele":"Мені боляче","Pis":"Пісяти","Caca":"Какати","Frío":"Мені холодно","Calor":"Мені жарко","Abrazo":"Обійми","Descansar":"Відпочити","Medicina":"Ліки","Quiero":"Я хочу","No quiero":"Я не хочу","Ya terminé":"Я закінчив","Otra vez":"Ще раз","Espera":"Зачекай","No sé":"Не знаю","Por favor":"Будь ласка","Gracias":"Дякую","Hola":"Привіт","Adiós":"Бувай"},"ru":{"Agua":"Вода","Comida":"Еда","Más":"Ещё","Menos":"Меньше","Fideo":"Лапша","Patata":"Картошка","Rabas":"Кольца кальмара","Tortilla":"Омлет","Pastas rellenas":"Паста с начинкой","Arroz con salsa de tomate":"Рис с томатным соусом","Tortilla de espinaca":"Омлет со шпинатом","Chocolate":"Шоколад","Calamares a la romana":"Кальмары в кляре","Patatas bravas":"Острая картошка","Patatas fritas":"Картошка фри","Patatas hervidas":"Варёная картошка","Agua mineral":"Минеральная вода","Pan baguette":"Багет","Capeletti de verdura":"Каппеллетти с овощами","Chorizo":"Колбаса чоризо","Ravioles de verduras":"Равиоли с овощами","Baño":"Туалет","Jugar":"Играть","Dormir":"Спать","Ayuda":"Помощь","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"Ванна","Lavarse los dientes":"Чистить зубы","Limpiarse la cola":"Вытереть попу","Salir":"Гулять","Ir a la playa":"Пойти на пляж","Ir al parque":"Пойти в парк","Ir a la escuela":"Пойти в школу","Sí":"Да","No":"Нет","Mamá":"Мама","Papá":"Папа","Playa":"Пляж","Piscina":"Бассейн","Parque de juegos":"Детская площадка","Feliz":"Радостный","Triste":"Грустный","Enojado":"Сердитый","Cansado":"Устал","Con miedo":"Мне страшно","Tranquilo":"Спокойный","Nervioso":"Волнуюсь","Aburrido":"Мне скучно","Sorprendido":"Удивлён","Quiero llorar":"Хочу плакать","Me gusta":"Мне нравится","No me gusta":"Мне не нравится","Tengo hambre":"Хочу есть","Tengo sed":"Хочу пить","Tengo sueño":"Хочу спать","Me duele":"Мне больно","Pis":"Пописать","Caca":"Покакать","Frío":"Мне холодно","Calor":"Мне жарко","Abrazo":"Обнять","Descansar":"Отдохнуть","Medicina":"Лекарство","Quiero":"Я хочу","No quiero":"Я не хочу","Ya terminé":"Я закончил","Otra vez":"Ещё раз","Espera":"Подожди","No sé":"Не знаю","Por favor":"Пожалуйста","Gracias":"Спасибо","Hola":"Привет","Adiós":"Пока"},"ne":{"Agua":"पानी","Comida":"खाना","Más":"अझै","Menos":"कम","Fideo":"चाउचाउ","Patata":"आलु","Rabas":"तारेर पकाएको स्क्विडको रिङ","Tortilla":"अण्डाको अमलेट","Pastas rellenas":"भरिएको पास्ता","Arroz con salsa de tomate":"गोलभेँडाको सससँग भात","Tortilla de espinaca":"पालुङ्गोको अमलेट","Chocolate":"चकलेट","Calamares a la romana":"तारेर पकाएको स्क्विड","Patatas bravas":"पिरो आलु","Patatas fritas":"फ्रेन्च फ्राइज","Patatas hervidas":"उसिनेको आलु","Agua mineral":"मिनरल वाटर","Pan baguette":"लामो पाउरोटी","Capeletti de verdura":"तरकारी भरिएको पास्ता","Chorizo":"मसलेदार ससेज","Ravioles de verduras":"तरकारी भरिएको रवियोली","Baño":"शौचालय","Jugar":"खेल्ने","Dormir":"सुत्ने","Ayuda":"सहयोग गर्नुहोस्","iPad":"आइप्याड","YouTube Kids":"युट्युब किड्स","Bañera":"नुहाउने टब","Lavarse los dientes":"दाँत माझ्ने","Limpiarse la cola":"दिसा गरेपछि सफा गर्ने","Salir":"बाहिर जाने","Ir a la playa":"समुद्र किनारमा जाने","Ir al parque":"पार्कमा जाने","Ir a la escuela":"विद्यालय जाने","Sí":"हुन्छ","No":"हुँदैन","Mamá":"आमा","Papá":"बाबा","Playa":"समुद्र किनार","Piscina":"पौडी पोखरी","Parque de juegos":"खेल्ने ठाउँ","Feliz":"खुसी","Triste":"दुःखी","Enojado":"रिस उठेको","Cansado":"थाकेको","Con miedo":"डर लागेको","Tranquilo":"शान्त","Nervioso":"आत्तिएको","Aburrido":"दिक्क लागेको","Sorprendido":"अचम्म लागेको","Quiero llorar":"मलाई रुन मन लाग्यो","Me gusta":"मलाई मन पर्छ","No me gusta":"मलाई मन पर्दैन","Tengo hambre":"मलाई भोक लागेको छ","Tengo sed":"मलाई तिर्खा लागेको छ","Tengo sueño":"मलाई निद्रा लागेको छ","Me duele":"दुखेको छ","Pis":"पिसाब","Caca":"दिसा","Frío":"चिसो","Calor":"गर्मी","Abrazo":"अँगालो","Descansar":"आराम","Medicina":"औषधि","Quiero":"मलाई चाहिन्छ","No quiero":"मलाई चाहिँदैन","Ya terminé":"मैले सकाएँ","Otra vez":"फेरि","Espera":"पर्खनुहोस्","No sé":"मलाई थाहा छैन","Por favor":"कृपया","Gracias":"धन्यवाद","Hola":"नमस्कार","Adiós":"बिदा"},"he":{"Agua":"מים","Comida":"אוכל","Más":"עוד","Menos":"פחות","Fideo":"אטריות","Patata":"תפוח אדמה","Rabas":"טבעות קלמרי מטוגנות","Tortilla":"חביתה","Pastas rellenas":"פסטה ממולאת","Arroz con salsa de tomate":"אורז ברוטב עגבניות","Tortilla de espinaca":"חביתת תרד","Chocolate":"שוקולד","Calamares a la romana":"קלמרי מטוגן","Patatas bravas":"תפוחי אדמה חריפים","Patatas fritas":"צ'יפס","Patatas hervidas":"תפוחי אדמה מבושלים","Agua mineral":"מים מינרליים","Pan baguette":"באגט","Capeletti de verdura":"קפלטי ירקות","Chorizo":"נקניק צ'וריסו","Ravioles de verduras":"רביולי ירקות","Baño":"שירותים","Jugar":"לשחק","Dormir":"לישון","Ayuda":"עזרה","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"אמבטיה","Lavarse los dientes":"לצחצח שיניים","Limpiarse la cola":"לנגב את הטוסיק","Salir":"לצאת","Ir a la playa":"ללכת לים","Ir al parque":"ללכת לפארק","Ir a la escuela":"ללכת לבית הספר","Sí":"כן","No":"לא","Mamá":"אמא","Papá":"אבא","Playa":"חוף הים","Piscina":"בריכה","Parque de juegos":"גן שעשועים","Feliz":"שמח","Triste":"עצוב","Enojado":"כועס","Cansado":"עייף","Con miedo":"מפחד","Tranquilo":"רגוע","Nervioso":"לחוץ","Aburrido":"משועמם","Sorprendido":"מופתע","Quiero llorar":"בא לי לבכות","Me gusta":"אני אוהב","No me gusta":"אני לא אוהב","Tengo hambre":"אני רעב","Tengo sed":"אני צמא","Tengo sueño":"אני רוצה לישון","Me duele":"כואב לי","Pis":"פיפי","Caca":"קקי","Frío":"קר לי","Calor":"חם לי","Abrazo":"חיבוק","Descansar":"לנוח","Medicina":"תרופה","Quiero":"אני רוצה","No quiero":"אני לא רוצה","Ya terminé":"סיימתי","Otra vez":"עוד פעם","Espera":"רגע, לחכות","No sé":"אני לא יודע","Por favor":"בבקשה","Gracias":"תודה","Hola":"שלום","Adiós":"להתראות"},"ar":{"Agua":"ماء","Comida":"طعام","Más":"المزيد","Menos":"أقل","Fideo":"نودلز","Patata":"بطاطا","Rabas":"حلقات حبار مقلية","Tortilla":"عجة","Pastas rellenas":"معكرونة محشوة","Arroz con salsa de tomate":"أرز بصلصة الطماطم","Tortilla de espinaca":"عجة السبانخ","Chocolate":"شوكولاتة","Calamares a la romana":"حبار مقلي","Patatas bravas":"بطاطا حارة","Patatas fritas":"بطاطا مقلية","Patatas hervidas":"بطاطا مسلوقة","Agua mineral":"مياه معدنية","Pan baguette":"خبز باغيت","Capeletti de verdura":"كابيليتي بالخضار","Chorizo":"نقانق تشوريزو","Ravioles de verduras":"رافيولي بالخضار","Baño":"الحمّام","Jugar":"ألعب","Dormir":"أنام","Ayuda":"مساعدة","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"حوض الاستحمام","Lavarse los dientes":"أنظّف أسناني","Limpiarse la cola":"أنظّف مؤخرتي","Salir":"أخرج","Ir a la playa":"أذهب إلى البحر","Ir al parque":"أذهب إلى الحديقة","Ir a la escuela":"أذهب إلى المدرسة","Sí":"نعم","No":"لا","Mamá":"ماما","Papá":"بابا","Playa":"الشاطئ","Piscina":"المسبح","Parque de juegos":"ساحة الألعاب","Feliz":"سعيد","Triste":"حزين","Enojado":"غاضب","Cansado":"متعب","Con miedo":"خائف","Tranquilo":"هادئ","Nervioso":"متوتر","Aburrido":"أشعر بالملل","Sorprendido":"متفاجئ","Quiero llorar":"أريد أن أبكي","Me gusta":"يعجبني","No me gusta":"لا يعجبني","Tengo hambre":"أنا جائع","Tengo sed":"أنا عطشان","Tengo sueño":"أنا نعسان","Me duele":"يؤلمني","Pis":"أريد أن أتبوّل","Caca":"أريد أن أتبرّز","Frío":"أشعر بالبرد","Calor":"أشعر بالحر","Abrazo":"عناق","Descansar":"أرتاح","Medicina":"دواء","Quiero":"أريد","No quiero":"لا أريد","Ya terminé":"انتهيت","Otra vez":"مرة أخرى","Espera":"انتظر","No sé":"لا أعرف","Por favor":"من فضلك","Gracias":"شكرًا","Hola":"مرحبًا","Adiós":"مع السلامة"},"zh-hans":{"Agua":"水","Comida":"饭","Más":"还要","Menos":"少一点","Fideo":"面条","Patata":"土豆","Rabas":"炸鱿鱼圈","Tortilla":"鸡蛋饼","Pastas rellenas":"带馅意面","Arroz con salsa de tomate":"番茄酱拌饭","Tortilla de espinaca":"菠菜鸡蛋饼","Chocolate":"巧克力","Calamares a la romana":"炸鱿鱼","Patatas bravas":"辣味土豆块","Patatas fritas":"薯条","Patatas hervidas":"水煮土豆","Agua mineral":"矿泉水","Pan baguette":"法棍面包","Capeletti de verdura":"蔬菜小饺子","Chorizo":"西班牙香肠","Ravioles de verduras":"蔬菜馄饨","Baño":"厕所","Jugar":"玩","Dormir":"睡觉","Ayuda":"帮帮我","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"洗澡","Lavarse los dientes":"刷牙","Limpiarse la cola":"擦屁股","Salir":"出去","Ir a la playa":"去海边","Ir al parque":"去公园","Ir a la escuela":"去学校","Sí":"是","No":"不是","Mamá":"妈妈","Papá":"爸爸","Playa":"海滩","Piscina":"游泳池","Parque de juegos":"游乐场","Feliz":"开心","Triste":"难过","Enojado":"生气","Cansado":"累了","Con miedo":"害怕","Tranquilo":"平静","Nervioso":"紧张","Aburrido":"无聊","Sorprendido":"惊讶","Quiero llorar":"我想哭","Me gusta":"我喜欢","No me gusta":"我不喜欢","Tengo hambre":"我饿了","Tengo sed":"我渴了","Tengo sueño":"我困了","Me duele":"我疼","Pis":"尿尿","Caca":"拉便便","Frío":"我冷","Calor":"我热","Abrazo":"抱抱","Descansar":"休息","Medicina":"药","Quiero":"我要","No quiero":"我不要","Ya terminé":"我好了","Otra vez":"再来一次","Espera":"等一下","No sé":"我不知道","Por favor":"请","Gracias":"谢谢","Hola":"你好","Adiós":"再见"},"zh-hant":{"Agua":"水","Comida":"吃飯","Más":"還要","Menos":"少一點","Fideo":"麵","Patata":"馬鈴薯","Rabas":"炸魷魚圈","Tortilla":"烘蛋","Pastas rellenas":"包餡義大利麵","Arroz con salsa de tomate":"番茄醬汁飯","Tortilla de espinaca":"菠菜烘蛋","Chocolate":"巧克力","Calamares a la romana":"酥炸魷魚","Patatas bravas":"辣味馬鈴薯","Patatas fritas":"薯條","Patatas hervidas":"水煮馬鈴薯","Agua mineral":"礦泉水","Pan baguette":"法國麵包","Capeletti de verdura":"蔬菜義大利餃","Chorizo":"西班牙臘腸","Ravioles de verduras":"蔬菜義大利方餃","Baño":"廁所","Jugar":"玩","Dormir":"睡覺","Ayuda":"幫幫我","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"泡澡","Lavarse los dientes":"刷牙","Limpiarse la cola":"擦屁股","Salir":"出去","Ir a la playa":"去海邊","Ir al parque":"去公園","Ir a la escuela":"去學校","Sí":"是","No":"不是","Mamá":"媽媽","Papá":"爸爸","Playa":"海邊","Piscina":"游泳池","Parque de juegos":"遊樂場","Feliz":"開心","Triste":"難過","Enojado":"生氣","Cansado":"好累","Con miedo":"害怕","Tranquilo":"平靜","Nervioso":"緊張","Aburrido":"好無聊","Sorprendido":"嚇一跳","Quiero llorar":"我想哭","Me gusta":"我喜歡","No me gusta":"我不喜歡","Tengo hambre":"我餓了","Tengo sed":"我渴了","Tengo sueño":"我想睡覺","Me duele":"好痛","Pis":"尿尿","Caca":"便便","Frío":"好冷","Calor":"好熱","Abrazo":"抱抱","Descansar":"休息","Medicina":"藥","Quiero":"我要","No quiero":"我不要","Ya terminé":"我好了","Otra vez":"再一次","Espera":"等一下","No sé":"我不知道","Por favor":"請","Gracias":"謝謝","Hola":"你好","Adiós":"再見"},"ja":{"Agua":"みず","Comida":"ごはん","Más":"もっと","Menos":"すこしだけ","Fideo":"めん","Patata":"じゃがいも","Rabas":"イカリング","Tortilla":"オムレツ","Pastas rellenas":"つめもののパスタ","Arroz con salsa de tomate":"トマトソースのごはん","Tortilla de espinaca":"ほうれんそうのオムレツ","Chocolate":"チョコレート","Calamares a la romana":"イカフライ","Patatas bravas":"からいポテト","Patatas fritas":"フライドポテト","Patatas hervidas":"ゆでたじゃがいも","Agua mineral":"ミネラルウォーター","Pan baguette":"フランスパン","Capeletti de verdura":"やさいのカッペレッティ","Chorizo":"チョリソー","Ravioles de verduras":"やさいのラビオリ","Baño":"トイレ","Jugar":"あそぶ","Dormir":"ねる","Ayuda":"たすけて","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"おふろ","Lavarse los dientes":"はみがき","Limpiarse la cola":"おしりをふく","Salir":"おでかけする","Ir a la playa":"うみにいく","Ir al parque":"こうえんにいく","Ir a la escuela":"がっこうにいく","Sí":"うん","No":"ううん","Mamá":"ママ","Papá":"パパ","Playa":"うみ","Piscina":"プール","Parque de juegos":"あそびば","Feliz":"うれしい","Triste":"かなしい","Enojado":"おこってる","Cansado":"つかれた","Con miedo":"こわい","Tranquilo":"おちついてる","Nervioso":"そわそわする","Aburrido":"つまらない","Sorprendido":"びっくり","Quiero llorar":"なきたい","Me gusta":"すき","No me gusta":"きらい","Tengo hambre":"おなかすいた","Tengo sed":"のどかわいた","Tengo sueño":"ねむい","Me duele":"いたい","Pis":"おしっこ","Caca":"うんち","Frío":"さむい","Calor":"あつい","Abrazo":"ぎゅってして","Descansar":"やすみたい","Medicina":"くすり","Quiero":"ほしい","No quiero":"いらない","Ya terminé":"おわった","Otra vez":"もういっかい","Espera":"まって","No sé":"わからない","Por favor":"おねがい","Gracias":"ありがとう","Hola":"こんにちは","Adiós":"バイバイ"},"ko":{"Agua":"물","Comida":"밥","Más":"더 주세요","Menos":"조금만요","Fideo":"국수","Patata":"감자","Rabas":"오징어 튀김","Tortilla":"오믈렛","Pastas rellenas":"속을 채운 파스타","Arroz con salsa de tomate":"토마토소스 밥","Tortilla de espinaca":"시금치 오믈렛","Chocolate":"초콜릿","Calamares a la romana":"오징어링 튀김","Patatas bravas":"매운 감자","Patatas fritas":"감자튀김","Patatas hervidas":"삶은 감자","Agua mineral":"생수","Pan baguette":"바게트","Capeletti de verdura":"채소 카펠레티","Chorizo":"초리소 소시지","Ravioles de verduras":"채소 라비올리","Baño":"화장실","Jugar":"놀고 싶어요","Dormir":"자고 싶어요","Ayuda":"도와주세요","iPad":"iPad","YouTube Kids":"YouTube Kids","Bañera":"목욕","Lavarse los dientes":"이 닦기","Limpiarse la cola":"엉덩이 닦기","Salir":"나가고 싶어요","Ir a la playa":"바다에 가요","Ir al parque":"공원에 가요","Ir a la escuela":"학교에 가요","Sí":"네","No":"아니요","Mamá":"엄마","Papá":"아빠","Playa":"바다","Piscina":"수영장","Parque de juegos":"놀이터","Feliz":"기뻐요","Triste":"슬퍼요","Enojado":"화나요","Cansado":"피곤해요","Con miedo":"무서워요","Tranquilo":"편안해요","Nervioso":"불안해요","Aburrido":"심심해요","Sorprendido":"놀랐어요","Quiero llorar":"울고 싶어요","Me gusta":"좋아요","No me gusta":"싫어요","Tengo hambre":"배고파요","Tengo sed":"목말라요","Tengo sueño":"졸려요","Me duele":"아파요","Pis":"쉬","Caca":"응가","Frío":"추워요","Calor":"더워요","Abrazo":"안아 주세요","Descansar":"쉬고 싶어요","Medicina":"약","Quiero":"주세요","No quiero":"안 할래요","Ya terminé":"다 했어요","Otra vez":"한 번 더요","Espera":"기다려 주세요","No sé":"몰라요","Por favor":"부탁해요","Gracias":"고마워요","Hola":"안녕하세요","Adiós":"안녕히 계세요"}};
 const BASE_CATS={"fr":{"comida":"Nourriture","acciones":"Actions","emociones":"Émotions","necesidades":"J'ai besoin","lugares":"Sorties","respuestas":"Réponses","personas":"Personnes"},"it":{"comida":"Cibo","acciones":"Azioni","emociones":"Emozioni","necesidades":"Ho bisogno","lugares":"Uscite","respuestas":"Risposte","personas":"Persone"},"pt":{"comida":"Comida","acciones":"Ações","emociones":"Emoções","necesidades":"Eu preciso","lugares":"Passeios","respuestas":"Respostas","personas":"Pessoas"},"de":{"comida":"Essen","acciones":"Aktivitäten","emociones":"Gefühle","necesidades":"Ich brauche","lugares":"Ausflüge","respuestas":"Antworten","personas":"Personen"},"lv":{"comida":"Ēdiens","acciones":"Darbības","emociones":"Emocijas","necesidades":"Man vajag","lugares":"Izbraucieni","respuestas":"Atbildes","personas":"Cilvēki"},"uk":{"comida":"Їжа","acciones":"Дії","emociones":"Емоції","necesidades":"Мені потрібно","lugares":"Прогулянки","respuestas":"Відповіді","personas":"Люди"},"ru":{"comida":"Еда","acciones":"Действия","emociones":"Эмоции","necesidades":"Мне нужно","lugares":"Прогулки","respuestas":"Ответы","personas":"Люди"},"ne":{"comida":"खाना","acciones":"क्रियाकलाप","emociones":"भावना","necesidades":"मलाई चाहिन्छ","lugares":"बाहिर घुम्न जाने","respuestas":"जवाफहरू","personas":"व्यक्तिहरू"},"he":{"comida":"אוכל","acciones":"פעולות","emociones":"רגשות","necesidades":"אני צריך","lugares":"יציאות","respuestas":"תשובות","personas":"אנשים"},"ar":{"comida":"طعام","acciones":"أفعال","emociones":"مشاعر","necesidades":"أحتاج","lugares":"نزهات","respuestas":"أجوبة","personas":"أشخاص"},"zh-hans":{"comida":"吃的","acciones":"做事","emociones":"心情","necesidades":"我需要","lugares":"出门","respuestas":"回答","personas":"人"},"zh-hant":{"comida":"吃的","acciones":"做事","emociones":"心情","necesidades":"我需要","lugares":"出門","respuestas":"回答","personas":"人"},"ja":{"comida":"たべもの","acciones":"すること","emociones":"きもち","necesidades":"してほしい","lugares":"おでかけ","respuestas":"へんじ","personas":"ひと"},"ko":{"comida":"음식","acciones":"하고 싶은 것","emociones":"기분","necesidades":"필요해요","lugares":"나들이","respuestas":"대답","personas":"사람"}};
-const DEFAULT_SETTINGS={simple:false, speak:true, strip:false, rate:0.8, volume:1, calm:false, haptic:false, lang:"es"};
+const DEFAULT_SETTINGS={simple:false, speak:true, strip:false, rate:0.8, volume:1, calm:false, haptic:false, lang:"es",
+  cols:0, labels:"both", contrast:false, tap:"release", holdMs:600, debounce:0, quick:false, alert:false, tools:false};
 const DEFAULT_CATS=[
   {id:"comida", name:"Comida", nameCa:"Menjar", nameEn:"Food", dot:"🍽️"},
   {id:"acciones", name:"Acciones", nameCa:"Accions", nameEn:"Actions", dot:"🏃"},
@@ -789,36 +942,38 @@ function pickVoice(){
   // Los demás idiomas nunca usan la voz de otro idioma (leería mal las palabras).
   return voiceList()[0] || null;
 }
-function makeUtter(text){
+function makeUtter(text,loud){
   const u=new SpeechSynthesisUtterance(text);
   const v=pickVoice();
   if(v){ u.voice=v; u.lang=v.lang; } else { u.lang=(LANG_BY[lang()]||LANG_BY.es).bcp; }
   u.rate=state.settings.rate||0.9; u.pitch=1;
-  u.volume=(state.settings.volume==null?1:state.settings.volume);
+  u.volume=loud?1:(state.settings.volume==null?1:state.settings.volume);
   return u;
 }
-function speak(text){
-  if(!state.settings.speak || !("speechSynthesis" in window)) return;
+function speak(text,loud,force){ // loud: a todo volumen; force: aunque "Hablar en voz alta" esté apagado (botón de ayuda)
+  if((!state.settings.speak && !force) || !("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
-  speechSynthesis.speak(makeUtter(text));
+  speechSynthesis.speak(makeUtter(text,loud));
 }
 /* "Calienta" la voz en el primer toque (iPad/Android a veces la silencian la 1ª vez) */
 function warmTTS(){ try{ if("speechSynthesis" in window){ const u=new SpeechSynthesisUtterance(" "); u.volume=0; speechSynthesis.speak(u); } }catch(e){} }
 /* Reproduce la grabación de un familiar */
 let curAudio=null;
-function playClip(dataUrl){
+function playClip(dataUrl,loud){
   try{ if(curAudio){curAudio.pause();} const a=new Audio(dataUrl);
-    a.volume=(state.settings.volume==null?1:state.settings.volume); curAudio=a; a.play().catch(()=>{}); return a;
+    a.volume=loud?1:(state.settings.volume==null?1:state.settings.volume);
+    if(loud){ const c=getCtx(); if(c){ try{ const g=c.createGain(); g.gain.value=2; c.createMediaElementSource(a).connect(g); g.connect(c.destination); }catch(e){} } } // "más fuerte": amplifica la grabación
+    curAudio=a; a.play().catch(()=>{}); return a;
   }catch(e){ return null; }
 }
 function stopAudio(){ try{ if(curAudio){curAudio.pause(); curAudio=null;} if("speechSynthesis" in window) speechSynthesis.cancel(); }catch(e){} }
 /* Vibración muy suave y opcional: confirma al peque que su toque funcionó */
 function buzz(){ if(state.settings.haptic && navigator.vibrate){ try{navigator.vibrate(12);}catch(e){} } }
 /* Sonido de una tarjeta: grabación del familiar si existe, si no la voz del dispositivo */
-function sayCard(p, onStart, onEnd){
+function sayCard(p, onStart, onEnd, loud){
   if(!state.settings.speak){ if(onEnd)onEnd(); return; }
-  if(p.audio){ const a=playClip(p.audio); if(a){ if(onStart)onStart(); a.onended=()=>{ if(onEnd)onEnd(); }; return; } }
-  if("speechSynthesis" in window){ speechSynthesis.cancel(); const u=makeUtter(dispName(p));
+  if(p.audio){ const a=playClip(p.audio,loud); if(a){ if(onStart)onStart(); a.onended=()=>{ if(onEnd)onEnd(); }; return; } }
+  if("speechSynthesis" in window){ speechSynthesis.cancel(); const u=makeUtter(dispName(p),loud);
     if(onStart)u.onstart=onStart; if(onEnd)u.onend=onEnd; speechSynthesis.speak(u);
   } else if(onEnd) onEnd();
 }
@@ -970,6 +1125,11 @@ const A11Y_STR={
  "ko":{sortLabel:"정렬", ariaPlayStrip:"문장 말하기", ariaClearStrip:"문장 지우기", ariaAddCat:"분류 추가"}
 };
 Object.keys(A11Y_STR).forEach(l=>{ I18N[l]=Object.assign(I18N[l]||{}, A11Y_STR[l]); });
+/* ---- Textos de las funciones de 2026-11 (lista de OpenAAC), en los 17 idiomas. Ninguno revisado por hablantes nativos. ---- */
+const OPENAAC_STR={"es":{"stContrast":"🌓 Alto contraste (fondo oscuro)","stAlert":"🔔 Botón para pedir ayuda","stTools":"📢 Repetir más fuerte y mostrar el texto","stQuick":"💬 Frases rápidas","stCols":"Columnas del tablero","colsAuto":"Automático","stColsHelp":"Con un número fijo, cada tarjeta queda siempre en el mismo sitio aunque gires la pantalla.","stLabels":"Qué se ve en las tarjetas","lblBoth":"Foto y texto","lblImg":"Solo foto","lblText":"Solo texto","stTap":"Cómo se elige una tarjeta","tapRelease":"Al levantar el dedo","tapPress":"Al tocar","tapHold":"Manteniendo el dedo","stHoldMs":"Tiempo manteniendo el dedo","stDebounce":"Ignorar toques repetidos durante","optOff":"No","secs":"{n} s","quickPh":"Nueva frase","ariaAddQuick":"Agregar frase","qpWait":"Espera un momento","qpHelp":"Necesito ayuda","qpStop":"Para, por favor","qpBreak":"Necesito un descanso","ariaAlert":"Pedir ayuda","ariaLoud":"Repetir más fuerte","ariaShow":"Mostrar el texto en grande","showFlip":"🔄 Girar","hNothingSaid":"Todavía no hay nada que repetir","printBtn":"🖨️ Imprimir el tablero","obzExport":"📦 Exportar para otras apps (.obz)","obzImport":"📥 Importar tablero (.obf / .obz)","obzHelp":"Open Board Format es un formato abierto que leen otras apps de comunicación. El archivo exportado incluye tus fotos y grabaciones.","hObzDone":"Tablero exportado","hObzImported":"{n} tarjetas importadas","hObzFail":"No se pudo leer ese archivo","resTitle":"Guías para familias","resBody":"OpenAAC publica material gratuito (en inglés): {a1}cuestionario para quien acompaña{/a} y {a2}guías para elegir, modelar y leer juntos{/a}.","fldOrder":"Posición en el tablero","moveBack":"Mover antes","moveFwd":"Mover después"},"ca":{"stContrast":"🌓 Alt contrast (fons fosc)","stAlert":"🔔 Botó per demanar ajuda","stTools":"📢 Repetir més fort i mostrar el text","stQuick":"💬 Frases ràpides","stCols":"Columnes del tauler","colsAuto":"Automàtic","stColsHelp":"Amb un nombre fix, cada targeta queda sempre al mateix lloc encara que giris la pantalla.","stLabels":"Què es veu a les targetes","lblBoth":"Foto i text","lblImg":"Només foto","lblText":"Només text","stTap":"Com es tria una targeta","tapRelease":"En aixecar el dit","tapPress":"En tocar","tapHold":"Mantenint el dit","stHoldMs":"Temps mantenint el dit","stDebounce":"Ignorar tocs repetits durant","optOff":"No","secs":"{n} s","quickPh":"Nova frase","ariaAddQuick":"Afegir frase","qpWait":"Espera un moment","qpHelp":"Necessito ajuda","qpStop":"Para, si us plau","qpBreak":"Necessito un descans","ariaAlert":"Demanar ajuda","ariaLoud":"Repetir més fort","ariaShow":"Mostrar el text en gran","showFlip":"🔄 Girar","hNothingSaid":"Encara no hi ha res per repetir","printBtn":"🖨️ Imprimir el tauler","obzExport":"📦 Exportar per a altres apps (.obz)","obzImport":"📥 Importar tauler (.obf / .obz)","obzHelp":"Open Board Format és un format obert que llegeixen altres apps de comunicació. El fitxer exportat inclou les teves fotos i gravacions.","hObzDone":"Tauler exportat","hObzImported":"{n} targetes importades","hObzFail":"No s'ha pogut llegir aquest fitxer","resTitle":"Guies per a famílies","resBody":"OpenAAC publica material gratuït (en anglès): {a1}qüestionari per a qui acompanya{/a} i {a2}guies per triar, modelar i llegir junts{/a}.","fldOrder":"Posició al tauler","moveBack":"Moure abans","moveFwd":"Moure després"},"en":{"stContrast":"🌓 High contrast (dark background)","stAlert":"🔔 Button to ask for help","stTools":"📢 Repeat louder and show the text","stQuick":"💬 Quick phrases","stCols":"Board columns","colsAuto":"Automatic","stColsHelp":"With a fixed number, every card always stays in the same place, even when you rotate the screen.","stLabels":"What the cards show","lblBoth":"Photo and text","lblImg":"Photo only","lblText":"Text only","stTap":"How a card is chosen","tapRelease":"When the finger lifts","tapPress":"On touch","tapHold":"Press and hold","stHoldMs":"Hold time","stDebounce":"Ignore repeated taps for","optOff":"Off","secs":"{n} s","quickPh":"New phrase","ariaAddQuick":"Add phrase","qpWait":"Wait a moment","qpHelp":"I need help","qpStop":"Stop, please","qpBreak":"I need a break","ariaAlert":"Ask for help","ariaLoud":"Repeat louder","ariaShow":"Show the text large","showFlip":"🔄 Flip","hNothingSaid":"Nothing to repeat yet","printBtn":"🖨️ Print the board","obzExport":"📦 Export for other apps (.obz)","obzImport":"📥 Import a board (.obf / .obz)","obzHelp":"Open Board Format is an open format that other communication apps can read. The exported file includes your photos and recordings.","hObzDone":"Board exported","hObzImported":"{n} cards imported","hObzFail":"Couldn't read that file","resTitle":"Guides for families","resBody":"OpenAAC publishes free material (in English): {a1}a self-check for communication partners{/a} and {a2}guides on making choices, modelling and reading together{/a}.","fldOrder":"Position on the board","moveBack":"Move earlier","moveFwd":"Move later"},"fr":{"stContrast":"🌓 Contraste élevé (fond sombre)","stAlert":"🔔 Bouton pour demander de l'aide","stTools":"📢 Répéter plus fort et afficher le texte","stQuick":"💬 Phrases rapides","stCols":"Colonnes du tableau","colsAuto":"Automatique","stColsHelp":"Avec un nombre fixe, chaque carte reste toujours au même endroit, même si vous tournez l'écran.","stLabels":"Ce que montrent les cartes","lblBoth":"Photo et texte","lblImg":"Photo seule","lblText":"Texte seul","stTap":"Comment choisir une carte","tapRelease":"En levant le doigt","tapPress":"Au toucher","tapHold":"En maintenant le doigt","stHoldMs":"Durée d'appui","stDebounce":"Ignorer les appuis répétés pendant","optOff":"Non","secs":"{n} s","quickPh":"Nouvelle phrase","ariaAddQuick":"Ajouter une phrase","qpWait":"Attends un instant","qpHelp":"J'ai besoin d'aide","qpStop":"Arrête, s'il te plaît","qpBreak":"J'ai besoin d'une pause","ariaAlert":"Demander de l'aide","ariaLoud":"Répéter plus fort","ariaShow":"Afficher le texte en grand","showFlip":"🔄 Retourner","hNothingSaid":"Rien à répéter pour l'instant","printBtn":"🖨️ Imprimer le tableau","obzExport":"📦 Exporter pour d'autres applis (.obz)","obzImport":"📥 Importer un tableau (.obf / .obz)","obzHelp":"Open Board Format est un format ouvert que lisent d'autres applis de communication. Le fichier exporté contient vos photos et vos enregistrements.","hObzDone":"Tableau exporté","hObzImported":"{n} cartes importées","hObzFail":"Impossible de lire ce fichier","resTitle":"Guides pour les familles","resBody":"OpenAAC publie des documents gratuits (en anglais) : {a1}un questionnaire pour les accompagnants{/a} et {a2}des guides pour choisir, modéliser et lire ensemble{/a}.","fldOrder":"Position dans le tableau","moveBack":"Déplacer avant","moveFwd":"Déplacer après"},"it":{"stContrast":"🌓 Alto contrasto (sfondo scuro)","stAlert":"🔔 Pulsante per chiedere aiuto","stTools":"📢 Ripeti più forte e mostra il testo","stQuick":"💬 Frasi rapide","stCols":"Colonne della tabella","colsAuto":"Automatico","stColsHelp":"Con un numero fisso, ogni scheda resta sempre nello stesso posto, anche se giri lo schermo.","stLabels":"Cosa mostrano le schede","lblBoth":"Foto e testo","lblImg":"Solo foto","lblText":"Solo testo","stTap":"Come si sceglie una scheda","tapRelease":"Quando si alza il dito","tapPress":"Al tocco","tapHold":"Tenendo premuto","stHoldMs":"Durata della pressione","stDebounce":"Ignora i tocchi ripetuti per","optOff":"No","secs":"{n} s","quickPh":"Nuova frase","ariaAddQuick":"Aggiungi frase","qpWait":"Aspetta un momento","qpHelp":"Ho bisogno di aiuto","qpStop":"Basta, per favore","qpBreak":"Ho bisogno di una pausa","ariaAlert":"Chiedi aiuto","ariaLoud":"Ripeti più forte","ariaShow":"Mostra il testo in grande","showFlip":"🔄 Ruota","hNothingSaid":"Non c'è ancora niente da ripetere","printBtn":"🖨️ Stampa la tabella","obzExport":"📦 Esporta per altre app (.obz)","obzImport":"📥 Importa una tabella (.obf / .obz)","obzHelp":"Open Board Format è un formato aperto che altre app di comunicazione possono leggere. Il file esportato include le tue foto e registrazioni.","hObzDone":"Tabella esportata","hObzImported":"{n} schede importate","hObzFail":"Impossibile leggere questo file","resTitle":"Guide per le famiglie","resBody":"OpenAAC pubblica materiale gratuito (in inglese): {a1}un questionario per chi accompagna{/a} e {a2}guide per scegliere, modellare e leggere insieme{/a}.","fldOrder":"Posizione nella tabella","moveBack":"Sposta prima","moveFwd":"Sposta dopo"},"pt":{"stContrast":"🌓 Alto contraste (fundo escuro)","stAlert":"🔔 Botão para pedir ajuda","stTools":"📢 Repetir mais alto e mostrar o texto","stQuick":"💬 Frases rápidas","stCols":"Colunas da prancha","colsAuto":"Automático","stColsHelp":"Com um número fixo, cada cartão fica sempre no mesmo lugar, mesmo girando a tela.","stLabels":"O que aparece nos cartões","lblBoth":"Foto e texto","lblImg":"Só foto","lblText":"Só texto","stTap":"Como se escolhe um cartão","tapRelease":"Ao levantar o dedo","tapPress":"Ao tocar","tapHold":"Mantendo o dedo","stHoldMs":"Tempo mantendo o dedo","stDebounce":"Ignorar toques repetidos por","optOff":"Não","secs":"{n} s","quickPh":"Nova frase","ariaAddQuick":"Adicionar frase","qpWait":"Espera um pouco","qpHelp":"Preciso de ajuda","qpStop":"Para, por favor","qpBreak":"Preciso de uma pausa","ariaAlert":"Pedir ajuda","ariaLoud":"Repetir mais alto","ariaShow":"Mostrar o texto em tamanho grande","showFlip":"🔄 Girar","hNothingSaid":"Ainda não há nada para repetir","printBtn":"🖨️ Imprimir a prancha","obzExport":"📦 Exportar para outros apps (.obz)","obzImport":"📥 Importar prancha (.obf / .obz)","obzHelp":"Open Board Format é um formato aberto que outros apps de comunicação leem. O arquivo exportado inclui suas fotos e gravações.","hObzDone":"Prancha exportada","hObzImported":"{n} cartões importados","hObzFail":"Não foi possível ler esse arquivo","resTitle":"Guias para famílias","resBody":"A OpenAAC publica material gratuito (em inglês): {a1}questionário para quem acompanha{/a} e {a2}guias para escolher, modelar e ler juntos{/a}.","fldOrder":"Posição na prancha","moveBack":"Mover para antes","moveFwd":"Mover para depois"},"de":{"stContrast":"🌓 Hoher Kontrast (dunkler Hintergrund)","stAlert":"🔔 Knopf, um Hilfe zu rufen","stTools":"📢 Lauter wiederholen und Text zeigen","stQuick":"💬 Schnelle Sätze","stCols":"Spalten der Tafel","colsAuto":"Automatisch","stColsHelp":"Mit einer festen Zahl bleibt jede Karte immer an derselben Stelle, auch wenn du den Bildschirm drehst.","stLabels":"Was die Karten zeigen","lblBoth":"Foto und Text","lblImg":"Nur Foto","lblText":"Nur Text","stTap":"Wie eine Karte gewählt wird","tapRelease":"Beim Loslassen","tapPress":"Beim Berühren","tapHold":"Durch Gedrückthalten","stHoldMs":"Dauer des Gedrückthaltens","stDebounce":"Wiederholtes Tippen ignorieren für","optOff":"Aus","secs":"{n} s","quickPh":"Neuer Satz","ariaAddQuick":"Satz hinzufügen","qpWait":"Warte kurz","qpHelp":"Ich brauche Hilfe","qpStop":"Stopp, bitte","qpBreak":"Ich brauche eine Pause","ariaAlert":"Hilfe rufen","ariaLoud":"Lauter wiederholen","ariaShow":"Text groß anzeigen","showFlip":"🔄 Drehen","hNothingSaid":"Noch nichts zum Wiederholen","printBtn":"🖨️ Tafel drucken","obzExport":"📦 Für andere Apps exportieren (.obz)","obzImport":"📥 Tafel importieren (.obf / .obz)","obzHelp":"Open Board Format ist ein offenes Format, das andere Kommunikations-Apps lesen können. Die exportierte Datei enthält deine Fotos und Aufnahmen.","hObzDone":"Tafel exportiert","hObzImported":"{n} Karten importiert","hObzFail":"Diese Datei konnte nicht gelesen werden","resTitle":"Leitfäden für Familien","resBody":"OpenAAC veröffentlicht kostenloses Material (auf Englisch): {a1}einen Fragebogen für Begleitpersonen{/a} und {a2}Leitfäden zum Auswählen, Modellieren und gemeinsamen Lesen{/a}.","fldOrder":"Position auf der Tafel","moveBack":"Nach vorne","moveFwd":"Nach hinten"},"lv":{"stContrast":"🌓 Augsts kontrasts (tumšs fons)","stAlert":"🔔 Poga, lai lūgtu palīdzību","stTools":"📢 Atkārtot skaļāk un parādīt tekstu","stQuick":"💬 Ātrās frāzes","stCols":"Tabulas kolonnas","colsAuto":"Automātiski","stColsHelp":"Ar noteiktu skaitu katra kartīte vienmēr paliek tajā pašā vietā, arī pagriežot ekrānu.","stLabels":"Kas redzams kartītēs","lblBoth":"Foto un teksts","lblImg":"Tikai foto","lblText":"Tikai teksts","stTap":"Kā izvēlas kartīti","tapRelease":"Paceļot pirkstu","tapPress":"Pieskaroties","tapHold":"Turot pirkstu","stHoldMs":"Turēšanas ilgums","stDebounce":"Ignorēt atkārtotus pieskārienus","optOff":"Nē","secs":"{n} s","quickPh":"Jauna frāze","ariaAddQuick":"Pievienot frāzi","qpWait":"Pagaidi mirkli","qpHelp":"Man vajag palīdzību","qpStop":"Lūdzu, beidz","qpBreak":"Man vajag pauzi","ariaAlert":"Lūgt palīdzību","ariaLoud":"Atkārtot skaļāk","ariaShow":"Parādīt tekstu lielu","showFlip":"🔄 Apgriezt","hNothingSaid":"Vēl nav ko atkārtot","printBtn":"🖨️ Drukāt tabulu","obzExport":"📦 Eksportēt citām lietotnēm (.obz)","obzImport":"📥 Importēt tabulu (.obf / .obz)","obzHelp":"Open Board Format ir atvērts formāts, ko nolasa citas saziņas lietotnes. Eksportētajā failā ir jūsu fotoattēli un ieraksti.","hObzDone":"Tabula eksportēta","hObzImported":"Importētas kartītes: {n}","hObzFail":"Neizdevās nolasīt šo failu","resTitle":"Ceļveži ģimenēm","resBody":"OpenAAC publicē bezmaksas materiālus (angļu valodā): {a1}anketa saziņas partneriem{/a} un {a2}ceļveži par izvēlēm, modelēšanu un kopīgu lasīšanu{/a}.","fldOrder":"Vieta tabulā","moveBack":"Pārvietot agrāk","moveFwd":"Pārvietot vēlāk"},"uk":{"stContrast":"🌓 Висока контрастність (темне тло)","stAlert":"🔔 Кнопка, щоб покликати на допомогу","stTools":"📢 Повторити голосніше і показати текст","stQuick":"💬 Швидкі фрази","stCols":"Стовпці дошки","colsAuto":"Автоматично","stColsHelp":"Із фіксованою кількістю кожна картка завжди лишається на тому самому місці, навіть коли повертаєте екран.","stLabels":"Що видно на картках","lblBoth":"Фото і текст","lblImg":"Лише фото","lblText":"Лише текст","stTap":"Як обирається картка","tapRelease":"Коли палець піднято","tapPress":"Під час дотику","tapHold":"Утримуючи палець","stHoldMs":"Час утримання","stDebounce":"Ігнорувати повторні дотики протягом","optOff":"Ні","secs":"{n} с","quickPh":"Нова фраза","ariaAddQuick":"Додати фразу","qpWait":"Зачекай хвилинку","qpHelp":"Мені потрібна допомога","qpStop":"Зупинись, будь ласка","qpBreak":"Мені потрібна перерва","ariaAlert":"Покликати на допомогу","ariaLoud":"Повторити голосніше","ariaShow":"Показати текст великим","showFlip":"🔄 Перевернути","hNothingSaid":"Поки що нічого повторювати","printBtn":"🖨️ Надрукувати дошку","obzExport":"📦 Експорт для інших застосунків (.obz)","obzImport":"📥 Імпортувати дошку (.obf / .obz)","obzHelp":"Open Board Format — відкритий формат, який читають інші застосунки для спілкування. Експортований файл містить ваші фото та записи.","hObzDone":"Дошку експортовано","hObzImported":"Імпортовано карток: {n}","hObzFail":"Не вдалося прочитати цей файл","resTitle":"Посібники для родин","resBody":"OpenAAC публікує безкоштовні матеріали (англійською): {a1}анкета для тих, хто супроводжує{/a} і {a2}посібники про вибір, моделювання та спільне читання{/a}.","fldOrder":"Місце на дошці","moveBack":"Перемістити раніше","moveFwd":"Перемістити далі"},"ru":{"stContrast":"🌓 Высокая контрастность (тёмный фон)","stAlert":"🔔 Кнопка, чтобы позвать на помощь","stTools":"📢 Повторить громче и показать текст","stQuick":"💬 Быстрые фразы","stCols":"Столбцы доски","colsAuto":"Автоматически","stColsHelp":"При фиксированном числе каждая карточка всегда остаётся на одном и том же месте, даже если повернуть экран.","stLabels":"Что видно на карточках","lblBoth":"Фото и текст","lblImg":"Только фото","lblText":"Только текст","stTap":"Как выбирается карточка","tapRelease":"Когда палец поднят","tapPress":"При касании","tapHold":"Удерживая палец","stHoldMs":"Время удержания","stDebounce":"Игнорировать повторные нажатия в течение","optOff":"Нет","secs":"{n} с","quickPh":"Новая фраза","ariaAddQuick":"Добавить фразу","qpWait":"Подожди минутку","qpHelp":"Мне нужна помощь","qpStop":"Остановись, пожалуйста","qpBreak":"Мне нужен перерыв","ariaAlert":"Позвать на помощь","ariaLoud":"Повторить громче","ariaShow":"Показать текст крупно","showFlip":"🔄 Перевернуть","hNothingSaid":"Пока нечего повторять","printBtn":"🖨️ Распечатать доску","obzExport":"📦 Экспорт для других приложений (.obz)","obzImport":"📥 Импортировать доску (.obf / .obz)","obzHelp":"Open Board Format — открытый формат, который читают другие приложения для общения. Экспортированный файл содержит ваши фото и записи.","hObzDone":"Доска экспортирована","hObzImported":"Импортировано карточек: {n}","hObzFail":"Не удалось прочитать этот файл","resTitle":"Руководства для семей","resBody":"OpenAAC публикует бесплатные материалы (на английском): {a1}анкета для тех, кто сопровождает{/a} и {a2}руководства о выборе, моделировании и совместном чтении{/a}.","fldOrder":"Место на доске","moveBack":"Переместить раньше","moveFwd":"Переместить дальше"},"ne":{"stContrast":"🌓 उच्च कन्ट्रास्ट (कालो पृष्ठभूमि)","stAlert":"🔔 सहयोग माग्ने बटन","stTools":"📢 अझ ठूलो स्वरमा दोहोर्‍याउनुहोस् र पाठ देखाउनुहोस्","stQuick":"💬 छिटो भन्ने वाक्यहरू","stCols":"बोर्डका स्तम्भहरू","colsAuto":"स्वचालित","stColsHelp":"निश्चित सङ्ख्या राख्दा स्क्रिन घुमाए पनि प्रत्येक चित्र कार्ड सधैँ एउटै ठाउँमा रहन्छ।","stLabels":"चित्र कार्डमा के देखिने","lblBoth":"फोटो र पाठ","lblImg":"फोटो मात्र","lblText":"पाठ मात्र","stTap":"चित्र कार्ड कसरी छान्ने","tapRelease":"औँला उठाउँदा","tapPress":"छुँदा","tapHold":"औँला थिचिराख्दा","stHoldMs":"थिचिराख्ने समय","stDebounce":"दोहोरिएका थिचाइलाई बेवास्ता गर्ने समय","optOff":"बन्द","secs":"{n} सेकेन्ड","quickPh":"नयाँ वाक्य","ariaAddQuick":"वाक्य थप्नुहोस्","qpWait":"एकछिन पर्खनुहोस्","qpHelp":"मलाई सहयोग चाहिन्छ","qpStop":"कृपया रोकिनुहोस्","qpBreak":"मलाई आराम चाहिन्छ","ariaAlert":"सहयोग माग्नुहोस्","ariaLoud":"अझ ठूलो स्वरमा दोहोर्‍याउनुहोस्","ariaShow":"पाठ ठूलो देखाउनुहोस्","showFlip":"🔄 घुमाउनुहोस्","hNothingSaid":"दोहोर्‍याउन अहिलेसम्म केही छैन।","printBtn":"🖨️ बोर्ड छाप्नुहोस्","obzExport":"📦 अन्य एपका लागि निर्यात गर्नुहोस् (.obz)","obzImport":"📥 बोर्ड आयात गर्नुहोस् (.obf / .obz)","obzHelp":"Open Board Format अन्य सञ्चार एपले पढ्न सक्ने खुला ढाँचा हो। निर्यात गरिएको फाइलमा तपाईंका फोटो र रेकर्डिङ समावेश हुन्छन्।","hObzDone":"बोर्ड निर्यात गरियो।","hObzImported":"{n} वटा चित्र कार्ड आयात गरिए।","hObzFail":"त्यो फाइल पढ्न सकिएन।","resTitle":"परिवारका लागि मार्गदर्शन","resBody":"OpenAAC ले निःशुल्क सामग्री प्रकाशित गर्छ (अङ्ग्रेजीमा): {a1}सञ्चार साथीका लागि प्रश्नावली{/a} र {a2}छनोट गर्ने, नमुना देखाउने र सँगै पढ्ने मार्गदर्शन{/a}।","fldOrder":"बोर्डमा स्थान","moveBack":"अगाडि सार्नुहोस्","moveFwd":"पछाडि सार्नुहोस्"},"he":{"stContrast":"🌓 ניגודיות גבוהה (רקע כהה)","stAlert":"🔔 כפתור לבקשת עזרה","stTools":"📢 חזרה בקול רם יותר והצגת הטקסט","stQuick":"💬 משפטים מהירים","stCols":"עמודות בלוח","colsAuto":"אוטומטי","stColsHelp":"עם מספר קבוע, כל כרטיס נשאר תמיד באותו מקום, גם כשמסובבים את המסך.","stLabels":"מה רואים בכרטיסים","lblBoth":"תמונה וטקסט","lblImg":"תמונה בלבד","lblText":"טקסט בלבד","stTap":"איך בוחרים כרטיס","tapRelease":"בהרמת האצבע","tapPress":"בנגיעה","tapHold":"בלחיצה ארוכה","stHoldMs":"משך הלחיצה","stDebounce":"להתעלם מנגיעות חוזרות במשך","optOff":"כבוי","secs":"{n} שנ׳","quickPh":"משפט חדש","ariaAddQuick":"הוספת משפט","qpWait":"רגע, בבקשה","qpHelp":"אני צריך עזרה","qpStop":"די, בבקשה","qpBreak":"אני צריך הפסקה","ariaAlert":"בקשת עזרה","ariaLoud":"חזרה בקול רם יותר","ariaShow":"הצגת הטקסט בגדול","showFlip":"🔄 היפוך","hNothingSaid":"עדיין אין מה לחזור עליו","printBtn":"🖨️ הדפסת הלוח","obzExport":"📦 ייצוא לאפליקציות אחרות (‎.obz)","obzImport":"📥 ייבוא לוח (‎.obf / .obz)","obzHelp":"Open Board Format הוא פורמט פתוח שאפליקציות תקשורת אחרות יודעות לקרוא. הקובץ המיוצא כולל את התמונות וההקלטות שלך.","hObzDone":"הלוח יוצא","hObzImported":"יובאו {n} כרטיסים","hObzFail":"לא הצלחנו לקרוא את הקובץ הזה","resTitle":"מדריכים למשפחות","resBody":"OpenAAC מפרסמת חומרים בחינם (באנגלית): {a1}שאלון לשותפי תקשורת{/a} ו{a2}מדריכים לבחירה, להדגמה ולקריאה משותפת{/a}.","fldOrder":"מיקום בלוח","moveBack":"להזיז לפני","moveFwd":"להזיז אחרי"},"ar":{"stContrast":"🌓 تباين عالٍ (خلفية داكنة)","stAlert":"🔔 زر لطلب المساعدة","stTools":"📢 كرّر بصوت أعلى واعرض النص","stQuick":"💬 عبارات سريعة","stCols":"أعمدة اللوحة","colsAuto":"تلقائي","stColsHelp":"مع عدد ثابت، تبقى كل بطاقة دائمًا في المكان نفسه حتى عند تدوير الشاشة.","stLabels":"ما يظهر على البطاقات","lblBoth":"صورة ونص","lblImg":"صورة فقط","lblText":"نص فقط","stTap":"طريقة اختيار البطاقة","tapRelease":"عند رفع الإصبع","tapPress":"عند اللمس","tapHold":"بالضغط المطوّل","stHoldMs":"مدة الضغط","stDebounce":"تجاهل اللمسات المتكررة لمدة","optOff":"إيقاف","secs":"{n} ث","quickPh":"عبارة جديدة","ariaAddQuick":"إضافة عبارة","qpWait":"انتظر لحظة","qpHelp":"أحتاج إلى مساعدة","qpStop":"توقف من فضلك","qpBreak":"أحتاج إلى استراحة","ariaAlert":"طلب المساعدة","ariaLoud":"كرّر بصوت أعلى","ariaShow":"اعرض النص بحجم كبير","showFlip":"🔄 اقلب","hNothingSaid":"لا يوجد ما يُكرَّر بعد","printBtn":"🖨️ اطبع اللوحة","obzExport":"📦 تصدير لتطبيقات أخرى (‎.obz)","obzImport":"📥 استيراد لوحة (‎.obf / .obz)","obzHelp":"Open Board Format صيغة مفتوحة تقرؤها تطبيقات التواصل الأخرى. الملف المُصدَّر يتضمن صورك وتسجيلاتك.","hObzDone":"تم تصدير اللوحة","hObzImported":"تم استيراد {n} بطاقة","hObzFail":"تعذّرت قراءة هذا الملف","resTitle":"أدلة للعائلات","resBody":"تنشر OpenAAC مواد مجانية (بالإنجليزية): {a1}استبيان لشريك التواصل{/a} و{a2}أدلة للاختيار والنمذجة والقراءة معًا{/a}.","fldOrder":"الموضع في اللوحة","moveBack":"قدّم البطاقة","moveFwd":"أخّر البطاقة"},"zh-hans":{"stContrast":"🌓 高对比度（深色背景）","stAlert":"🔔 求助按钮","stTools":"📢 大声重复并显示文字","stQuick":"💬 快捷短句","stCols":"沟通板列数","colsAuto":"自动","stColsHelp":"固定列数后，即使旋转屏幕，每张卡片也始终在同一个位置。","stLabels":"卡片上显示什么","lblBoth":"图片和文字","lblImg":"只显示图片","lblText":"只显示文字","stTap":"怎样选中卡片","tapRelease":"手指抬起时","tapPress":"一碰就选","tapHold":"长按","stHoldMs":"长按时间","stDebounce":"忽略重复点按的时间","optOff":"关闭","secs":"{n} 秒","quickPh":"新短句","ariaAddQuick":"添加短句","qpWait":"等一下","qpHelp":"我需要帮助","qpStop":"请停下","qpBreak":"我想休息一下","ariaAlert":"求助","ariaLoud":"大声重复","ariaShow":"放大显示文字","showFlip":"🔄 翻转","hNothingSaid":"还没有可以重复的内容","printBtn":"🖨️ 打印沟通板","obzExport":"📦 导出给其他应用（.obz）","obzImport":"📥 导入沟通板（.obf / .obz）","obzHelp":"Open Board Format 是一种开放格式，其他沟通应用也能读取。导出的文件包含你的照片和录音。","hObzDone":"沟通板已导出","hObzImported":"已导入 {n} 张卡片","hObzFail":"无法读取这个文件","resTitle":"给家庭的指南","resBody":"OpenAAC 提供免费资料（英文）：{a1}沟通伙伴自评问卷{/a}和{a2}关于做选择、示范和共读的指南{/a}。","fldOrder":"在沟通板上的位置","moveBack":"往前移","moveFwd":"往后移"},"zh-hant":{"stContrast":"🌓 高對比（深色背景）","stAlert":"🔔 求助按鈕","stTools":"📢 大聲重複並顯示文字","stQuick":"💬 快速短句","stCols":"溝通板欄數","colsAuto":"自動","stColsHelp":"固定欄數後，即使旋轉螢幕，每張卡片也都會在同一個位置。","stLabels":"卡片上顯示什麼","lblBoth":"圖片和文字","lblImg":"只顯示圖片","lblText":"只顯示文字","stTap":"如何選取卡片","tapRelease":"手指放開時","tapPress":"一碰就選","tapHold":"長按","stHoldMs":"長按時間","stDebounce":"忽略重複點按的時間","optOff":"關閉","secs":"{n} 秒","quickPh":"新短句","ariaAddQuick":"新增短句","qpWait":"等一下","qpHelp":"我需要幫忙","qpStop":"請停下來","qpBreak":"我想休息一下","ariaAlert":"求助","ariaLoud":"大聲重複","ariaShow":"放大顯示文字","showFlip":"🔄 翻轉","hNothingSaid":"還沒有可以重複的內容","printBtn":"🖨️ 列印溝通板","obzExport":"📦 匯出給其他應用程式（.obz）","obzImport":"📥 匯入溝通板（.obf / .obz）","obzHelp":"Open Board Format 是一種開放格式，其他溝通應用程式也能讀取。匯出的檔案包含你的照片和錄音。","hObzDone":"溝通板已匯出","hObzImported":"已匯入 {n} 張卡片","hObzFail":"無法讀取這個檔案","resTitle":"給家庭的指南","resBody":"OpenAAC 提供免費資料（英文）：{a1}溝通夥伴自評問卷{/a}和{a2}關於做選擇、示範和共讀的指南{/a}。","fldOrder":"在溝通板上的位置","moveBack":"往前移","moveFwd":"往後移"},"ja":{"stContrast":"🌓 ハイコントラスト（暗い背景）","stAlert":"🔔 助けを呼ぶボタン","stTools":"📢 大きな声でくり返す・文字を見せる","stQuick":"💬 クイックフレーズ","stCols":"ボードの列数","colsAuto":"自動","stColsHelp":"列数を固定すると、画面を回転しても各カードはいつも同じ場所に表示されます。","stLabels":"カードに表示するもの","lblBoth":"写真と文字","lblImg":"写真だけ","lblText":"文字だけ","stTap":"カードの選び方","tapRelease":"指を離したとき","tapPress":"触れたとき","tapHold":"長押し","stHoldMs":"長押しの時間","stDebounce":"くり返しのタッチを無視する時間","optOff":"オフ","secs":"{n}秒","quickPh":"新しいフレーズ","ariaAddQuick":"フレーズを追加","qpWait":"ちょっとまって","qpHelp":"たすけてください","qpStop":"やめてください","qpBreak":"きゅうけいしたい","ariaAlert":"助けを呼ぶ","ariaLoud":"大きな声でくり返す","ariaShow":"文字を大きく表示","showFlip":"🔄 反転","hNothingSaid":"くり返す内容がまだありません","printBtn":"🖨️ ボードを印刷","obzExport":"📦 ほかのアプリ用に書き出す (.obz)","obzImport":"📥 ボードを読み込む (.obf / .obz)","obzHelp":"Open Board Format は、ほかのコミュニケーションアプリでも読めるオープンな形式です。書き出したファイルには写真と録音が含まれます。","hObzDone":"ボードを書き出しました","hObzImported":"{n} 枚のカードを読み込みました","hObzFail":"このファイルを読み込めませんでした","resTitle":"ご家族向けガイド","resBody":"OpenAAC は無料の資料（英語）を公開しています：{a1}コミュニケーションパートナー向けチェックシート{/a}と{a2}選ぶ・モデリング・一緒に読むためのガイド{/a}。","fldOrder":"ボード上の位置","moveBack":"前へ移動","moveFwd":"後ろへ移動"},"ko":{"stContrast":"🌓 고대비 (어두운 배경)","stAlert":"🔔 도움 요청 버튼","stTools":"📢 더 크게 다시 말하기와 글자 보여 주기","stQuick":"💬 빠른 문장","stCols":"보드 열 수","colsAuto":"자동","stColsHelp":"열 수를 고정하면 화면을 돌려도 카드가 항상 같은 자리에 있어요.","stLabels":"카드에 보이는 것","lblBoth":"사진과 글자","lblImg":"사진만","lblText":"글자만","stTap":"카드를 고르는 방법","tapRelease":"손가락을 뗄 때","tapPress":"닿자마자","tapHold":"길게 누르기","stHoldMs":"길게 누르는 시간","stDebounce":"반복해서 누르면 무시하는 시간","optOff":"끄기","secs":"{n}초","quickPh":"새 문장","ariaAddQuick":"문장 추가","qpWait":"잠깐만요","qpHelp":"도와주세요","qpStop":"그만해 주세요","qpBreak":"쉬고 싶어요","ariaAlert":"도움 요청","ariaLoud":"더 크게 다시 말하기","ariaShow":"글자를 크게 보여 주기","showFlip":"🔄 뒤집기","hNothingSaid":"아직 다시 말할 내용이 없어요","printBtn":"🖨️ 보드 인쇄","obzExport":"📦 다른 앱용으로 내보내기 (.obz)","obzImport":"📥 보드 가져오기 (.obf / .obz)","obzHelp":"Open Board Format은 다른 의사소통 앱에서도 읽을 수 있는 열린 형식이에요. 내보낸 파일에는 사진과 녹음이 들어 있어요.","hObzDone":"보드를 내보냈어요","hObzImported":"카드 {n}장을 가져왔어요","hObzFail":"이 파일을 읽을 수 없어요","resTitle":"가족을 위한 안내서","resBody":"OpenAAC는 무료 자료(영어)를 제공해요: {a1}의사소통 파트너 자기 점검표{/a}와 {a2}선택하기, 모델링, 함께 읽기 안내서{/a}.","fldOrder":"보드에서의 위치","moveBack":"앞으로 옮기기","moveFwd":"뒤로 옮기기"}};
+Object.keys(OPENAAC_STR).forEach(l=>{ const d=OPENAAC_STR[l];
+  d.resBody=d.resBody.replace("{a1}",'<a href="https://www.openaac.org/cpp" target="_blank" rel="noopener">').replace("{a2}",'<a href="https://www.openaac.org/docs.html" target="_blank" rel="noopener">').split("{/a}").join("</a>");
+  I18N[l]=Object.assign(I18N[l]||{}, d); });
 Object.keys(LANG_LINE).forEach(l=>{ if(I18N[l]&&I18N[l].welcomeBody) I18N[l].welcomeBody=I18N[l].welcomeBody.replace(/<div[^>]*>🇪🇸\/🟨🟥(?:\/🇬🇧)?[\s\S]*?<\/div>/, '<div style="margin-bottom:10px">'+LANG_LINE[l]+'</div>'); });
 const MODEL_LINE={"es":"👐 <b>Modela tú también</b>: cuando hables con tu peque, toca tú los pictogramas de las palabras importantes mientras las dices. No le pidas que repita: aprende viendo cómo se usa.","ca":"👐 <b>Modela tu també</b>: quan parlis amb el teu infant, toca tu els pictogrames de les paraules importants mentre les dius. No li demanis que repeteixi: aprèn veient com es fa servir.","en":"👐 <b>Model it yourself</b>: when you talk to your child, tap the pictograms for the key words as you say them. Don't ask them to repeat: they learn by seeing how it's used.","fr":"👐 <b>Montrez l'exemple</b> : quand vous parlez à votre enfant, touchez vous-même les pictogrammes des mots importants en les disant. Ne lui demandez pas de répéter : il apprend en voyant comment on s'en sert.","it":"👐 <b>Dai tu l'esempio</b>: quando parli con il bambino, tocca tu i pittogrammi delle parole importanti mentre le dici. Non chiedergli di ripetere: impara vedendo come si usa.","pt":"👐 <b>Dê o exemplo</b>: quando falar com a criança, toque você mesmo nos pictogramas das palavras importantes enquanto as diz. Não peça que ela repita: ela aprende vendo como se usa.","de":"👐 <b>Mach es vor</b>: Wenn du mit deinem Kind sprichst, tippe die Piktogramme der wichtigen Wörter an, während du sie sagst. Verlange nicht, dass es wiederholt: Es lernt, indem es sieht, wie man sie benutzt.","lv":"👐 <b>Rādiet piemēru</b>: runājot ar bērnu, paši pieskarieties svarīgāko vārdu piktogrammām, kamēr tos sakāt. Nelūdziet, lai bērns atkārto: viņš mācās, redzot, kā to lieto.","uk":"👐 <b>Показуйте самі</b>: коли говорите з дитиною, торкайтеся піктограм важливих слів, поки їх вимовляєте. Не просіть дитину повторювати: вона вчиться, бачачи, як цим користуються.","ru":"👐 <b>Показывайте сами</b>: когда говорите с ребёнком, нажимайте на пиктограммы важных слов, пока их произносите. Не просите ребёнка повторять: он учится, видя, как этим пользуются.","ne":"👐 <b>आफैँ नमुना प्रस्तुत गर्नुहोस्</b>: बच्चासँग कुरा गर्दा महत्त्वपूर्ण शब्दहरू बोल्दै सम्बन्धित चित्र सङ्केतमा पनि थिच्नुहोस्। बच्चालाई दोहोर्‍याउन दबाब नदिनुहोस्। कसरी प्रयोग गरिन्छ भनेर हेरेर उनीहरूले सिक्छन्।","he":"👐 <b>להדגים בעצמכם</b>: כשמדברים עם הילד, נוגעים בעצמכם בפיקטוגרמות של המילים החשובות בזמן שאומרים אותן. לא מבקשים ממנו לחזור: הוא לומד מלראות איך משתמשים בזה.","ar":"👐 <b>كن أنت القدوة</b>: عندما تتحدث مع طفلك، المس بنفسك الرموز المصوّرة للكلمات المهمة وأنت تقولها. لا تطلب منه أن يكرّر: فهو يتعلّم حين يرى كيف تُستخدم.","zh-hans":"👐 <b>您也来示范</b>：和孩子说话时，一边说重要的词，一边自己点对应的象形图标。不要让他重复：他是通过看您怎么用来学习的。","zh-hant":"👐 <b>你也來示範</b>：和孩子說話時，一邊說，一邊自己點選重要詞語的圖示。不要要求孩子跟著說：孩子是看著別人怎麼用來學會的。","ja":"👐 <b>大人もお手本を見せましょう</b>：お子さんと話すとき、大事な言葉を言いながら、そのピクトグラムをあなた自身がタッチしてください。くり返すように求める必要はありません。使い方を見ることで学んでいきます。","ko":"👐 <b>먼저 보여 주세요</b>: 아이와 이야기할 때, 중요한 낱말을 말하면서 그 그림 기호를 직접 눌러 주세요. 따라 하라고 하지 마세요. 아이는 쓰는 모습을 보며 배워요."};
 Object.keys(MODEL_LINE).forEach(l=>{ const d=I18N[l]; if(!d||!d.welcomeBody) return; const div='<div style="margin-bottom:10px">'+MODEL_LINE[l]+'</div>';
@@ -994,6 +1154,7 @@ function applyLang(){
   const ml=$("#modeLabel"); if(ml) ml.textContent = state.mode==="care"?t("modeCare"):t("modeChild");
   // Botón de idioma segmentado
   document.querySelectorAll("#langGrid .segbtn").forEach(b=>b.classList.toggle("on", b.dataset.lang===L));
+  renderQuick(); buildAccessSelects();
   a11yNames();
 }
 /* Los lectores de pantalla leen los emojis del principio ("cámara, Tomar una foto").
@@ -1015,6 +1176,11 @@ function applyBodyClasses(){
   document.body.classList.toggle("simple",!!state.settings.simple);
   document.body.classList.toggle("strip",!!state.settings.strip);
   document.body.classList.toggle("calm",!!state.settings.calm);
+  { const st=state.settings, cl=document.body.classList, cols=COLS_OPTS.includes(+st.cols)?+st.cols:0, g=$("#grid");
+    cl.toggle("hc",!!st.contrast); cl.toggle("lbl-img",st.labels==="img"); cl.toggle("lbl-text",st.labels==="text");
+    cl.toggle("has-quick",!!st.quick); cl.toggle("has-alert",!!st.alert); cl.toggle("has-tools",!!st.tools);
+    cl.toggle("talk",!!(st.quick||st.alert||st.tools));
+    g.classList.toggle("fixed",cols>0); if(cols>0) g.style.setProperty("--cols",String(cols)); else g.style.removeProperty("--cols"); }
   $("#modeLabel").textContent=state.mode==="care"?t("modeCare"):t("modeChild");
   $("#lockBtn").classList.toggle("hidden",state.mode==="care");
   $("#addBtn").classList.toggle("hidden",state.mode!=="care");
@@ -1062,9 +1228,8 @@ function renderBoard(){
     if(careMode){ card.setAttribute("role","group"); } else { card.setAttribute("role","button"); card.setAttribute("tabindex","0"); }
     card.setAttribute("aria-label",dispName(p));
     card.innerHTML=`${p.fav?'<div class="fav" aria-hidden="true">⭐</div>':''}<div class="img" style="background-image:url('${p.img}')"></div><div class="name">${p.audio?'<span class="micdot" aria-hidden="true">🔊</span> ':''}${escapeHtml(dispName(p))}</div><button class="edit" aria-label="${escapeHtml(t("ariaEdit"))}${escapeHtml(dispName(p))}">✏️</button>`;
-    card.querySelector(".img").onclick=()=>onSelect(p,card);
-    card.querySelector(".name").onclick=()=>onSelect(p,card);
-    if(!careMode) card.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onSelect(p,card); } });
+    bindSelect(card,p,careMode);
+    if(!careMode) card.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); if(!e.repeat) trySelect(p,card); } });
     card.querySelector(".edit").onclick=(e)=>{e.stopPropagation(); openEdit(p);};
     grid.appendChild(card);
   });
@@ -1075,6 +1240,7 @@ function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 let zoomPic=null;
 function onSelect(p, cardEl){
   p.uses=(p.uses||0)+1; save();
+  lastSaid={p};
   buzz();
   if(cardEl){ cardEl.classList.add("picked"); setTimeout(()=>cardEl.classList.remove("picked"),450); }
   // Con tira de frases: suma a la frase Y muestra la imagen grande.
@@ -1128,9 +1294,8 @@ function renderStrip(){
 }
 $("#playStrip").onclick=()=>{
   if(!state.strip.length) return;
-  stopAudio();
-  let i=0; const next=()=>{ if(i>=state.strip.length) return; sayCard(state.strip[i], null, ()=>{ i++; next(); }); };
-  next();
+  lastSaid={items:state.strip.slice()};
+  sayItems(lastSaid.items);
 };
 $("#clearStrip").onclick=()=>{state.strip=[]; renderStrip();};
 
@@ -1326,6 +1491,7 @@ function openEditSheet(p){
     $("#fNameLoc").value = loc ? ((p.names&&p.names[LX]) || (BASE_NAMES[LX]&&BASE_NAMES[LX][p.name]) || "") : ""; } buildCatSelect(p.cat); $("#fTags").value=(p.tags||[]).join(", ");
   editFav=!!p.fav; $("#fFav").classList.toggle("on",editFav);
   $("#delPic").classList.toggle("hidden", !(pending&&pending.editingId));
+  $("#moveWrap").classList.toggle("hidden", !(pending&&pending.editingId));
   buildTagSuggest();
   updateRecUI();
   $("#editScrim").classList.add("show");
@@ -1501,10 +1667,313 @@ $("#importBtn").onclick=()=>$("#fileRestore").click();
 $("#fileRestore").onchange=async e=>{
   const f=e.target.files[0]; if(!f)return; const txt=await f.text();
   try{const d=JSON.parse(txt); if(d.pics)state.pics=d.pics; if(d.cats)state.cats=d.cats; if(d.settings)state.settings=d.settings;
-    await save(); applyBodyClasses(); renderCats(); renderBoard(); showHint(t("hRestored"));}
+    await save(); applyBodyClasses(); applyLang(); renderCats(); renderBoard(); showHint(t("hRestored"));}
   catch(err){showHint(t("hReadFail"));}
   e.target.value="";
 };
+
+/* ============ 2026-11 (lista de OpenAAC): acceso, barra de habla, imprimir, Open Board Format ============
+   Todo lo de este bloque está apagado por defecto y se activa en Ajustes: quien ya usa la app no nota cambios. */
+const COLS_OPTS=[0,2,3,4,5,6,8], DEB_OPTS=[0,500,1000,2000];
+const DEFAULT_QUICK=[{d:"qpWait"},{d:"qpHelp"},{d:"qpStop"},{d:"qpBreak"}];
+function quickList(){ const q=state.settings.quickPhrases; return Array.isArray(q)?q:DEFAULT_QUICK; }
+function quickText(q){ return q.d ? t(q.d) : (q.text||""); }
+function fmtSecs(ms){ const L=lang(); let n; try{ n=(ms/1000).toLocaleString((LANG_BY[L]||LANG_BY.en).bcp); }catch(e){ n=String(ms/1000); }
+  return t("secs").split("{n}").join(locNum(n,L)); }
+
+/* ---- Lo último que se dijo (para repetirlo más fuerte o enseñarlo en grande) ---- */
+let lastSaid=null; // {p} una tarjeta | {items:[...]} una frase | {text} una frase rápida
+function currentMessage(){ if(state.settings.strip && state.strip.length) return {items:state.strip.slice()}; return lastSaid; }
+function saidText(m){ if(!m) return ""; if(m.text) return m.text; if(m.p) return dispName(m.p); return (m.items||[]).map(dispName).join(" "); }
+function sayItems(items,loud){ stopAudio(); let i=0; const next=()=>{ if(i>=items.length) return; sayCard(items[i], null, ()=>{ i++; next(); }, loud); }; next(); }
+
+/* ---- Frases rápidas: se dicen al tocarlas, sin pasar por la tira ---- */
+function renderQuick(){
+  const w=$("#quickItems"); if(!w) return; w.innerHTML="";
+  quickList().forEach(q=>{ const tx=quickText(q); if(!tx) return;
+    const b=document.createElement("button"); b.type="button"; b.className="qchip"; b.textContent=tx;
+    b.onclick=()=>{ buzz(); lastSaid={text:tx}; if(state.settings.speak) speak(tx); else openShow(); };
+    w.appendChild(b); });
+}
+function renderQuickEdit(){
+  const w=$("#quickEdit"); if(!w) return; w.innerHTML="";
+  quickList().forEach((q,idx)=>{ const tx=quickText(q);
+    const r=document.createElement("div"); r.className="qrow";
+    const s=document.createElement("span"); s.textContent=tx;
+    const b=document.createElement("button"); b.type="button"; b.className="iconbtn danger"; b.textContent="✕"; b.setAttribute("aria-label",t("ariaRemove")+tx);
+    b.onclick=async()=>{ const l=quickList().slice(); l.splice(idx,1); state.settings.quickPhrases=l; await save(); renderQuickEdit(); renderQuick(); };
+    r.appendChild(s); r.appendChild(b); w.appendChild(r); });
+}
+async function addQuick(){ const v=$("#quickNew").value.trim(); if(!v) return;
+  state.settings.quickPhrases=[...quickList(),{text:v.slice(0,80)}]; $("#quickNew").value=""; await save(); renderQuickEdit(); renderQuick(); }
+$("#quickAdd").onclick=addQuick;
+$("#quickNew").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); addQuick(); } });
+
+/* ---- Botón para pedir ayuda: tres tonos y la frase "Necesito ayuda" a todo volumen ---- */
+let actx=null, alertBusy=false;
+function getCtx(){ try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended") actx.resume(); return actx; }catch(e){ return null; } }
+function ringAlert(){
+  if(alertBusy) return; alertBusy=true; setTimeout(()=>{ alertBusy=false; },2500);
+  if(navigator.vibrate){ try{ navigator.vibrate([150,80,150]); }catch(e){} }
+  const c=getCtx();
+  if(c){ try{ [0,.28,.56].forEach((d,i)=>{ const o=c.createOscillator(), g=c.createGain(), t0=c.currentTime+d;
+    o.type="sine"; o.frequency.value=i%2?660:880;
+    g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(0.6,t0+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t0+0.22);
+    o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0+0.25); }); }catch(e){} }
+  const tx=t("qpHelp"); lastSaid={text:tx};
+  setTimeout(()=>speak(tx,true,true),850);
+}
+$("#alertBtn").onclick=ringAlert;
+
+/* ---- Repetir más fuerte / mostrar el texto en grande (y girarlo para quien está enfrente) ---- */
+$("#loudBtn").onclick=()=>{
+  const m=currentMessage(); if(!m){ showHint(t("hNothingSaid")); return; }
+  if(!state.settings.speak){ openShow(); return; }
+  lastSaid=m;
+  if(m.text) speak(m.text,true); else if(m.p){ stopAudio(); sayCard(m.p,null,null,true); } else sayItems(m.items,true);
+};
+function fitShowText(){ // la letra más grande con la que el texto cabe sin partir palabras
+  const el=$("#showText"), inner=$("#showInner"); let size=150; el.style.fontSize=size+"px";
+  while(size>20 && (inner.offsetWidth>el.clientWidth+1 || inner.offsetHeight>el.clientHeight+1)){ size-=4; el.style.fontSize=size+"px"; } }
+function openShow(){
+  const m=currentMessage(); if(!m){ showHint(t("hNothingSaid")); return; }
+  const el=$("#showText"); $("#showInner").textContent=saidText(m); el.classList.remove("flip");
+  $("#showScrim").classList.add("show"); fitShowText();
+}
+$("#showBtn").onclick=openShow;
+$("#showFlip").onclick=()=>$("#showText").classList.toggle("flip");
+$("#showText").onclick=()=>$("#showText").classList.toggle("flip");
+$("#showClose").onclick=()=>$("#showScrim").classList.remove("show");
+window.addEventListener("resize",()=>{ if($("#showScrim").classList.contains("show")) fitShowText(); });
+
+/* ---- Cómo se elige una tarjeta: al levantar el dedo (de siempre), al tocar o manteniendo ---- */
+let lastSelAt=0, swallowClick=false;
+function trySelect(p,card){ const d=+state.settings.debounce||0, now=Date.now(); if(d && now-lastSelAt<d) return false; lastSelAt=now; onSelect(p,card); return true; }
+// Al elegir con "al tocar" o "manteniendo", el dedo sigue apoyado: el clic que llega al levantarlo
+// caería sobre la imagen grande (la cerraría o la repetiría). Se descarta ese clic.
+document.addEventListener("click",e=>{ if(swallowClick){ swallowClick=false; e.stopPropagation(); e.preventDefault(); } },true);
+window.addEventListener("pointerup",()=>{ if(swallowClick) setTimeout(()=>{ swallowClick=false; },350); },true);
+window.addEventListener("pointercancel",()=>{ swallowClick=false; },true);
+function bindSelect(card,p,careMode){
+  const mode=careMode?"release":(state.settings.tap||"release");
+  if(mode==="release"){ [card.querySelector(".img"),card.querySelector(".name")].forEach(el=>{ el.onclick=()=>trySelect(p,card); }); return; }
+  if(mode==="press"){ card.addEventListener("pointerdown",e=>{ if(e.button) return; if(trySelect(p,card)) swallowClick=true; }); return; }
+  const ms=Math.min(3000,Math.max(200,+state.settings.holdMs||600)); let tm=null;
+  const cancel=()=>{ clearTimeout(tm); tm=null; card.classList.remove("holding"); };
+  card.style.setProperty("--hold",ms+"ms");
+  card.addEventListener("pointerdown",e=>{ if(e.button) return; cancel(); card.classList.add("holding");
+    tm=setTimeout(()=>{ cancel(); if(trySelect(p,card)) swallowClick=true; },ms); });
+  ["pointerup","pointerleave","pointercancel"].forEach(ev=>card.addEventListener(ev,cancel));
+  card.addEventListener("contextmenu",e=>e.preventDefault());
+}
+
+/* ---- Ajustes nuevos ---- */
+function buildAccessSelects(){
+  const cs=$("#colsSel"), ds=$("#debSel"), L=lang(); cs.innerHTML=""; ds.innerHTML="";
+  COLS_OPTS.forEach(n=>{ const o=document.createElement("option"); o.value=String(n); o.textContent=n?locNum(n,L):t("colsAuto"); cs.appendChild(o); });
+  DEB_OPTS.forEach(n=>{ const o=document.createElement("option"); o.value=String(n); o.textContent=n?fmtSecs(n):t("optOff"); ds.appendChild(o); });
+  cs.value=String(COLS_OPTS.includes(+state.settings.cols)?+state.settings.cols:0);
+  ds.value=String(DEB_OPTS.includes(+state.settings.debounce)?+state.settings.debounce:0);
+  $("#labelsSel").value=["img","text"].includes(state.settings.labels)?state.settings.labels:"both";
+  $("#tapSel").value=["press","hold"].includes(state.settings.tap)?state.settings.tap:"release";
+  const h=+state.settings.holdMs||600; $("#holdRange").value=h; $("#holdOut").textContent=fmtSecs(h);
+  $("#holdWrap").classList.toggle("hidden",$("#tapSel").value!=="hold");
+  $("#quickEditWrap").classList.toggle("hidden",!state.settings.quick);
+  ["Contrast","Alert","Tools","Quick"].forEach(k=>$("#sw"+k).classList.toggle("on",!!state.settings[k.toLowerCase()]));
+  renderQuickEdit();
+}
+function bindSel(id,key,num){ $(id).onchange=async e=>{ state.settings[key]=num?(+e.target.value||0):e.target.value; await save(); applyBodyClasses(); renderBoard(); buildAccessSelects(); }; }
+bindSel("#colsSel","cols",true); bindSel("#debSel","debounce",true); bindSel("#labelsSel","labels",false); bindSel("#tapSel","tap",false);
+$("#holdRange").oninput=async e=>{ state.settings.holdMs=+e.target.value||600; $("#holdOut").textContent=fmtSecs(state.settings.holdMs); await save(); renderBoard(); };
+bindToggle("#swContrast","contrast"); bindToggle("#swAlert","alert"); bindToggle("#swTools","tools"); bindToggle("#swQuick","quick");
+$("#swQuick").addEventListener("click",()=>{ $("#quickEditWrap").classList.toggle("hidden",!state.settings.quick); renderQuickEdit(); });
+
+/* ---- Mover una tarjeta dentro de su categoría (el orden del tablero) ---- */
+async function movePic(dir){
+  if(!pending||!pending.editingId) return;
+  const p=state.pics.find(x=>x.id===pending.editingId); if(!p) return;
+  // Orden completo actual; se renumera para que no haya posiciones repetidas y se intercambia con la vecina de su categoría.
+  const all=state.pics.slice().sort((a,b)=>(a.pos||0)-(b.pos||0)); all.forEach((x,i)=>{ x.pos=i; });
+  const same=all.filter(x=>x.cat===p.cat), i=same.indexOf(p), j=i+dir;
+  if(j<0||j>=same.length){ showHint(locNum(i+1,lang())+" / "+locNum(same.length,lang())); return; }
+  const o=same[j], tmp=o.pos; o.pos=p.pos; p.pos=tmp;
+  markDirty(); await save(); renderBoard(); showHint(locNum(j+1,lang())+" / "+locNum(same.length,lang()));
+}
+$("#moveBack").onclick=()=>movePic(-1);
+$("#moveFwd").onclick=()=>movePic(1);
+
+/* ---- Imprimir el tablero: una copia en papel por si falla el dispositivo ---- */
+function printBoard(){
+  const area=$("#printArea"); area.innerHTML=""; area.style.setProperty("--pc",String(+state.settings.cols||4));
+  const used=new Set();
+  const section=(title,list)=>{ if(!list.length) return;
+    const sec=document.createElement("section"); sec.className="pr-cat";
+    const h=document.createElement("h2"); h.textContent=title; sec.appendChild(h);
+    const g=document.createElement("div"); g.className="pr-grid";
+    list.forEach(p=>{ used.add(p.id); const c=document.createElement("div"); c.className="pr-card";
+      const im=document.createElement("img"); im.src=p.img; im.alt="";
+      const n=document.createElement("div"); n.textContent=dispName(p); c.appendChild(im); c.appendChild(n); g.appendChild(c); });
+    sec.appendChild(g); area.appendChild(sec); };
+  const byPos=(a,b)=>(a.pos||0)-(b.pos||0);
+  state.cats.forEach(c=>section(dispCat(c), state.pics.filter(p=>p.cat===c.id).sort(byPos)));
+  section("TalkPics", state.pics.filter(p=>!used.has(p.id)).sort(byPos));
+  $("#setScrim").classList.remove("show");
+  setTimeout(()=>{ try{ window.print(); }catch(e){} },250);
+}
+$("#printBtn").onclick=printBoard;
+window.addEventListener("afterprint",()=>{ $("#printArea").innerHTML=""; });
+
+/* ---- Open Board Format (.obf / .obz): formato abierto para llevar el tablero a otras apps de CAA ----
+   .obz = zip con manifest.json, un .obf por tablero, las imágenes y los sonidos. Aquí: un tablero de inicio
+   con un botón por categoría y un tablero por categoría. Sin librerías: zip sin comprimir hecho a mano. */
+const OBF_FORMAT="open-board-0.1";
+const CRC_T=(()=>{ const tb=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); tb[n]=c>>>0; } return tb; })();
+function crc32(u8){ let c=0xFFFFFFFF; for(let i=0;i<u8.length;i++) c=CRC_T[(c^u8[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function zipStore(files){ // [{name, data:Uint8Array}] -> Blob
+  const enc=new TextEncoder(), parts=[], central=[]; let off=0;
+  const d=new Date(), dd=((Math.max(1980,d.getFullYear())-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate(), dt=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1);
+  files.forEach(f=>{ const nm=enc.encode(f.name), crc=crc32(f.data), sz=f.data.length;
+    const lh=new DataView(new ArrayBuffer(30)); lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(6,0x0800,true);
+    lh.setUint16(10,dt,true); lh.setUint16(12,dd,true); lh.setUint32(14,crc,true); lh.setUint32(18,sz,true); lh.setUint32(22,sz,true); lh.setUint16(26,nm.length,true);
+    parts.push(new Uint8Array(lh.buffer),nm,f.data);
+    const ch=new DataView(new ArrayBuffer(46)); ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(8,0x0800,true);
+    ch.setUint16(12,dt,true); ch.setUint16(14,dd,true); ch.setUint32(16,crc,true); ch.setUint32(20,sz,true); ch.setUint32(24,sz,true); ch.setUint16(28,nm.length,true); ch.setUint32(42,off,true);
+    central.push(new Uint8Array(ch.buffer),nm); off+=30+nm.length+sz; });
+  const csize=central.reduce((a,b)=>a+b.length,0), e=new DataView(new ArrayBuffer(22));
+  e.setUint32(0,0x06054b50,true); e.setUint16(8,files.length,true); e.setUint16(10,files.length,true); e.setUint32(12,csize,true); e.setUint32(16,off,true);
+  return new Blob([...parts,...central,new Uint8Array(e.buffer)],{type:"application/zip"});
+}
+function dataUrlParts(u){ const m=/^data:([^;,]+)((?:;[^;,]*)*?)(;base64)?,([\s\S]*)$/.exec(u||""); if(!m) return null;
+  let bytes; if(m[3]){ const b=atob(m[4]); bytes=new Uint8Array(b.length); for(let i=0;i<b.length;i++) bytes[i]=b.charCodeAt(i); }
+  else bytes=new TextEncoder().encode(decodeURIComponent(m[4]));
+  return {mime:m[1].toLowerCase(), bytes}; }
+const MIME_EXT={"image/jpeg":"jpg","image/jpg":"jpg","image/png":"png","image/svg+xml":"svg","image/webp":"webp","image/gif":"gif","audio/webm":"webm","audio/mp4":"m4a","audio/ogg":"ogg","audio/mpeg":"mp3","audio/wav":"wav","audio/x-wav":"wav","audio/aac":"aac"};
+function imgSize(src){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res([im.naturalWidth||400, im.naturalHeight||400]); im.onerror=()=>res([400,400]); im.src=src; }); }
+function audioSecs(src){ return new Promise(res=>{ let done=false; const fin=v=>{ if(!done){ done=true; res(v); } };
+  try{ const a=new Audio(); a.preload="metadata"; a.onloadedmetadata=()=>fin(isFinite(a.duration)&&a.duration>0?Math.max(1,Math.round(a.duration)):6); a.onerror=()=>fin(6); a.src=src; }catch(e){ fin(6); }
+  setTimeout(()=>fin(6),1500); }); }
+async function buildObz(){
+  const enc=new TextEncoder(), files=[], L=lang(), cols=+state.settings.cols||4;
+  const man={format:OBF_FORMAT, root:"boards/home.obf", paths:{boards:{}, images:{}, sounds:{}}};
+  const gridOf=ids=>{ const n=Math.min(cols,Math.max(1,ids.length)), rows=Math.max(1,Math.ceil(ids.length/n)), order=[];
+    for(let r=0;r<rows;r++){ const row=[]; for(let c=0;c<n;c++) row.push(ids[r*n+c]||null); order.push(row); } return {rows, columns:n, order}; };
+  const byPos=(a,b)=>(a.pos||0)-(b.pos||0);
+  const addImage=async(id,src)=>{ const d=dataUrlParts(src);
+    if(!d){ return {id, url:src, content_type:"image/png", width:300, height:300}; } // imagen remota (no incrustada)
+    const [w,h]=await imgSize(src), path="images/"+id+"."+(MIME_EXT[d.mime]||"png");
+    files.push({name:path, data:d.bytes}); man.paths.images[id]=path; return {id, path, content_type:d.mime, width:w, height:h}; };
+  const groups=state.cats.map(c=>({id:"cat_"+c.id, name:dispCat(c), dot:c.dot||"📁", pics:state.pics.filter(p=>p.cat===c.id).sort(byPos)})).filter(g=>g.pics.length);
+  const known=new Set(state.cats.map(c=>c.id)), orphan=state.pics.filter(p=>!known.has(p.cat)).sort(byPos);
+  if(orphan.length) groups.push({id:"cat__other", name:"TalkPics", dot:"📁", pics:orphan});
+  const home={format:OBF_FORMAT, id:"home", locale:L, name:"TalkPics", description_html:"TalkPics", buttons:[], grid:null, images:[], sounds:[]};
+  for(const g of groups){
+    const path="boards/"+g.id+".obf";
+    const b={format:OBF_FORMAT, id:g.id, locale:L, name:g.name, description_html:escapeHtml(g.name), buttons:[], grid:null, images:[], sounds:[]};
+    for(const p of g.pics){
+      const btn={id:"b_"+p.id, label:dispName(p)||"?", image_id:"i_"+p.id, ext_talkpics_name:p.name};
+      if(p.fav) btn.ext_talkpics_fav=true;
+      if(p.tags&&p.tags.length) btn.ext_talkpics_tags=p.tags;
+      b.images.push(await addImage("i_"+p.id,p.img));
+      const au=p.audio&&dataUrlParts(p.audio);
+      if(au){ const sid="s_"+p.id, sp="sounds/"+sid+"."+(MIME_EXT[au.mime]||"webm");
+        files.push({name:sp, data:au.bytes}); man.paths.sounds[sid]=sp; btn.sound_id=sid;
+        b.sounds.push({id:sid, path:sp, content_type:au.mime, duration:await audioSecs(p.audio)}); }
+      b.buttons.push(btn);
+    }
+    b.grid=gridOf(b.buttons.map(x=>x.id));
+    files.push({name:path, data:enc.encode(JSON.stringify(b))}); man.paths.boards[g.id]=path;
+    const hid="i_"+g.id; home.images.push(await addImage(hid, emojiImg(g.dot,"#ffffff")));
+    home.buttons.push({id:"b_"+g.id, label:g.name, image_id:hid, load_board:{id:g.id, path}});
+  }
+  home.grid=gridOf(home.buttons.map(x=>x.id));
+  files.unshift({name:"boards/home.obf", data:enc.encode(JSON.stringify(home))}); man.paths.boards.home="boards/home.obf";
+  files.unshift({name:"manifest.json", data:enc.encode(JSON.stringify(man))});
+  return zipStore(files);
+}
+async function exportObz(){
+  try{
+    const blob=await buildObz(), name="TalkPics-"+new Date().toISOString().slice(0,10)+".obz";
+    const url=URL.createObjectURL(blob), a=document.createElement("a"); a.href=url; a.download=name; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),4000); showHint(t("hObzDone"));
+  }catch(e){ showHint(t("hExportFail")); }
+}
+$("#obzExport").onclick=exportObz;
+
+/* ---- Importar .obf / .obz: cada tablero pasa a ser una categoría y cada botón con texto, una tarjeta (se añaden, no reemplazan) ---- */
+function unzipIndex(buf){
+  const dv=new DataView(buf), u8=new Uint8Array(buf), dec=new TextDecoder(); let i=u8.length-22;
+  while(i>=0 && dv.getUint32(i,true)!==0x06054b50) i--;
+  if(i<0) throw new Error("zip");
+  const n=dv.getUint16(i+10,true), out={}; let p=dv.getUint32(i+16,true);
+  for(let k=0;k<n;k++){ if(dv.getUint32(p,true)!==0x02014b50) break;
+    const method=dv.getUint16(p+10,true), csz=dv.getUint32(p+20,true), nl=dv.getUint16(p+28,true), el=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true), lo=dv.getUint32(p+42,true);
+    const name=dec.decode(u8.subarray(p+46,p+46+nl)); p+=46+nl+el+cl;
+    if(name.endsWith("/")) continue;
+    const start=lo+30+dv.getUint16(lo+26,true)+dv.getUint16(lo+28,true);
+    out[name]={method, raw:u8.subarray(start,start+csz)}; }
+  return out;
+}
+async function zipRead(en){
+  if(!en) throw new Error("missing");
+  if(en.method===0) return en.raw;
+  if(en.method===8 && ("DecompressionStream" in window)){
+    const st=new Blob([en.raw]).stream().pipeThrough(new DecompressionStream("deflate-raw")); return new Uint8Array(await new Response(st).arrayBuffer()); }
+  throw new Error("zip method");
+}
+function fitImage(src){ return new Promise(res=>{ const img=new Image(); img.crossOrigin="anonymous";
+  img.onload=()=>{ try{ const c=document.createElement("canvas"); c.width=c.height=500; const x=c.getContext("2d"); x.fillStyle="#ffffff"; x.fillRect(0,0,500,500);
+    const iw=img.naturalWidth||img.width||500, ih=img.naturalHeight||img.height||500, s=Math.min(500/iw,500/ih), w=iw*s, h=ih*s;
+    x.drawImage(img,(500-w)/2,(500-h)/2,w,h); res(c.toDataURL("image/jpeg",0.85)); }catch(e){ res(null); } };
+  img.onerror=()=>res(null); img.src=src; }); }
+function bytesToDataUrl(bytes,mime){ return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(new Blob([bytes],{type:mime})); }); }
+const EXT_MIME={jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",svg:"image/svg+xml",webp:"image/webp",gif:"image/gif",webm:"audio/webm",m4a:"audio/mp4",mp4:"audio/mp4",ogg:"audio/ogg",mp3:"audio/mpeg",wav:"audio/wav",aac:"audio/aac"};
+const OBZ_MAX=1500; // tope de tarjetas por importación (cada una guarda su imagen en el dispositivo)
+async function importObf(file){
+  const buf=await file.arrayBuffer(), u8=new Uint8Array(buf), dec=new TextDecoder(); let zip=null, boards=[];
+  if(u8[0]===0x50 && u8[1]===0x4b){
+    zip=unzipIndex(buf);
+    const man=JSON.parse(dec.decode(await zipRead(zip["manifest.json"])));
+    const paths=[...new Set([man.root, ...Object.values((man.paths&&man.paths.boards)||{})])].filter(x=>x&&zip[x]);
+    for(const path of paths){ try{ boards.push(JSON.parse(dec.decode(await zipRead(zip[path])))); }catch(e){} }
+  } else boards=[JSON.parse(dec.decode(u8))];
+  boards=boards.filter(b=>b&&Array.isArray(b.buttons));
+  if(!boards.length) throw new Error("empty");
+  const L=lang(), cache={}; let count=0, maxPos=state.pics.reduce((m,p)=>Math.max(m,(typeof p.pos==="number"?p.pos:0)),0);
+  const media=async(list,id,kind)=>{ // imagen o sonido de un botón -> data URL (o null)
+    if(!id) return null; const key=kind+":"+id; if(key in cache) return cache[key];
+    const it=(list||[]).find(x=>x&&String(x.id)===String(id)); let out=null;
+    if(it){ try{
+      let src=null;
+      if(typeof it.data==="string" && it.data.startsWith("data:")) src=it.data;
+      else if(it.path && zip && zip[it.path]){ const ext=(it.path.split(".").pop()||"").toLowerCase(); src=await bytesToDataUrl(await zipRead(zip[it.path]), it.content_type||EXT_MIME[ext]||"application/octet-stream"); }
+      else if(kind==="img" && typeof it.url==="string" && /^https?:/i.test(it.url)) src=it.url;
+      if(src) out = kind==="img" ? await fitImage(src) : src;
+    }catch(e){ out=null; } }
+    cache[key]=out; return out; };
+  for(const b of boards){
+    const ids=[]; if(b.grid&&Array.isArray(b.grid.order)) b.grid.order.forEach(r=>(r||[]).forEach(id=>{ if(id!=null) ids.push(String(id)); }));
+    const btns=b.buttons.slice().sort((x,y)=>{ const i=ids.indexOf(String(x.id)), j=ids.indexOf(String(y.id)); return (i<0?1e9:i)-(j<0?1e9:j); });
+    const cat={id:uid(), name:String(b.name||file.name.replace(/\.(obf|obz)$/i,"")||"OBF").slice(0,40), dot:"📁"}; let added=0;
+    for(const btn of btns){
+      if(count>=OBZ_MAX) break;
+      if(!btn || btn.load_board || !btn.label) continue; // los botones que solo abren otro tablero no son tarjetas
+      const label=String(btn.label).slice(0,80), name=String(btn.ext_talkpics_name||label);
+      const img=(await media(b.images,btn.image_id,"img")) || emojiImg("💬","#eae6da");
+      const np={id:uid(), name, img, cat:cat.id, tags:Array.isArray(btn.ext_talkpics_tags)?btn.ext_talkpics_tags.map(String):[], fav:!!btn.ext_talkpics_fav, uses:0, created:Date.now()+count, pos:++maxPos};
+      if(label!==name){ if(L==="ca") np.nameCa=label; else if(L==="en") np.nameEn=label; else if(!OLD_LANGS.includes(L)) np.names={[L]:label}; }
+      const au=await media(b.sounds,btn.sound_id,"snd"); if(au) np.audio=au;
+      state.pics.push(np); added++; count++;
+    }
+    if(added) state.cats.push(cat);
+  }
+  if(!count) throw new Error("empty");
+  markDirty(); await save(); renderCats(); renderBoard();
+  showHint(t("hObzImported").split("{n}").join(locNum(count,L)));
+}
+$("#obzImport").onclick=()=>$("#fileObz").click();
+$("#fileObz").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
+  try{ await importObf(f); }catch(err){ showHint(t("hObzFail")); }
+  e.target.value=""; };
 
 /* ============ Utilidades UI ============ */
 let hintT=null;
