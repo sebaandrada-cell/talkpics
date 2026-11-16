@@ -1,7 +1,7 @@
 /* TalkPics service worker: guarda la app en el dispositivo para que abra sin internet.
    Para publicar una actualización, cambia el número de VERSION. */
-const VERSION = "talkpics-v27";
-// Herramienta de "quitar el fondo" (carpeta bg/, unos 20 MB): caché aparte que NO se borra al cambiar VERSION,
+const VERSION = "talkpics-v28";
+// Herramienta de "quitar el fondo" (carpeta bg/, unos 8 MB de descarga): caché aparte que NO se borra al cambiar VERSION,
 // para no volver a descargarla en cada actualización. Si cambian esos archivos, sube este número.
 const BG_CACHE = "tp-bgtool-1";
 const CORE = [
