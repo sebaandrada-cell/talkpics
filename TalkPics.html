@@ -64,6 +64,10 @@
 
   /* ---------- Board ---------- */
   main{flex:1; overflow-y:auto; padding:14px; -webkit-overflow-scrolling:touch;}
+  /* Aviso de "sin voz en este idioma", encima del tablero */
+  #voiceWarn{flex:none; display:flex; align-items:center; gap:8px; margin:8px 12px 0; padding:6px 6px 6px 12px; background:#fff4ef; border:1.5px solid #a5432f; border-radius:14px; color:#6e2a1b; font-size:14px; line-height:1.4;}
+  #voiceWarn span{flex:1; min-width:0;}
+  #voiceWarnClose{flex:none; width:44px; height:44px; border:0; border-radius:12px; background:transparent; color:#6e2a1b; font-size:20px; font-weight:700; cursor:pointer;}
   .grid{display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
   body.simple .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px;}
   .pcard{
@@ -293,6 +297,8 @@
   body.hc #kbText{background:#000; color:#fff; border-color:#fff;}
   body.hc #kbMode{color:#ffd400;}
   body.hc #voiceNone{color:#ff8a70 !important;}
+  body.hc #voiceWarn{background:#000; color:#fff; border-color:#ff8a70;}
+  body.hc #voiceWarnClose{color:#ffd400;}
   body.hc .credits a, body.hc .araNote a{color:#ffd400;}
   body.hc button:focus-visible, body.hc .pcard:focus-visible, body.hc .cat:focus-visible, body.hc input:focus-visible, body.hc select:focus-visible, body.hc .sw:focus-visible{outline-color:#00e5ff;}
   /* Imprimir el tablero (copia en papel) */
@@ -311,6 +317,7 @@
   }
   /* ---- Derecha a izquierda (hebreo, árabe): espejo de lo que está colocado a izquierda/derecha ---- */
   [dir=rtl] .title{margin-right:0; margin-left:auto;}
+  [dir=rtl] #voiceWarn{padding:6px 12px 6px 6px;}
   [dir=rtl] .pcard .fav{left:auto; right:8px;}
   [dir=rtl] .pcard .edit{right:auto; left:8px;}
   @media (max-width:600px){ [dir=rtl] .pcard .fav{right:5px;} [dir=rtl] .pcard .edit{left:5px;} }
@@ -350,6 +357,12 @@
       <option value="used" data-i18n="sortUsed">Más usadas</option>
     </select>
     <button class="iconbtn solid" id="shareBar" title="Guardar / Compartir" data-i18n-title="ttShareBar">📤 <span class="lbl" data-i18n="lblSave">Guardar</span></button>
+  </div>
+
+  <!-- Aviso: el dispositivo no tiene voz para el idioma elegido (se cierra con la X y no vuelve para ese idioma) -->
+  <div id="voiceWarn" class="hidden" role="status">
+    <span data-i18n="voiceNone"></span>
+    <button id="voiceWarnClose" aria-label="Cerrar" data-i18n-aria="close"><span aria-hidden="true">✕</span></button>
   </div>
 
   <main><div class="grid" id="grid"></div><div class="empty hidden" id="empty"></div></main>
@@ -990,6 +1003,15 @@ function pickVoice(){
   // Los demás idiomas nunca usan la voz de otro idioma (leería mal las palabras).
   return voiceList()[0] || null;
 }
+// Aviso en el tablero cuando el dispositivo tiene voces pero ninguna del idioma elegido: el navegador leería
+// las palabras con la voz de otro idioma. Antes solo se avisaba dentro de Ajustes, donde casi nadie lo ve.
+// Con la lista de voces vacía no se avisa: puede que aún se esté cargando.
+function voiceMissing(){ return ("speechSynthesis" in window) && speechSynthesis.getVoices().length>0 && !voiceList().length; }
+function updateVoiceWarn(){
+  const w=document.getElementById("voiceWarn"); if(!w) return;
+  const off=(state.settings.voiceWarnOff||[]).includes(lang()); // idiomas en los que ya se cerró el aviso
+  w.classList.toggle("hidden", !(state.settings.speak && !off && voiceMissing()));
+}
 function makeUtter(text,loud){
   const u=new SpeechSynthesisUtterance(text);
   const v=pickVoice();
@@ -1203,7 +1225,7 @@ function applyLang(){
   // Botón de idioma segmentado
   document.querySelectorAll("#langGrid .segbtn").forEach(b=>b.classList.toggle("on", b.dataset.lang===L));
   renderQuick(); buildAccessSelects(); renderSkins(); if($("#kbScrim").classList.contains("show")) renderKb();
-  a11yNames();
+  a11yNames(); updateVoiceWarn();
 }
 /* Los lectores de pantalla leen los emojis del principio ("cámara, Tomar una foto").
    Para botones, títulos y etiquetas de interruptores se da un nombre sin el emoji.
@@ -1663,6 +1685,7 @@ $("#voiceSel").onchange=async e=>{
 };
 function bindToggle(swId,key){$(swId).onclick=async()=>{state.settings[key]=!state.settings[key]; $(swId).classList.toggle("on",state.settings[key]); applyBodyClasses(); renderStrip(); await save();};}
 bindToggle("#swSimple","simple"); bindToggle("#swSpeak","speak"); bindToggle("#swStrip","strip");
+$("#swSpeak").addEventListener("click",updateVoiceWarn);
 $("#swStrip").addEventListener("click",()=>{ if(!state.settings.strip){ state.strip=[]; renderStrip(); } });
 bindToggle("#swCalm","calm");
 $("#swHaptic").onclick=async()=>{ state.settings.haptic=!state.settings.haptic; $("#swHaptic").classList.toggle("on",state.settings.haptic); if(state.settings.haptic) buzz(); await save(); };
@@ -2140,7 +2163,9 @@ let hintT=null;
 function showHint(t){const h=$("#hint"); h.textContent=t; h.classList.add("show"); clearTimeout(hintT); hintT=setTimeout(()=>h.classList.remove("show"),2200);}
 function hideHint(){$("#hint").classList.remove("show");}
 $("#search").oninput=renderBoard; $("#sortSel").onchange=renderBoard;
-if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{ populateVoices(); };}
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>{ populateVoices(); updateVoiceWarn(); };}
+$("#voiceWarnClose").onclick=async()=>{ const a=state.settings.voiceWarnOff||[]; if(!a.includes(lang())) a.push(lang());
+  state.settings.voiceWarnOff=a; updateVoiceWarn(); await save(); };
 
 /* ============ Bienvenida / Ayuda ============ */
 function showWelcome(){ $("#welcomeScrim").classList.add("show"); }
@@ -2160,6 +2185,7 @@ $("#helpBtn").onclick=()=>{ $("#setScrim").classList.remove("show"); showWelcome
   if(!state.settings.seenWelcome) showWelcome();
   // Calienta la voz en el primer toque (mejor compatibilidad en tablets)
   window.addEventListener("pointerdown",warmTTS,{once:true});
+  setTimeout(updateVoiceWarn,1500); // algunos navegadores entregan la lista de voces tarde y sin avisar
 })();
 </script>
 <script>
