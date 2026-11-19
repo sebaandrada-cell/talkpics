@@ -2197,6 +2197,29 @@ if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
   });
 }
 
+/* Zoom al abrir (2026-11-19): el pellizco con dos dedos está permitido (accesibilidad, 2026-11-07),
+   pero si alguien amplía sin querer, Android conserva la app en memoria y al volver a abrirla
+   sigue ampliada y cortada. Al abrir o volver a la app, si está ampliada, se vuelve a escala 1
+   poniendo maximum-scale=1 un instante y quitándolo después: el pellizco sigue funcionando.
+   Si aun así sigue ampliada, se recarga la app, pero solo si no hay ninguna hoja ni la imagen
+   grande abiertas (nunca a mitad de añadir o editar una foto). Los datos están en IndexedDB. */
+(function(){
+  const vv=window.visualViewport, meta=document.querySelector('meta[name="viewport"]');
+  if(!vv || !meta) return;
+  const base=meta.getAttribute("content");
+  const zoomed=()=>vv.scale>1.01;
+  function resetZoom(){
+    if(!zoomed()) return;
+    meta.setAttribute("content", base+", maximum-scale=1");
+    setTimeout(()=>{
+      meta.setAttribute("content", base);
+      if(zoomed() && !document.querySelector(".scrim.show:not(#welcomeScrim), #zoom.show")) location.reload();
+    }, 400);
+  }
+  window.addEventListener("pageshow", resetZoom);
+  document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") resetZoom(); });
+})();
+
 /* ============ Accesibilidad: diálogos, interruptores y Escape (2026-11-07) ============
    Cada hoja (.scrim) y la imagen ampliada (#zoom) se comporta como un diálogo:
    al abrirse recibe el foco, lo de detrás queda inerte (Tab no se escapa), Escape la cierra
