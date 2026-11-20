@@ -567,11 +567,22 @@
       <div class="credits-h" data-i18n="resTitle">Guías para familias</div>
       <p data-i18n-html="resBody"></p>
     </div>
-    <div class="credits" style="background:#eef6f0">
+    <div class="credits" id="supportBox" style="background:#eef6f0">
       <div class="credits-h" data-i18n="supportTitle">♥ Apoya TalkPics</div>
       <p data-i18n="supportBody">TalkPics es gratis y no se vende. Si te ayuda, una donación, aunque sea de 1 €, la mantiene viva.</p>
       <a class="bigbtn ghost" style="margin-top:10px; text-decoration:none; display:flex; align-items:center; justify-content:center" href="https://sebaandrada-cell.github.io/talkpics/#precio" target="_blank" rel="noopener" data-i18n="supportBtn">Donar</a>
     </div>
+    <script>
+    /* Versiones de Google Play y App Store: las tiendas no permiten pedir donativos al desarrollador con un enlace
+       externo (Apple 3.1.1, pagos de Google Play), así que ahí se quita este bloque. La web no cambia.
+       Android (TWA) abre con ?source=twa o con referrer android-app://; iOS (Capacitor) define window.Capacitor.
+       Se guarda en sessionStorage para que sobreviva a las recargas de la app pero no pase a Chrome normal. */
+    (function(){ try{
+      var src=new URLSearchParams(location.search).get("source");
+      if(src==="twa"||src==="ios"||String(document.referrer).indexOf("android-app://")===0) sessionStorage.setItem("tpStoreApp","1");
+      if(window.Capacitor||sessionStorage.getItem("tpStoreApp")==="1"){ var b=document.getElementById("supportBox"); if(b) b.remove(); }
+    }catch(e){} })();
+    </script>
     <div class="credits">
       <div class="credits-h" data-i18n="creditsTitle">Créditos y licencia</div>
       <p data-i18n="bgCredit" style="margin-bottom:8px"></p>
