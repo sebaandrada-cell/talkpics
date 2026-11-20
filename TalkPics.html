@@ -55,6 +55,18 @@
   }
   .cat.active{background:var(--accent); border-color:var(--accent); color:#fff;}
   .cat .dot{font-size:20px;}
+  /* Móvil (2026-11-20): las categorías en varias filas tapaban casi media pantalla.
+     Van en una sola fila que se desliza; el borde se difumina si quedan categorías ocultas. */
+  @media (max-width:600px){
+    nav{flex-wrap:nowrap; overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:none; scroll-padding-inline:12px;}
+    nav::-webkit-scrollbar{display:none;}
+    nav.more-end{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent); mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent);}
+    nav.more-start{-webkit-mask-image:linear-gradient(to right,transparent,#000 44px); mask-image:linear-gradient(to right,transparent,#000 44px);}
+    nav.more-start.more-end{-webkit-mask-image:linear-gradient(to right,transparent,#000 44px,#000 calc(100% - 44px),transparent); mask-image:linear-gradient(to right,transparent,#000 44px,#000 calc(100% - 44px),transparent);}
+    [dir=rtl] nav.more-end{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 44px),transparent); mask-image:linear-gradient(to left,#000 calc(100% - 44px),transparent);}
+    [dir=rtl] nav.more-start{-webkit-mask-image:linear-gradient(to left,transparent,#000 44px); mask-image:linear-gradient(to left,transparent,#000 44px);}
+    [dir=rtl] nav.more-start.more-end{-webkit-mask-image:linear-gradient(to left,transparent,#000 44px,#000 calc(100% - 44px),transparent); mask-image:linear-gradient(to left,transparent,#000 44px,#000 calc(100% - 44px),transparent);}
+  }
 
   /* ---------- Caregiver toolbar ---------- */
   #carebar{display:none; gap:8px; padding:8px 12px; background:#fbf8f1; border-bottom:1px solid var(--line); align-items:center; flex:none; flex-wrap:wrap;}
@@ -1266,7 +1278,18 @@ function renderCats(){
     b.onclick=()=>{state.curCat=c.id; renderCats(); renderBoard();};
     wrap.appendChild(b);
   });
+  // En móvil la fila se desliza: la categoría elegida queda a la vista y se marca si hay más ocultas.
+  const act=wrap.querySelector(".cat.active");
+  if(act && wrap.scrollWidth>wrap.clientWidth) act.scrollIntoView({block:"nearest", inline:"nearest"});
+  catEdges();
 }
+function catEdges(){
+  const w=$("#cats"), max=w.scrollWidth-w.clientWidth, pos=Math.abs(w.scrollLeft);
+  w.classList.toggle("more-start", max>2 && pos>2);
+  w.classList.toggle("more-end", max>2 && pos<max-2);
+}
+$("#cats").addEventListener("scroll", catEdges, {passive:true});
+window.addEventListener("resize", catEdges);
 function currentList(){
   let list=state.pics.slice();
   if(state.curCat==="__fav") list=list.filter(p=>p.fav);
