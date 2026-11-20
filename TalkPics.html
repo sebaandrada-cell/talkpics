@@ -271,6 +271,48 @@
   .kkey.del{background:#f6ddd5; color:var(--danger);}
   #kbScrim .row .bigbtn{margin-top:0;}
   #kbMode{background:none; border:none; color:var(--accent); font-size:15px; font-weight:700; text-decoration:underline; cursor:pointer; padding:8px; min-height:44px; font-family:inherit;}
+  /* Agenda: ahora y después (2026-11-20) */
+  body:not(.has-sched) #schedBtn{display:none;}
+  #schedScrim{padding:0;}
+  #schedScrim .sheet{max-width:none; height:100dvh; max-height:none; border-radius:0; display:flex; flex-direction:column; gap:12px; padding:14px; overflow-y:auto;}
+  #schedScrim h2{margin:0;}
+  #schedView{flex:1; min-height:0; display:flex; flex-direction:column; gap:12px;}
+  body.care #schedView{flex:none;}
+  body.care .schedPair{flex:none; height:50dvh;}
+  .schedPair{flex:1; min-height:0; display:flex; gap:12px;}
+  @media (orientation:portrait){ .schedPair{flex-direction:column;} }
+  .schedSlot{display:flex; flex-direction:column; gap:6px; min-height:0; min-width:0;}
+  .schedSlot.now{flex:3;} .schedSlot.next{flex:2;}
+  .schedLbl{font-size:22px; font-weight:900; color:var(--ink);}
+  .schedSlot.next .schedLbl{color:var(--muted);}
+  .schedCard{flex:1; min-height:0; display:flex; flex-direction:column; background:var(--card); border:4px solid var(--accent); border-radius:22px; overflow:hidden; cursor:pointer; padding:0; font-family:inherit; color:var(--ink); width:100%;}
+  .schedSlot.next .schedCard{border:3px dashed var(--field-line);}
+  .schedCard .img{flex:1; min-height:30px; background:#fff center/contain no-repeat;}
+  .schedCard .name{font-size:28px; font-weight:900; padding:8px 10px; text-align:center; overflow-wrap:anywhere;}
+  .schedSlot.next .schedCard .name{font-size:22px;}
+  body.lbl-img .schedCard .name{display:none;}
+  body.lbl-text .schedCard .img{display:none;}
+  body.lbl-text .schedCard .name{flex:1; display:flex; align-items:center; justify-content:center;}
+  .schedNone{flex:1; display:flex; align-items:center; justify-content:center; text-align:center; font-size:18px; font-weight:700; color:var(--muted); border:3px dashed var(--line); border-radius:22px; padding:12px; min-height:80px;}
+  .schedMsg{flex:1; display:flex; align-items:center; justify-content:center; text-align:center; font-size:34px; font-weight:900; padding:20px;}
+  #schedAllList{display:flex; gap:8px; overflow-x:auto; padding:4px; flex:none;}
+  .schedMini{flex:none; width:84px; text-align:center; font-size:13px; font-weight:700; overflow-wrap:anywhere;}
+  .schedMini .img{width:84px; height:64px; border-radius:12px; border:2px solid var(--line); background:#fff center/contain no-repeat;}
+  .schedMini.done .img{opacity:.4;} .schedMini.done .name{text-decoration:line-through; color:var(--muted);}
+  .schedMini.cur .img{border:3px solid var(--accent);}
+  #schedScrim .row .bigbtn{margin-top:0;}
+  #schedEdit h3, #schedPick h3{font-size:18px; margin:8px 0;}
+  .srow{display:flex; gap:8px; align-items:center; margin-bottom:8px;}
+  .srow .img{width:56px; height:56px; flex:none; border-radius:10px; border:2px solid var(--line); background:#fff center/contain no-repeat;}
+  .srow span{flex:1; font-size:17px; font-weight:700; overflow-wrap:anywhere;}
+  .srow .iconbtn{min-width:48px; height:48px; font-size:20px; padding:0;}
+  .srow .iconbtn:disabled{opacity:.35; cursor:default;}
+  #schedPickGrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; margin-bottom:12px;}
+  .spick{display:flex; flex-direction:column; border:2px solid var(--line); border-radius:14px; background:var(--card); padding:0; overflow:hidden; cursor:pointer; font-family:inherit; color:var(--ink); min-height:120px;}
+  .spick .img{height:84px; background:#fff center/contain no-repeat;}
+  .spick .name{font-size:15px; font-weight:700; padding:6px; overflow-wrap:anywhere;}
+  body.hc .schedCard, body.hc .spick{background:#000; color:#fff;}
+  body.hc .schedSlot.next .schedCard, body.hc .spick, body.hc .schedNone{border-color:#fff;}
   /* Tono de piel (buscador ARASAAC) */
   .skinrow{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; font-size:14px; font-weight:700; color:var(--muted);}
   .skinbtn{width:44px; height:44px; border-radius:50%; border:2px solid var(--field-line); cursor:pointer; padding:0; font-size:20px; font-weight:900; color:#2b2b2b; display:inline-flex; align-items:center; justify-content:center;}
@@ -381,6 +423,7 @@
 
   <div id="talkbar">
     <button class="iconbtn danger" id="alertBtn" aria-label="Pedir ayuda" data-i18n-aria="ariaAlert">🔔</button>
+    <button class="iconbtn plain" id="schedBtn" aria-label="Agenda" data-i18n-aria="ariaSched">📅</button>
     <div id="quickItems"></div>
     <button class="iconbtn plain" id="kbBtn" aria-label="Escribir con el teclado" data-i18n-aria="ariaKb">⌨️</button>
     <button class="iconbtn plain" id="loudBtn" aria-label="Repetir más fuerte" data-i18n-aria="ariaLoud">📢</button>
@@ -422,6 +465,29 @@
       <button class="bigbtn ghost" id="kbClose" data-i18n="close">Cerrar</button>
     </div>
     <button id="kbMode" type="button"></button>
+  </div>
+</div>
+
+<!-- Agenda: lo que toca ahora y lo que viene después -->
+<div class="scrim" id="schedScrim">
+  <div class="sheet">
+    <h2 data-i18n="schedTitle">📅 Agenda</h2>
+    <div id="schedView"></div>
+    <div class="row" id="schedBtns">
+      <button class="bigbtn primary" id="schedDone" data-i18n="schedDoneBtn">✔ Hecho</button>
+      <button class="bigbtn ghost" id="schedClose" data-i18n="close">Cerrar</button>
+    </div>
+    <div id="schedEdit" class="hidden">
+      <h3 data-i18n="schedEdit">Pasos de la agenda</h3>
+      <div id="schedSteps"></div>
+      <button class="bigbtn ghost" id="schedAddBtn" data-i18n="schedAdd">＋ Añadir paso</button>
+      <button class="bigbtn ghost hidden" id="schedRestartEd" style="margin-top:10px" data-i18n="schedRestart">↺ Empezar de nuevo</button>
+    </div>
+    <div id="schedPick" class="hidden">
+      <h3 data-i18n="schedPick">Elige una tarjeta</h3>
+      <button class="bigbtn ghost" id="schedPickBack" style="margin-bottom:12px" data-i18n="schedBack">Volver</button>
+      <div id="schedPickGrid"></div>
+    </div>
   </div>
 </div>
 
@@ -523,6 +589,11 @@
     <div class="toggle"><span id="swAlertLbl" data-i18n="stAlert">🔔 Botón para pedir ayuda</span> <div class="sw" id="swAlert" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swAlertLbl"></div></div>
     <div class="toggle"><span id="swToolsLbl" data-i18n="stTools">📢 Repetir más fuerte y mostrar el texto</span> <div class="sw" id="swTools" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swToolsLbl"></div></div>
     <div class="toggle"><span id="swKeysLbl" data-i18n="stKeys">⌨️ Teclado para escribir</span> <div class="sw" id="swKeys" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swKeysLbl"></div></div>
+    <div class="toggle"><span id="swSchedLbl" data-i18n="stSched">📅 Agenda: ahora y después</span> <div class="sw" id="swSched" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swSchedLbl"></div></div>
+    <div class="field hidden" id="schedOptWrap" style="margin-top:4px">
+      <div class="toggle"><span id="swSchedAllLbl" data-i18n="stSchedAll">Ver toda la agenda (no solo ahora y después)</span> <div class="sw" id="swSchedAll" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swSchedAllLbl"></div></div>
+      <div class="fieldhelp" data-i18n="stSchedHelp">Muestra lo que toca ahora y lo que viene después. Los pasos se eligen en modo editor, tocando 📅.</div>
+    </div>
     <div class="toggle"><span id="swQuickLbl" data-i18n="stQuick">💬 Frases rápidas</span> <div class="sw" id="swQuick" role="switch" tabindex="0" aria-checked="false" aria-labelledby="swQuickLbl"></div></div>
     <div class="field hidden" id="quickEditWrap" style="margin-top:12px">
       <div id="quickEdit"></div>
@@ -1223,6 +1294,9 @@ const OPENAAC_STR={"es":{"stContrast":"🌓 Alto contraste (fondo oscuro)","stAl
 Object.keys(OPENAAC_STR).forEach(l=>{ const d=OPENAAC_STR[l];
   d.resBody=d.resBody.replace("{a1}",'<a href="https://www.openaac.org/cpp" target="_blank" rel="noopener">').replace("{a2}",'<a href="https://www.openaac.org/docs.html" target="_blank" rel="noopener">').split("{/a}").join("</a>");
   I18N[l]=Object.assign(I18N[l]||{}, d); });
+/* Agenda: textos en los 17 idiomas (2026-11-20; ninguno revisado por hablantes nativos) */
+const SCHED_STR={"es": {"stSched": "📅 Agenda: ahora y después", "stSchedAll": "Ver toda la agenda (no solo ahora y después)", "stSchedHelp": "Muestra lo que toca ahora y lo que viene después. Los pasos se eligen en modo editor, tocando 📅.", "ariaSched": "Agenda", "schedTitle": "📅 Agenda", "schedNow": "Ahora", "schedNext": "Después", "schedDoneBtn": "✔ Hecho", "schedFinished": "¡Terminado!", "schedRestart": "↺ Empezar de nuevo", "schedEmptyChild": "Todavía no hay pasos. Un adulto los añade en modo editor.", "schedEmptyCare": "Añade los pasos en orden, con tarjetas que ya tienes.", "schedEdit": "Pasos de la agenda", "schedAdd": "＋ Añadir paso", "schedPick": "Elige una tarjeta", "schedBack": "Volver", "ariaUp": "Subir", "ariaDown": "Bajar", "schedNoNext": "Es el último paso"}, "ca": {"stSched": "📅 Agenda: ara i després", "stSchedAll": "Veure tota l'agenda (no només ara i després)", "stSchedHelp": "Mostra què toca ara i què ve després. Els passos es trien en mode editor, tocant 📅.", "ariaSched": "Agenda", "schedTitle": "📅 Agenda", "schedNow": "Ara", "schedNext": "Després", "schedDoneBtn": "✔ Fet", "schedFinished": "Ja està!", "schedRestart": "↺ Tornar a començar", "schedEmptyChild": "Encara no hi ha passos. Un adult els afegeix en mode editor.", "schedEmptyCare": "Afegeix els passos en ordre, amb targetes que ja tens.", "schedEdit": "Passos de l'agenda", "schedAdd": "＋ Afegir un pas", "schedPick": "Tria una targeta", "schedBack": "Tornar", "ariaUp": "Pujar", "ariaDown": "Baixar", "schedNoNext": "És l'últim pas"}, "en": {"stSched": "📅 Schedule: now and next", "stSchedAll": "Show the whole schedule (not just now and next)", "stSchedHelp": "Shows what happens now and what comes next. Choose the steps in editor mode by tapping 📅.", "ariaSched": "Schedule", "schedTitle": "📅 Schedule", "schedNow": "Now", "schedNext": "Next", "schedDoneBtn": "✔ Done", "schedFinished": "All done!", "schedRestart": "↺ Start again", "schedEmptyChild": "No steps yet. An adult adds them in editor mode.", "schedEmptyCare": "Add the steps in order, using cards you already have.", "schedEdit": "Schedule steps", "schedAdd": "＋ Add a step", "schedPick": "Choose a card", "schedBack": "Back", "ariaUp": "Move up", "ariaDown": "Move down", "schedNoNext": "This is the last step"}, "fr": {"stSched": "📅 Emploi du temps : maintenant et après", "stSchedAll": "Voir tout l'emploi du temps (pas seulement maintenant et après)", "stSchedHelp": "Montre ce qu'on fait maintenant et ce qui vient après. Les étapes se choisissent en mode éditeur, en touchant 📅.", "ariaSched": "Emploi du temps", "schedTitle": "📅 Emploi du temps", "schedNow": "Maintenant", "schedNext": "Après", "schedDoneBtn": "✔ Fini", "schedFinished": "Tout est fini !", "schedRestart": "↺ Recommencer", "schedEmptyChild": "Pas encore d'étapes. Un adulte les ajoute en mode éditeur.", "schedEmptyCare": "Ajoutez les étapes dans l'ordre, avec des cartes que vous avez déjà.", "schedEdit": "Étapes de l'emploi du temps", "schedAdd": "＋ Ajouter une étape", "schedPick": "Choisissez une carte", "schedBack": "Retour", "ariaUp": "Monter", "ariaDown": "Descendre", "schedNoNext": "C'est la dernière étape"}, "it": {"stSched": "📅 Agenda: ora e dopo", "stSchedAll": "Mostra tutta l'agenda (non solo ora e dopo)", "stSchedHelp": "Mostra cosa si fa ora e cosa viene dopo. I passi si scelgono in modalità editor, toccando 📅.", "ariaSched": "Agenda", "schedTitle": "📅 Agenda", "schedNow": "Ora", "schedNext": "Dopo", "schedDoneBtn": "✔ Fatto", "schedFinished": "Finito!", "schedRestart": "↺ Ricomincia", "schedEmptyChild": "Ancora nessun passo. Un adulto li aggiunge in modalità editor.", "schedEmptyCare": "Aggiungi i passi in ordine, con schede che hai già.", "schedEdit": "Passi dell'agenda", "schedAdd": "＋ Aggiungi un passo", "schedPick": "Scegli una scheda", "schedBack": "Indietro", "ariaUp": "Sposta su", "ariaDown": "Sposta giù", "schedNoNext": "È l'ultimo passo"}, "pt": {"stSched": "📅 Rotina: agora e depois", "stSchedAll": "Ver a rotina inteira (não só agora e depois)", "stSchedHelp": "Mostra o que é agora e o que vem depois. Os passos são escolhidos no modo editor, tocando em 📅.", "ariaSched": "Rotina", "schedTitle": "📅 Rotina", "schedNow": "Agora", "schedNext": "Depois", "schedDoneBtn": "✔ Feito", "schedFinished": "Terminou!", "schedRestart": "↺ Começar de novo", "schedEmptyChild": "Ainda não há passos. Um adulto os adiciona no modo editor.", "schedEmptyCare": "Adicione os passos em ordem, com cartões que você já tem.", "schedEdit": "Passos da rotina", "schedAdd": "＋ Adicionar passo", "schedPick": "Escolha um cartão", "schedBack": "Voltar", "ariaUp": "Subir", "ariaDown": "Descer", "schedNoNext": "É o último passo"}, "de": {"stSched": "📅 Tagesplan: jetzt und danach", "stSchedAll": "Ganzen Plan zeigen (nicht nur jetzt und danach)", "stSchedHelp": "Zeigt, was jetzt dran ist und was danach kommt. Die Schritte wählst du im Bearbeitungsmodus über 📅.", "ariaSched": "Tagesplan", "schedTitle": "📅 Tagesplan", "schedNow": "Jetzt", "schedNext": "Danach", "schedDoneBtn": "✔ Fertig", "schedFinished": "Alles geschafft!", "schedRestart": "↺ Neu anfangen", "schedEmptyChild": "Noch keine Schritte. Ein Erwachsener fügt sie im Bearbeitungsmodus hinzu.", "schedEmptyCare": "Füge die Schritte der Reihe nach hinzu, mit Karten, die du schon hast.", "schedEdit": "Schritte im Plan", "schedAdd": "＋ Schritt hinzufügen", "schedPick": "Wähle eine Karte", "schedBack": "Zurück", "ariaUp": "Nach oben", "ariaDown": "Nach unten", "schedNoNext": "Das ist der letzte Schritt"}, "lv": {"stSched": "📅 Dienas plāns: tagad un pēc tam", "stSchedAll": "Rādīt visu plānu (ne tikai tagad un pēc tam)", "stSchedHelp": "Parāda, kas notiek tagad un kas būs pēc tam. Soļus izvēlas rediģēšanas režīmā, pieskaroties 📅.", "ariaSched": "Dienas plāns", "schedTitle": "📅 Dienas plāns", "schedNow": "Tagad", "schedNext": "Pēc tam", "schedDoneBtn": "✔ Gatavs", "schedFinished": "Viss izdarīts!", "schedRestart": "↺ Sākt no jauna", "schedEmptyChild": "Vēl nav soļu. Pieaugušais tos pievieno rediģēšanas režīmā.", "schedEmptyCare": "Pievienojiet soļus pēc kārtas, izmantojot jau esošās kartītes.", "schedEdit": "Plāna soļi", "schedAdd": "＋ Pievienot soli", "schedPick": "Izvēlieties kartīti", "schedBack": "Atpakaļ", "ariaUp": "Uz augšu", "ariaDown": "Uz leju", "schedNoNext": "Šis ir pēdējais solis"}, "uk": {"stSched": "📅 Розклад: зараз і потім", "stSchedAll": "Показувати весь розклад (не лише зараз і потім)", "stSchedHelp": "Показує, що зараз і що буде потім. Кроки обирають у режимі редагування, торкнувшись 📅.", "ariaSched": "Розклад", "schedTitle": "📅 Розклад", "schedNow": "Зараз", "schedNext": "Потім", "schedDoneBtn": "✔ Готово", "schedFinished": "Усе зроблено!", "schedRestart": "↺ Почати знову", "schedEmptyChild": "Кроків ще немає. Дорослий додає їх у режимі редагування.", "schedEmptyCare": "Додайте кроки по черзі з карток, які вже маєте.", "schedEdit": "Кроки розкладу", "schedAdd": "＋ Додати крок", "schedPick": "Оберіть картку", "schedBack": "Назад", "ariaUp": "Вгору", "ariaDown": "Вниз", "schedNoNext": "Це останній крок"}, "ru": {"stSched": "📅 Расписание: сейчас и потом", "stSchedAll": "Показывать всё расписание (не только сейчас и потом)", "stSchedHelp": "Показывает, что сейчас и что будет потом. Шаги выбирают в режиме редактирования, нажав 📅.", "ariaSched": "Расписание", "schedTitle": "📅 Расписание", "schedNow": "Сейчас", "schedNext": "Потом", "schedDoneBtn": "✔ Готово", "schedFinished": "Всё сделано!", "schedRestart": "↺ Начать заново", "schedEmptyChild": "Шагов пока нет. Взрослый добавляет их в режиме редактирования.", "schedEmptyCare": "Добавьте шаги по порядку из карточек, которые уже есть.", "schedEdit": "Шаги расписания", "schedAdd": "＋ Добавить шаг", "schedPick": "Выберите карточку", "schedBack": "Назад", "ariaUp": "Вверх", "ariaDown": "Вниз", "schedNoNext": "Это последний шаг"}, "ne": {"stSched": "📅 तालिका: अहिले र त्यसपछि", "stSchedAll": "पूरा तालिका देखाउनुहोस् (अहिले र त्यसपछि मात्र होइन)", "stSchedHelp": "अहिले के गर्ने र त्यसपछि के आउँछ भनेर देखाउँछ। चरणहरू सम्पादन मोडमा 📅 थिचेर छानिन्छन्।", "ariaSched": "तालिका", "schedTitle": "📅 तालिका", "schedNow": "अहिले", "schedNext": "त्यसपछि", "schedDoneBtn": "✔ सकियो", "schedFinished": "सबै सकियो!", "schedRestart": "↺ फेरि सुरु गर्नुहोस्", "schedEmptyChild": "अहिलेसम्म कुनै चरण छैन। ठूला मान्छेले सम्पादन मोडमा थप्नुहुन्छ।", "schedEmptyCare": "तपाईंसँग भएका चित्र कार्डबाट चरणहरू क्रमैसँग थप्नुहोस्।", "schedEdit": "तालिकाका चरणहरू", "schedAdd": "＋ चरण थप्नुहोस्", "schedPick": "एउटा चित्र कार्ड छान्नुहोस्", "schedBack": "फर्कनुहोस्", "ariaUp": "माथि सार्नुहोस्", "ariaDown": "तल सार्नुहोस्", "schedNoNext": "यो अन्तिम चरण हो"}, "he": {"stSched": "📅 סדר יום: עכשיו ואחר כך", "stSchedAll": "להציג את כל סדר היום (לא רק עכשיו ואחר כך)", "stSchedHelp": "מציג מה עכשיו ומה אחר כך. את השלבים בוחרים במצב עריכה, בלחיצה על 📅.", "ariaSched": "סדר יום", "schedTitle": "📅 סדר יום", "schedNow": "עכשיו", "schedNext": "אחר כך", "schedDoneBtn": "✔ סיימתי", "schedFinished": "הכול נגמר!", "schedRestart": "↺ להתחיל מחדש", "schedEmptyChild": "עדיין אין שלבים. מבוגר מוסיף אותם במצב עריכה.", "schedEmptyCare": "אפשר להוסיף את השלבים לפי הסדר, מכרטיסים שכבר קיימים.", "schedEdit": "שלבי סדר היום", "schedAdd": "＋ להוסיף שלב", "schedPick": "לבחור כרטיס", "schedBack": "חזרה", "ariaUp": "להזיז למעלה", "ariaDown": "להזיז למטה", "schedNoNext": "זה השלב האחרון"}, "ar": {"stSched": "📅 جدول اليوم: الآن وبعد ذلك", "stSchedAll": "عرض الجدول كاملًا (ليس فقط الآن وبعد ذلك)", "stSchedHelp": "يعرض ما يحدث الآن وما يأتي بعده. تُختار الخطوات في وضع التحرير بالضغط على 📅.", "ariaSched": "جدول اليوم", "schedTitle": "📅 جدول اليوم", "schedNow": "الآن", "schedNext": "بعد ذلك", "schedDoneBtn": "✔ انتهيت", "schedFinished": "انتهى كل شيء!", "schedRestart": "↺ ابدأ من جديد", "schedEmptyChild": "لا توجد خطوات بعد. يضيفها شخص بالغ في وضع التحرير.", "schedEmptyCare": "أضف الخطوات بالترتيب من البطاقات الموجودة لديك.", "schedEdit": "خطوات الجدول", "schedAdd": "＋ أضف خطوة", "schedPick": "اختر بطاقة", "schedBack": "رجوع", "ariaUp": "نقل لأعلى", "ariaDown": "نقل لأسفل", "schedNoNext": "هذه آخر خطوة"}, "zh-hans": {"stSched": "📅 日程：现在和接下来", "stSchedAll": "显示完整日程（不只是现在和接下来）", "stSchedHelp": "显示现在做什么、接下来做什么。在编辑模式中点 📅 选择步骤。", "ariaSched": "日程", "schedTitle": "📅 日程", "schedNow": "现在", "schedNext": "接下来", "schedDoneBtn": "✔ 完成", "schedFinished": "全部完成！", "schedRestart": "↺ 重新开始", "schedEmptyChild": "还没有步骤。由大人在编辑模式中添加。", "schedEmptyCare": "用已有的卡片，按顺序添加步骤。", "schedEdit": "日程步骤", "schedAdd": "＋ 添加步骤", "schedPick": "选择一张卡片", "schedBack": "返回", "ariaUp": "上移", "ariaDown": "下移", "schedNoNext": "这是最后一步"}, "zh-hant": {"stSched": "📅 日程：現在和接下來", "stSchedAll": "顯示完整日程（不只是現在和接下來）", "stSchedHelp": "顯示現在做什麼、接下來做什麼。在編輯模式中點 📅 選擇步驟。", "ariaSched": "日程", "schedTitle": "📅 日程", "schedNow": "現在", "schedNext": "接下來", "schedDoneBtn": "✔ 完成", "schedFinished": "全部完成！", "schedRestart": "↺ 重新開始", "schedEmptyChild": "還沒有步驟。由大人在編輯模式中新增。", "schedEmptyCare": "用已有的卡片，依順序新增步驟。", "schedEdit": "日程步驟", "schedAdd": "＋ 新增步驟", "schedPick": "選擇一張卡片", "schedBack": "返回", "ariaUp": "上移", "ariaDown": "下移", "schedNoNext": "這是最後一步"}, "ja": {"stSched": "📅 スケジュール（今と次）", "stSchedAll": "スケジュール全体を表示する（今と次だけでなく）", "stSchedHelp": "今することと次にすることを表示します。手順は編集モードで 📅 を押して選びます。", "ariaSched": "スケジュール", "schedTitle": "📅 スケジュール", "schedNow": "いま", "schedNext": "つぎ", "schedDoneBtn": "✔ できた", "schedFinished": "ぜんぶ できた！", "schedRestart": "↺ もういちど", "schedEmptyChild": "まだ手順がありません。大人が編集モードで追加します。", "schedEmptyCare": "手持ちのカードを使って、手順を順番に追加してください。", "schedEdit": "スケジュールの手順", "schedAdd": "＋ 手順を追加", "schedPick": "カードを選んでください", "schedBack": "戻る", "ariaUp": "上へ", "ariaDown": "下へ", "schedNoNext": "最後の手順です"}, "ko": {"stSched": "📅 일정: 지금과 다음", "stSchedAll": "전체 일정 보기 (지금과 다음만이 아니라)", "stSchedHelp": "지금 할 일과 다음 할 일을 보여 줘요. 단계는 편집 모드에서 📅 를 눌러 골라요.", "ariaSched": "일정", "schedTitle": "📅 일정", "schedNow": "지금", "schedNext": "다음", "schedDoneBtn": "✔ 다 했어요", "schedFinished": "다 끝났어요!", "schedRestart": "↺ 처음부터", "schedEmptyChild": "아직 단계가 없어요. 어른이 편집 모드에서 추가해요.", "schedEmptyCare": "가지고 있는 카드로 단계를 순서대로 추가하세요.", "schedEdit": "일정 단계", "schedAdd": "＋ 단계 추가", "schedPick": "카드를 고르세요", "schedBack": "돌아가기", "ariaUp": "위로", "ariaDown": "아래로", "schedNoNext": "마지막 단계예요"}};
+Object.keys(SCHED_STR).forEach(l=>{ I18N[l]=Object.assign(I18N[l]||{}, SCHED_STR[l]); });
 Object.keys(LANG_LINE).forEach(l=>{ if(I18N[l]&&I18N[l].welcomeBody) I18N[l].welcomeBody=I18N[l].welcomeBody.replace(/<div[^>]*>🇪🇸\/🟨🟥(?:\/🇬🇧)?[\s\S]*?<\/div>/, '<div style="margin-bottom:10px">'+LANG_LINE[l]+'</div>'); });
 const MODEL_LINE={"es":"👐 <b>Modela tú también</b>: cuando hables con tu peque, toca tú los pictogramas de las palabras importantes mientras las dices. No le pidas que repita: aprende viendo cómo se usa.","ca":"👐 <b>Modela tu també</b>: quan parlis amb el teu infant, toca tu els pictogrames de les paraules importants mentre les dius. No li demanis que repeteixi: aprèn veient com es fa servir.","en":"👐 <b>Model it yourself</b>: when you talk to your child, tap the pictograms for the key words as you say them. Don't ask them to repeat: they learn by seeing how it's used.","fr":"👐 <b>Montrez l'exemple</b> : quand vous parlez à votre enfant, touchez vous-même les pictogrammes des mots importants en les disant. Ne lui demandez pas de répéter : il apprend en voyant comment on s'en sert.","it":"👐 <b>Dai tu l'esempio</b>: quando parli con il bambino, tocca tu i pittogrammi delle parole importanti mentre le dici. Non chiedergli di ripetere: impara vedendo come si usa.","pt":"👐 <b>Dê o exemplo</b>: quando falar com a criança, toque você mesmo nos pictogramas das palavras importantes enquanto as diz. Não peça que ela repita: ela aprende vendo como se usa.","de":"👐 <b>Mach es vor</b>: Wenn du mit deinem Kind sprichst, tippe die Piktogramme der wichtigen Wörter an, während du sie sagst. Verlange nicht, dass es wiederholt: Es lernt, indem es sieht, wie man sie benutzt.","lv":"👐 <b>Rādiet piemēru</b>: runājot ar bērnu, paši pieskarieties svarīgāko vārdu piktogrammām, kamēr tos sakāt. Nelūdziet, lai bērns atkārto: viņš mācās, redzot, kā to lieto.","uk":"👐 <b>Показуйте самі</b>: коли говорите з дитиною, торкайтеся піктограм важливих слів, поки їх вимовляєте. Не просіть дитину повторювати: вона вчиться, бачачи, як цим користуються.","ru":"👐 <b>Показывайте сами</b>: когда говорите с ребёнком, нажимайте на пиктограммы важных слов, пока их произносите. Не просите ребёнка повторять: он учится, видя, как этим пользуются.","ne":"👐 <b>आफैँ नमुना प्रस्तुत गर्नुहोस्</b>: बच्चासँग कुरा गर्दा महत्त्वपूर्ण शब्दहरू बोल्दै सम्बन्धित चित्र सङ्केतमा पनि थिच्नुहोस्। बच्चालाई दोहोर्‍याउन दबाब नदिनुहोस्। कसरी प्रयोग गरिन्छ भनेर हेरेर उनीहरूले सिक्छन्।","he":"👐 <b>להדגים בעצמכם</b>: כשמדברים עם הילד, נוגעים בעצמכם בפיקטוגרמות של המילים החשובות בזמן שאומרים אותן. לא מבקשים ממנו לחזור: הוא לומד מלראות איך משתמשים בזה.","ar":"👐 <b>كن أنت القدوة</b>: عندما تتحدث مع طفلك، المس بنفسك الرموز المصوّرة للكلمات المهمة وأنت تقولها. لا تطلب منه أن يكرّر: فهو يتعلّم حين يرى كيف تُستخدم.","zh-hans":"👐 <b>您也来示范</b>：和孩子说话时，一边说重要的词，一边自己点对应的象形图标。不要让他重复：他是通过看您怎么用来学习的。","zh-hant":"👐 <b>你也來示範</b>：和孩子說話時，一邊說，一邊自己點選重要詞語的圖示。不要要求孩子跟著說：孩子是看著別人怎麼用來學會的。","ja":"👐 <b>大人もお手本を見せましょう</b>：お子さんと話すとき、大事な言葉を言いながら、そのピクトグラムをあなた自身がタッチしてください。くり返すように求める必要はありません。使い方を見ることで学んでいきます。","ko":"👐 <b>먼저 보여 주세요</b>: 아이와 이야기할 때, 중요한 낱말을 말하면서 그 그림 기호를 직접 눌러 주세요. 따라 하라고 하지 마세요. 아이는 쓰는 모습을 보며 배워요."};
 Object.keys(MODEL_LINE).forEach(l=>{ const d=I18N[l]; if(!d||!d.welcomeBody) return; const div='<div style="margin-bottom:10px">'+MODEL_LINE[l]+'</div>';
@@ -1271,8 +1345,8 @@ function applyBodyClasses(){
   document.body.classList.toggle("calm",!!state.settings.calm);
   { const st=state.settings, cl=document.body.classList, cols=COLS_OPTS.includes(+st.cols)?+st.cols:0, g=$("#grid");
     cl.toggle("hc",!!st.contrast); cl.toggle("lbl-img",st.labels==="img"); cl.toggle("lbl-text",st.labels==="text");
-    cl.toggle("has-quick",!!st.quick); cl.toggle("has-alert",!!st.alert); cl.toggle("has-tools",!!st.tools); cl.toggle("has-kb",!!st.keys);
-    cl.toggle("talk",!!(st.quick||st.alert||st.tools||st.keys));
+    cl.toggle("has-quick",!!st.quick); cl.toggle("has-alert",!!st.alert); cl.toggle("has-tools",!!st.tools); cl.toggle("has-kb",!!st.keys); cl.toggle("has-sched",!!st.sched);
+    cl.toggle("talk",!!(st.quick||st.alert||st.tools||st.keys||st.sched));
     g.classList.toggle("fixed",cols>0); if(cols>0) g.style.setProperty("--cols",String(cols)); else g.style.removeProperty("--cols"); }
   $("#modeLabel").textContent=state.mode==="care"?t("modeCare"):t("modeChild");
   $("#lockBtn").classList.toggle("hidden",state.mode==="care");
@@ -1901,7 +1975,8 @@ function buildAccessSelects(){
   const h=+state.settings.holdMs||600; $("#holdRange").value=h; $("#holdOut").textContent=fmtSecs(h);
   $("#holdWrap").classList.toggle("hidden",$("#tapSel").value!=="hold");
   $("#quickEditWrap").classList.toggle("hidden",!state.settings.quick);
-  ["Contrast","Alert","Tools","Quick","Keys"].forEach(k=>$("#sw"+k).classList.toggle("on",!!state.settings[k.toLowerCase()]));
+  ["Contrast","Alert","Tools","Quick","Keys","Sched","SchedAll"].forEach(k=>$("#sw"+k).classList.toggle("on",!!state.settings[k.toLowerCase()]));
+  $("#schedOptWrap").classList.toggle("hidden",!state.settings.sched);
   renderQuickEdit();
 }
 function bindSel(id,key,num){ $(id).onchange=async e=>{ state.settings[key]=num?(+e.target.value||0):e.target.value; await save(); applyBodyClasses(); renderBoard(); buildAccessSelects(); }; }
@@ -2135,6 +2210,112 @@ $("#kbText").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefau
 $("#kbMode").onclick=async()=>{ state.settings.kbDevice=!state.settings.kbDevice; await save(); renderKb(); if(!kbBig()){ try{ $("#kbText").focus(); }catch(e){} } };
 bindToggle("#swKeys","keys");
 
+/* ---- Agenda: lo que toca ahora y lo que viene después (2026-11-20) ----
+   Ajustes: sched (botón 📅 en la barra), schedall (ver todos los pasos), schedSteps (ids de tarjetas, en orden, se pueden repetir),
+   schedIdx (paso actual; == número de pasos cuando se terminó). Todo queda en el dispositivo. Los pasos solo se editan en modo editor. */
+const SCHED_MAX=30;
+let schedPicking=false, schedLastDone=0;
+function pruneSched(){
+  const ids=Array.isArray(state.settings.schedSteps)?state.settings.schedSteps:[];
+  const ok=ids.filter(id=>state.pics.some(p=>p.id===id));
+  const old=+state.settings.schedIdx||0, idx=Math.max(0,Math.min(old,ok.length));
+  if(ok.length!==ids.length || idx!==old){ state.settings.schedSteps=ok; state.settings.schedIdx=idx; save(); }
+  return {steps:ok.map(id=>state.pics.find(p=>p.id===id)), idx};
+}
+function schedSay(p){ lastSaid={p}; stopAudio(); sayCard(p); }
+function schedImg(p){ const d=document.createElement("div"); d.className="img"; d.setAttribute("aria-hidden","true"); d.style.backgroundImage="url('"+p.img+"')"; return d; }
+function schedSlot(cls,label,p,emptyTxt){
+  const s=document.createElement("div"); s.className="schedSlot "+cls;
+  const l=document.createElement("div"); l.className="schedLbl"; l.textContent=label; s.appendChild(l);
+  if(p){ const b=document.createElement("button"); b.type="button"; b.className="schedCard"; b.setAttribute("aria-label",label+": "+dispName(p));
+    const nm=document.createElement("div"); nm.className="name"; nm.setAttribute("aria-hidden","true"); nm.textContent=dispName(p);
+    b.appendChild(schedImg(p)); b.appendChild(nm); b.onclick=()=>{ buzz(); schedSay(p); }; s.appendChild(b); }
+  else { const e=document.createElement("div"); e.className="schedNone"; e.textContent=emptyTxt; s.appendChild(e); }
+  return s;
+}
+function renderSched(){
+  const {steps,idx}=pruneSched(), care=state.mode==="care", v=$("#schedView"), done=$("#schedDone");
+  $("#schedPick").classList.toggle("hidden",!schedPicking);
+  v.classList.toggle("hidden",schedPicking); $("#schedBtns").classList.toggle("hidden",schedPicking);
+  $("#schedEdit").classList.toggle("hidden",!care||schedPicking);
+  if(schedPicking){ renderSchedPick(); return; }
+  v.innerHTML="";
+  if(!steps.length){ const m=document.createElement("div"); m.className="schedNone"; m.textContent=care?t("schedEmptyCare"):t("schedEmptyChild"); v.appendChild(m); done.classList.add("hidden"); }
+  else if(idx>=steps.length){
+    const m=document.createElement("div"); m.className="schedMsg"; m.setAttribute("role","status"); m.textContent=t("schedFinished"); v.appendChild(m);
+    const r=document.createElement("button"); r.type="button"; r.className="bigbtn ghost"; r.textContent=t("schedRestart"); r.onclick=()=>schedGo(0); v.appendChild(r);
+    done.classList.add("hidden"); }
+  else {
+    const pair=document.createElement("div"); pair.className="schedPair";
+    pair.appendChild(schedSlot("now",t("schedNow"),steps[idx]));
+    pair.appendChild(schedSlot("next",t("schedNext"),steps[idx+1],t("schedNoNext")));
+    v.appendChild(pair); done.classList.remove("hidden"); }
+  if(state.settings.schedall && steps.length){
+    const w=document.createElement("div"); w.id="schedAllList"; w.setAttribute("role","list"); w.tabIndex=0; w.setAttribute("aria-label",t("schedEdit"));
+    steps.forEach((p,i)=>{ const d=document.createElement("div"); d.className="schedMini"+(i<idx?" done":"")+(i===idx?" cur":""); d.setAttribute("role","listitem");
+      if(i<idx) d.setAttribute("aria-label","✔ "+dispName(p));
+      const nm=document.createElement("div"); nm.className="name"; nm.textContent=dispName(p);
+      d.appendChild(schedImg(p)); d.appendChild(nm); w.appendChild(d); });
+    v.appendChild(w);
+    const cur=w.querySelector(".cur"); if(cur) try{ cur.scrollIntoView({block:"nearest",inline:"center"}); }catch(e){}
+  }
+  if(care) renderSchedEdit(steps);
+}
+function renderSchedEdit(steps){
+  const w=$("#schedSteps"), L=lang(); w.innerHTML="";
+  steps.forEach((p,i)=>{
+    const r=document.createElement("div"); r.className="srow"; r.appendChild(schedImg(p));
+    const sp=document.createElement("span"); sp.textContent=locNum(i+1,L)+". "+dispName(p); r.appendChild(sp);
+    const mk=(txt,cls,aria,fn,dis)=>{ const b=document.createElement("button"); b.type="button"; b.className="iconbtn "+cls; b.textContent=txt; b.setAttribute("aria-label",aria); b.disabled=!!dis; b.onclick=fn; r.appendChild(b); };
+    mk("▲","plain",t("ariaUp")+": "+dispName(p),()=>schedMove(i,-1),i===0);
+    mk("▼","plain",t("ariaDown")+": "+dispName(p),()=>schedMove(i,1),i===steps.length-1);
+    mk("✕","danger",t("ariaRemove")+dispName(p),()=>schedDel(i));
+    w.appendChild(r); });
+  $("#schedAddBtn").disabled=steps.length>=SCHED_MAX;
+  $("#schedRestartEd").classList.toggle("hidden",!steps.length);
+}
+function renderSchedPick(){
+  const g=$("#schedPickGrid"); g.innerHTML="";
+  const order={}; state.cats.forEach((c,i)=>{ order[c.id]=i; });
+  const ord=p=>(p.cat in order)?order[p.cat]:999;
+  state.pics.slice().sort((a,b)=>(ord(a)-ord(b))||((a.pos||0)-(b.pos||0))).forEach(p=>{
+    const b=document.createElement("button"); b.type="button"; b.className="spick"; b.setAttribute("aria-label",dispName(p));
+    const nm=document.createElement("div"); nm.className="name"; nm.setAttribute("aria-hidden","true"); nm.textContent=dispName(p);
+    b.appendChild(schedImg(p)); b.appendChild(nm); b.onclick=()=>schedAdd(p.id); g.appendChild(b); });
+  setTimeout(()=>{ const f=g.querySelector("button"); if(f) try{ f.focus({preventScroll:true}); }catch(e){} },30);
+}
+async function schedGo(i){
+  state.settings.schedIdx=i; await save(); renderSched();
+  const {steps,idx}=pruneSched();
+  if(steps[idx]) schedSay(steps[idx]); else if(steps.length){ lastSaid={text:t("schedFinished")}; speak(t("schedFinished")); }
+}
+async function schedMove(i,d){
+  const a=pruneSched().steps.map(p=>p.id), j=i+d; if(j<0||j>=a.length) return;
+  [a[i],a[j]]=[a[j],a[i]]; state.settings.schedSteps=a; await save(); renderSched();
+  const b=$("#schedSteps").children[j]; if(b){ const btn=b.querySelectorAll("button")[d<0?0:1]; const f=(btn&&!btn.disabled)?btn:b.querySelector("button:not([disabled])"); if(f) try{ f.focus(); }catch(e){} }
+}
+async function schedDel(i){
+  const {steps,idx}=pruneSched(), a=steps.map(p=>p.id); a.splice(i,1);
+  state.settings.schedSteps=a; state.settings.schedIdx=(i<idx)?idx-1:idx; await save(); renderSched();
+  try{ $("#schedAddBtn").focus(); }catch(e){}
+}
+async function schedAdd(id){
+  const a=pruneSched().steps.map(p=>p.id); if(a.length<SCHED_MAX) a.push(id);
+  state.settings.schedSteps=a; await save(); schedPicking=false; renderSched();
+  try{ $("#schedAddBtn").focus(); }catch(e){}
+}
+$("#schedBtn").onclick=()=>{ schedPicking=false; renderSched(); $("#schedScrim").classList.add("show");
+  const {steps,idx}=pruneSched(); if(steps[idx]) schedSay(steps[idx]); };
+$("#schedDone").onclick=()=>{ // pausa contra toques repetidos, para no saltarse pasos sin querer
+  const now=Date.now(), gap=Math.max(800,+state.settings.debounce||0); if(now-schedLastDone<gap) return; schedLastDone=now;
+  buzz(); const {steps,idx}=pruneSched(); if(idx<steps.length) schedGo(idx+1); };
+$("#schedClose").onclick=()=>{ stopAudio(); schedPicking=false; $("#schedScrim").classList.remove("show"); };
+$("#schedAddBtn").onclick=()=>{ schedPicking=true; renderSched(); };
+$("#schedPickBack").onclick=()=>{ schedPicking=false; renderSched(); try{ $("#schedAddBtn").focus(); }catch(e){} };
+$("#schedRestartEd").onclick=()=>schedGo(0);
+bindToggle("#swSched","sched"); bindToggle("#swSchedAll","schedall");
+$("#swSched").addEventListener("click",()=>$("#schedOptWrap").classList.toggle("hidden",!state.settings.sched));
+
 /* ---- Quitar el fondo de una foto, en el dispositivo (la foto no se envía a ningún sitio).
    Usa ONNX Runtime Web (MIT) y el modelo U²-Net pequeño (Apache 2.0), carpeta bg/ (ver bg/LICENSES.txt).
    Se descargan la primera vez que se usa (19,5 MB en disco; unos 8 MB de descarga, porque GitHub Pages los comprime); el service worker los guarda aparte para usarlos sin internet. ---- */
@@ -2262,7 +2443,7 @@ if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
   const app=$("#app");
   const dialogs=[...document.querySelectorAll(".scrim"), $("#zoom")];
   const ESC_BTN={addScrim:"#addCancel", camScrim:"#camCancel", arasaacScrim:"#araCancel", editScrim:"#editCancel",
-    setScrim:"#setClose", exportScrim:"#expCancel", welcomeScrim:"#welcomeClose"};
+    setScrim:"#setClose", exportScrim:"#expCancel", welcomeScrim:"#welcomeClose", schedScrim:"#schedClose"};
   const stack=[]; // diálogos abiertos, el último arriba
   const FOCUSABLE='button:not([disabled]):not(.hidden), [href], input:not([type=file]):not(.hidden):not([disabled]), select:not([disabled]), textarea, [tabindex]:not([tabindex="-1"])';
   function visible(el){ return !!(el.offsetWidth||el.offsetHeight||el.getClientRects().length); }
