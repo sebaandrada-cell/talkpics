@@ -383,6 +383,7 @@
     .pr-card{border:1.5pt solid #000; border-radius:8pt; padding:4pt; text-align:center; break-inside:avoid; page-break-inside:avoid;}
     .pr-card img{width:100%; aspect-ratio:1/1; object-fit:contain; display:block;}
     .pr-card div{font-weight:800; font-size:12pt; line-height:1.15; padding-top:3pt; overflow-wrap:anywhere;}
+    .pr-credit{font-size:8pt; line-height:1.3; margin:8pt 0 0;}
     .pp-head{display:flex; justify-content:space-between; align-items:baseline; gap:12pt; border-bottom:2pt solid #000; padding-bottom:6pt; margin-bottom:12pt;}
     .pp-name{font-size:17pt; font-weight:800; overflow-wrap:anywhere;}
     .pp-date{font-size:10pt; white-space:nowrap;}
@@ -2071,6 +2072,16 @@ async function movePic(dir){
 $("#moveBack").onclick=()=>movePic(-1);
 $("#moveFwd").onclick=()=>movePic(1);
 
+/* ---- Atribución de ARASAAC fuera de la app (2026-11-26) ----
+   ARASAAC pidió (correo del 2026-11-24) que la atribución acompañe a sus pictogramas también cuando el tablero
+   sale de TalkPics. Se usa el mismo texto que la nota del buscador (araNote, en el idioma de la app), en texto plano,
+   más la dirección de la licencia, que en araNote solo está en el enlace. Va al pie de cada hoja impresa con
+   pictogramas de ARASAAC y en el .obz (campo license de cada imagen + ATTRIBUTION.txt). */
+const ARA_LICENSE_URL="https://creativecommons.org/licenses/by-nc-sa/4.0/";
+function araCreditText(){ const d=document.createElement("div"); d.innerHTML=t("araNote"); return d.textContent.trim()+" "+ARA_LICENSE_URL; }
+const ARA_OBF_LICENSE={type:"CC BY-NC-SA 4.0", copyright_notice_url:ARA_LICENSE_URL, source_url:"https://arasaac.org", author_name:"Sergio Palao (ARASAAC, Gobierno de Aragón)", author_url:"https://arasaac.org"};
+function isAraLicense(l){ return !!(l && typeof l==="object" && /arasaac|palao/i.test(String(l.source_url||"")+" "+String(l.author_name||"")+" "+String(l.author_url||""))); }
+
 /* ---- Imprimir el tablero: una copia en papel por si falla el dispositivo ---- */
 function printBoard(){
   const area=$("#printArea"); area.innerHTML=""; area.style.setProperty("--pc",String(+state.settings.cols||4));
@@ -2082,7 +2093,9 @@ function printBoard(){
     list.forEach(p=>{ used.add(p.id); const c=document.createElement("div"); c.className="pr-card";
       const im=document.createElement("img"); im.src=p.img; im.alt="";
       const n=document.createElement("div"); n.textContent=dispName(p); c.appendChild(im); c.appendChild(n); g.appendChild(c); });
-    sec.appendChild(g); area.appendChild(sec); };
+    sec.appendChild(g);
+    if(list.some(p=>p.arasaac)){ const cr=document.createElement("p"); cr.className="pr-credit"; cr.textContent=araCreditText(); sec.appendChild(cr); }
+    area.appendChild(sec); };
   const byPos=(a,b)=>(a.pos||0)-(b.pos||0);
   state.cats.forEach(c=>section(dispCat(c), state.pics.filter(p=>p.cat===c.id).sort(byPos)));
   section("TalkPics", state.pics.filter(p=>!used.has(p.id)).sort(byPos));
@@ -2193,6 +2206,7 @@ async function buildObz(){
   const known=new Set(state.cats.map(c=>c.id)), orphan=state.pics.filter(p=>!known.has(p.cat)).sort(byPos);
   if(orphan.length) groups.push({id:"cat__other", name:"TalkPics", dot:"📁", pics:orphan});
   const home={format:OBF_FORMAT, id:"home", locale:L, name:"TalkPics", description_html:"TalkPics", buttons:[], grid:null, images:[], sounds:[]};
+  let usesAra=false;
   for(const g of groups){
     const path="boards/"+g.id+".obf";
     const b={format:OBF_FORMAT, id:g.id, locale:L, name:g.name, description_html:escapeHtml(g.name), buttons:[], grid:null, images:[], sounds:[]};
@@ -2200,7 +2214,7 @@ async function buildObz(){
       const btn={id:"b_"+p.id, label:dispName(p)||"?", image_id:"i_"+p.id, ext_talkpics_name:p.name};
       if(p.fav) btn.ext_talkpics_fav=true;
       if(p.tags&&p.tags.length) btn.ext_talkpics_tags=p.tags;
-      b.images.push(await addImage("i_"+p.id,p.img));
+      const im=await addImage("i_"+p.id,p.img); if(p.arasaac){ im.license={...ARA_OBF_LICENSE}; usesAra=true; } b.images.push(im);
       const au=p.audio&&dataUrlParts(p.audio);
       if(au){ const sid="s_"+p.id, sp="sounds/"+sid+"."+(MIME_EXT[au.mime]||"webm");
         files.push({name:sp, data:au.bytes}); man.paths.sounds[sid]=sp; btn.sound_id=sid;
@@ -2214,6 +2228,7 @@ async function buildObz(){
   }
   home.grid=gridOf(home.buttons.map(x=>x.id));
   files.unshift({name:"boards/home.obf", data:enc.encode(JSON.stringify(home))}); man.paths.boards.home="boards/home.obf";
+  if(usesAra) files.push({name:"ATTRIBUTION.txt", data:enc.encode(araCreditText()+"\n")});
   files.unshift({name:"manifest.json", data:enc.encode(JSON.stringify(man))});
   return zipStore(files);
 }
@@ -2286,7 +2301,9 @@ async function importObf(file){
       if(!btn || btn.load_board || !btn.label) continue; // los botones que solo abren otro tablero no son tarjetas
       const label=String(btn.label).slice(0,80), name=String(btn.ext_talkpics_name||label);
       const img=(await media(b.images,btn.image_id,"img")) || emojiImg("💬","#eae6da");
+      const imgMeta=(b.images||[]).find(x=>x&&String(x.id)===String(btn.image_id));
       const np={id:uid(), name, img, cat:cat.id, tags:Array.isArray(btn.ext_talkpics_tags)?btn.ext_talkpics_tags.map(String):[], fav:!!btn.ext_talkpics_fav, uses:0, created:Date.now()+count, pos:++maxPos};
+      if(imgMeta && isAraLicense(imgMeta.license)) np.arasaac=true;
       if(label!==name){ if(L==="ca") np.nameCa=label; else if(L==="en") np.nameEn=label; else if(!OLD_LANGS.includes(L)) np.names={[L]:label}; }
       const au=await media(b.sounds,btn.sound_id,"snd"); if(au) np.audio=au;
       state.pics.push(np); added++; count++;
