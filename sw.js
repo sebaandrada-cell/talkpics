@@ -1,6 +1,6 @@
 /* TalkPics service worker: guarda la app en el dispositivo para que abra sin internet.
-   Para publicar una actualización, cambia el número de VERSION. */
-const VERSION = "talkpics-v37";
+   Para publicar una actualización, cambia el número de VERSION y, igual, APP_VER en TalkPics.html. */
+const VERSION = "talkpics-v38";
 // Herramienta de "quitar el fondo" (carpeta bg/, unos 8 MB de descarga): caché aparte que NO se borra al cambiar VERSION,
 // para no volver a descargarla en cada actualización. Si cambian esos archivos, sube este número.
 const BG_CACHE = "tp-bgtool-1";
@@ -11,7 +11,16 @@ const CORE = [
 ];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
+  // cache: "reload": la versión nueva se descarga de la web, nunca de la caché HTTP del navegador,
+  // que podría devolver los archivos viejos y dejar una versión nueva con contenido antiguo.
+  e.waitUntil(caches.open(VERSION)
+    .then(c => c.addAll(CORE.map(u => new Request(u, { cache: "reload" }))))
+    .then(() => self.skipWaiting()));
+});
+
+// La app pregunta qué versión tiene el service worker ("Buscar actualizaciones" en Ajustes).
+self.addEventListener("message", e => {
+  if (e.data === "tp-version" && e.ports && e.ports[0]) e.ports[0].postMessage(VERSION);
 });
 
 self.addEventListener("activate", e => {
